@@ -1,0 +1,852 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>CityExplorer — Valence</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600&family=DM+Sans:wght@300;400;500&display=swap');
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --red:#E63946;
+  --red-light:rgba(230,57,70,.1);
+  --red-mid:rgba(230,57,70,.2);
+  --cream:#F7F2EB;
+  --cream-dark:#EDE6DB;
+  --white:#FFFFFF;
+  --text:#1A0A08;
+  --text-mid:#6B4A40;
+  --text-soft:#A08070;
+  --border:rgba(160,100,80,.12);
+  --border-mid:rgba(160,100,80,.2);
+  --card:#FFFFFF;
+  --shadow:0 2px 12px rgba(26,10,8,.08);
+  --shadow-lg:0 8px 32px rgba(26,10,8,.12);
+}
+body{background:var(--cream);color:var(--text);font-family:'DM Sans',sans-serif;overflow:hidden;height:100dvh;width:100vw;user-select:none;-webkit-user-select:none}
+
+/* ══ LOADING ══ */
+#loading{position:fixed;inset:0;background:var(--cream);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1rem;z-index:500;transition:opacity .6s}
+#loading.done{opacity:0;pointer-events:none}
+.ld-logo{font-family:'Playfair Display',serif;font-size:2rem;color:var(--red);letter-spacing:.05em}
+.ld-sub{font-size:.72rem;letter-spacing:.25em;text-transform:uppercase;color:var(--text-soft)}
+.ld-ring{width:40px;height:40px;border:2px solid var(--red-mid);border-top-color:var(--red);border-radius:50%;animation:spin .8s linear infinite;margin-top:.5rem}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* ══ APP ══ */
+#app{position:fixed;inset:0;display:flex;flex-direction:column}
+
+/* ══ TOP BAR ══ */
+#top-bar{flex-shrink:0;background:var(--white);border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;padding:.8rem 1.2rem .7rem;box-shadow:0 1px 8px rgba(26,10,8,.06)}
+.top-left{display:flex;align-items:center;gap:.7rem}
+.top-accent{width:4px;height:36px;background:var(--red);border-radius:2px;flex-shrink:0}
+.top-city{font-family:'Playfair Display',serif;font-size:1.3rem;color:var(--text);line-height:1}
+.top-region{font-size:.6rem;color:var(--red);letter-spacing:.2em;text-transform:uppercase;margin-top:.1rem}
+
+/* Weather widget */
+#weather-widget{cursor:pointer;text-align:right;padding:.35rem .7rem;border-radius:12px;border:1px solid var(--border-mid);background:var(--cream);transition:background .18s}
+#weather-widget:active{background:var(--cream-dark)}
+.wx-loading{display:flex;align-items:center;justify-content:center;height:38px}
+.wx-spinner{width:14px;height:14px;border:1.5px solid var(--red-mid);border-top-color:var(--red);border-radius:50%;animation:spin .8s linear infinite}
+.wx-main{display:flex;align-items:center;justify-content:flex-end;gap:.35rem}
+.wx-main span:first-child{font-size:1.2rem}
+#wx-temp{font-family:'Playfair Display',serif;font-size:1.2rem;color:var(--red)}
+.wx-details{margin-top:.05rem}
+#wx-desc{font-size:.62rem;color:var(--text-mid);display:block}
+#wx-feels{font-size:.58rem;color:var(--text-soft)}
+.wx-extra{display:flex;gap:.5rem;justify-content:flex-end;margin-top:.1rem}
+#wx-wind,#wx-rain{font-size:.58rem;color:var(--text-soft)}
+
+/* ══ SCREENS ══ */
+.screen{flex:1;overflow:hidden;display:none;flex-direction:column;min-height:0}
+.screen.active{display:flex}
+.screen-body{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch}
+
+/* ══ SEARCH ══ */
+.search-wrap{padding:.75rem 1.2rem;flex-shrink:0;background:var(--white);border-bottom:1px solid var(--border)}
+.search-wrap input{width:100%;background:var(--cream);border:1px solid var(--border-mid);border-radius:10px;padding:.6rem 1rem;color:var(--text);font-family:'DM Sans',sans-serif;font-size:.9rem;outline:none;transition:border-color .18s}
+.search-wrap input::placeholder{color:var(--text-soft)}
+.search-wrap input:focus{border-color:var(--red)}
+
+/* ══ MONUMENT CARDS ══ */
+.monument-grid{padding:.75rem 1rem 5rem;display:flex;flex-direction:column;gap:.75rem;background:var(--cream)}
+
+/* Featured */
+.mc-featured{border-radius:16px;overflow:hidden;cursor:pointer;background:var(--white);box-shadow:var(--shadow);transition:box-shadow .18s;position:relative}
+.mc-featured:active{box-shadow:var(--shadow-lg)}
+.mc-feat-photo{width:100%;height:190px;position:relative;background:var(--cream-dark);overflow:hidden}
+.mc-feat-photo img{width:100%;height:100%;object-fit:cover;display:block;transition:opacity .5s;opacity:0}
+.mc-feat-photo img.ok{opacity:1}
+.mc-feat-photo .ef{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:5rem;opacity:.25}
+.mc-feat-photo .shimmer{position:absolute;inset:0;background:linear-gradient(90deg,transparent,rgba(255,255,255,.5),transparent);background-size:200% 100%;animation:sh 1.4s infinite}
+@keyframes sh{0%{background-position:-200% 0}100%{background-position:200% 0}}
+.mc-feat-badge{position:absolute;top:.75rem;left:.75rem;background:var(--red);color:#fff;font-size:.65rem;font-weight:600;padding:.25rem .65rem;border-radius:20px;letter-spacing:.05em}
+.mc-feat-gmap{position:absolute;top:.75rem;right:.75rem;background:rgba(255,255,255,.9);backdrop-filter:blur(8px);border:1px solid var(--border-mid);border-radius:8px;font-size:.72rem;padding:.25rem .5rem;cursor:pointer;color:var(--text)}
+.mc-feat-body{padding:.9rem 1rem 1rem}
+.mc-feat-name{font-family:'Playfair Display',serif;font-size:1.3rem;color:var(--text);line-height:1.1}
+.mc-feat-hood{font-size:.65rem;color:var(--text-soft);margin:.2rem 0 .55rem;letter-spacing:.08em;text-transform:uppercase}
+.mc-feat-tags{display:flex;gap:.35rem;flex-wrap:wrap}
+.mc-tag{font-size:.6rem;padding:.15rem .5rem;border-radius:20px;background:var(--red-light);color:var(--red);border:1px solid var(--red-mid);font-weight:500}
+
+/* Regular */
+.mc-card{display:flex;border-radius:14px;overflow:hidden;cursor:pointer;background:var(--white);box-shadow:var(--shadow);transition:box-shadow .18s;position:relative}
+.mc-card:active{box-shadow:var(--shadow-lg)}
+.mc-card-photo{width:90px;flex-shrink:0;position:relative;background:var(--cream-dark);overflow:hidden}
+.mc-card-photo img{width:100%;height:100%;object-fit:cover;display:block;transition:opacity .5s;opacity:0}
+.mc-card-photo img.ok{opacity:1}
+.mc-card-photo .ef{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:2.5rem;opacity:.3}
+.mc-card-photo .shimmer{position:absolute;inset:0;background:linear-gradient(90deg,transparent,rgba(255,255,255,.5),transparent);background-size:200% 100%;animation:sh 1.4s infinite}
+.mc-card-body{flex:1;padding:.75rem .9rem;min-width:0;display:flex;flex-direction:column;justify-content:center}
+.mc-card-name{font-family:'Playfair Display',serif;font-size:1rem;color:var(--text);line-height:1.1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.mc-card-hood{font-size:.6rem;color:var(--text-soft);margin:.1rem 0 .4rem;text-transform:uppercase;letter-spacing:.08em}
+.mc-card-tags{display:flex;gap:.3rem;flex-wrap:wrap}
+.mc-card-gmap{position:absolute;top:.5rem;right:.5rem;background:var(--cream);border:1px solid var(--border-mid);border-radius:6px;font-size:.7rem;padding:.15rem .38rem;cursor:pointer;color:var(--text)}
+
+/* ══ BOTTOM NAV ══ */
+#bottom-nav{flex-shrink:0;display:flex;background:var(--white);border-top:1px solid var(--border);padding-bottom:env(safe-area-inset-bottom,0);box-shadow:0 -1px 8px rgba(26,10,8,.06)}
+.nav-btn{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:.6rem 0 .5rem;background:none;border:none;cursor:pointer;color:var(--text-soft);transition:color .18s;gap:.1rem;position:relative}
+.nav-btn.active{color:var(--red)}
+.nav-btn.active::after{content:'';position:absolute;top:0;left:50%;transform:translateX(-50%);width:32px;height:2px;background:var(--red);border-radius:0 0 2px 2px}
+.nav-icon{font-size:1.2rem}
+.nav-label{font-size:.54rem;letter-spacing:.1em;text-transform:uppercase;font-weight:500}
+
+/* ══ DETAIL PANEL ══ */
+#detail-panel{position:fixed;bottom:0;left:0;right:0;background:var(--white);border-top:2px solid var(--red);border-radius:20px 20px 0 0;padding:0 1.4rem calc(56px + 1.5rem);transform:translateY(100%);transition:transform .38s cubic-bezier(.32,.72,0,1);z-index:100;overflow-y:auto;max-height:92vh;box-shadow:0 -8px 40px rgba(26,10,8,.15)}
+#detail-panel.open{transform:translateY(0)}
+.panel-handle{width:36px;height:3px;background:var(--border-mid);border-radius:2px;margin:.85rem auto .4rem}
+#close-panel{position:absolute;top:.85rem;right:1rem;z-index:20;background:var(--cream);border:1px solid var(--border-mid);border-radius:50%;width:30px;height:30px;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:.85rem;color:var(--text)}
+#dp-photo-wrap{position:relative;width:calc(100% + 2.8rem);margin:0 -1.4rem 1.1rem;height:200px;overflow:hidden;border-radius:16px 16px 0 0;background:var(--cream-dark)}
+#dp-photo-wrap img{width:100%;height:100%;object-fit:cover;display:block;transition:opacity .5s;opacity:0}
+#dp-photo-wrap img.ok{opacity:1}
+#dp-photo-wrap .ef{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:5rem;opacity:.25}
+#dp-photo-wrap .shimmer{z-index:1;position:absolute;inset:0;background:linear-gradient(90deg,transparent,rgba(255,255,255,.5),transparent);background-size:200% 100%;animation:sh 1.4s infinite}
+#dp-grad{position:absolute;bottom:0;left:0;right:0;height:70px;background:linear-gradient(to bottom,transparent,rgba(255,255,255,.9));pointer-events:none;z-index:2}
+#dp-badge{position:absolute;bottom:.7rem;right:.7rem;width:44px;height:44px;background:var(--white);border-radius:50%;border:2px solid var(--red);display:flex;align-items:center;justify-content:center;font-size:1.4rem;z-index:3;box-shadow:var(--shadow)}
+.p-title{font-family:'Playfair Display',serif;font-size:1.6rem;color:var(--text);line-height:1.1}
+.p-hood{font-size:.68rem;letter-spacing:.18em;text-transform:uppercase;color:var(--text-soft);margin-top:.2rem}
+.p-tags{display:flex;gap:.4rem;flex-wrap:wrap;margin:.65rem 0}
+.tag{font-size:.63rem;letter-spacing:.07em;text-transform:uppercase;padding:.2rem .55rem;border:1px solid var(--border-mid);border-radius:20px;color:var(--text-mid)}
+.tag.hl{border-color:var(--red);color:var(--red);background:var(--red-light)}
+.p-desc{font-size:.85rem;line-height:1.7;color:var(--text-mid);margin-bottom:1rem}
+.p-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:.6rem;margin-bottom:1.2rem}
+.stat{text-align:center;padding:.7rem;background:var(--cream);border-radius:10px;border:1px solid var(--border)}
+.stat-val{font-family:'Playfair Display',serif;font-size:1.1rem;color:var(--red)}
+.stat-label{font-size:.58rem;color:var(--text-soft);letter-spacing:.1em;text-transform:uppercase;margin-top:.1rem}
+.p-actions{display:flex;gap:.6rem}
+.btn-pri{flex:1;background:var(--red);color:#fff;border:none;padding:.8rem;font-family:'Playfair Display',serif;font-size:1rem;border-radius:10px;cursor:pointer;transition:opacity .15s}
+.btn-pri:active{opacity:.85}
+.btn-sec{background:var(--cream);color:var(--text-mid);border:1px solid var(--border-mid);padding:.8rem 1rem;border-radius:10px;cursor:pointer}
+
+/* ══ SECTION HEADERS ══ */
+.section-screen-hdr{padding:1rem 1.2rem .6rem;background:var(--white);border-bottom:1px solid var(--border);flex-shrink:0}
+.section-ttl{font-family:'Playfair Display',serif;font-size:1.6rem;color:var(--text)}
+.section-ttl span{color:var(--red)}
+.section-sub{font-size:.66rem;color:var(--text-soft);letter-spacing:.14em;text-transform:uppercase;margin-top:.2rem}
+
+/* ══ ITINERARY ══ */
+.itin-bg{background:var(--cream);flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch}
+.cfg-inner{padding:1.3rem 1.2rem .8rem}
+.cfg-label{font-size:.65rem;letter-spacing:.18em;text-transform:uppercase;color:var(--text-soft);margin-bottom:.65rem}
+.cfg-sec{margin-bottom:1.3rem}
+.pill-row{display:flex;gap:.38rem;flex-wrap:wrap}
+.pill{padding:.38rem .8rem;background:var(--white);border:1px solid var(--border-mid);border-radius:20px;color:var(--text-mid);font-size:.75rem;cursor:pointer;transition:all .18s;font-family:'DM Sans',sans-serif}
+.pill.active{background:var(--red);border-color:var(--red);color:#fff}
+.day-row{display:flex;gap:.5rem}
+.day-pill{flex:1;padding:.55rem .2rem;background:var(--white);border:1px solid var(--border-mid);border-radius:10px;color:var(--text-mid);font-size:.8rem;cursor:pointer;transition:all .18s;font-family:'DM Sans',sans-serif;text-align:center}
+.day-pill.active{background:var(--red);border-color:var(--red);color:#fff}
+.gen-btn{width:100%;padding:1rem;background:var(--red);border:none;border-radius:12px;color:#fff;font-family:'Playfair Display',serif;font-size:1.1rem;cursor:pointer;margin-top:.5rem;transition:opacity .15s,transform .15s;box-shadow:0 4px 16px rgba(230,57,70,.3)}
+.gen-btn:active{opacity:.85;transform:scale(.98)}
+
+/* Result */
+.result-hdr{display:flex;align-items:center;justify-content:space-between;padding:.85rem 1.2rem .5rem;position:sticky;top:0;background:var(--white);z-index:2;border-bottom:1px solid var(--border)}
+.result-title{font-family:'Playfair Display',serif;font-size:1.2rem;color:var(--text)}
+.back-btn,.share-btn{background:var(--cream);border:1px solid var(--border-mid);border-radius:8px;padding:.35rem .7rem;color:var(--text-mid);font-size:.78rem;cursor:pointer;font-family:'DM Sans',sans-serif}
+.chips-row{display:flex;gap:.38rem;padding:.6rem 1.2rem;overflow-x:auto;scrollbar-width:none;background:var(--white);border-bottom:1px solid var(--border)}
+.chips-row::-webkit-scrollbar{display:none}
+.chip{background:var(--cream);border:1px solid var(--border-mid);border-radius:20px;padding:.25rem .75rem;font-size:.68rem;color:var(--text-mid);white-space:nowrap}
+.chip span{color:var(--red);font-weight:600}
+
+/* Day blocks */
+.day-block{margin:1rem 1rem 0}
+.day-block-hdr{display:flex;align-items:center;gap:.65rem;margin-bottom:.65rem}
+.day-num-badge{background:var(--red);color:#fff;font-size:.68rem;font-weight:600;letter-spacing:.15em;padding:.2rem .6rem;border-radius:20px}
+.day-theme-lbl{font-size:.72rem;color:var(--text-soft);letter-spacing:.1em;text-transform:uppercase}
+.gmaps-blk{padding:.75rem 1rem 1.5rem}
+.btn-gfull{width:100%;padding:.85rem;background:var(--white);border:1px solid var(--red);border-radius:10px;color:var(--red);font-size:.88rem;cursor:pointer;font-family:'DM Sans',sans-serif;font-weight:500}
+
+/* Stop cards */
+.stop-card{display:flex;gap:.65rem;padding:.75rem;background:var(--white);border:1px solid var(--border);border-radius:12px;margin-bottom:.5rem;cursor:pointer;transition:box-shadow .18s;position:relative;box-shadow:var(--shadow)}
+.stop-card:active{box-shadow:var(--shadow-lg)}
+.stop-tl{display:flex;flex-direction:column;align-items:center;flex-shrink:0;width:32px}
+.stop-time{font-size:.6rem;color:var(--red);font-weight:600;white-space:nowrap}
+.stop-dot{width:9px;height:9px;border-radius:50%;background:var(--red);margin:.28rem 0;flex-shrink:0;border:2px solid var(--white);box-shadow:0 0 0 2px var(--red)}
+.stop-line{flex:1;width:1.5px;background:var(--red-mid);min-height:14px}
+.stop-thumb{width:60px;height:60px;border-radius:10px;flex-shrink:0;overflow:hidden;position:relative;background:var(--cream-dark)}
+.stop-thumb img{width:100%;height:100%;object-fit:cover;display:block;transition:opacity .4s;opacity:0}
+.stop-thumb img.ok{opacity:1}
+.stop-thumb .ef{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:1.5rem;opacity:.5}
+.stop-info{flex:1;min-width:0}
+.stop-name{font-family:'Playfair Display',serif;font-size:.95rem;color:var(--text);line-height:1.1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.stop-hood{font-size:.6rem;color:var(--text-soft);margin-top:.08rem;text-transform:uppercase;letter-spacing:.08em}
+.stop-meta{display:flex;gap:.35rem;margin-top:.32rem;flex-wrap:wrap}
+.sb{font-size:.58rem;padding:.12rem .4rem;border-radius:20px;background:var(--red-light);color:var(--red);border:1px solid var(--red-mid);font-weight:500}
+.sb.g{background:var(--cream);color:var(--text-soft);border-color:var(--border-mid)}
+.stop-tip{margin-top:.35rem;font-size:.68rem;color:var(--text-mid);font-style:italic;line-height:1.45;padding:.3rem .5rem;background:var(--cream);border-radius:6px;border-left:2px solid var(--red)}
+.stop-gmap{position:absolute;top:.6rem;right:.6rem;font-size:.7rem;background:var(--cream);border:1px solid var(--border-mid);border-radius:6px;padding:.18rem .38rem;cursor:pointer;color:var(--text-mid)}
+
+/* ══ SPORTS ══ */
+.sport-tabs,.food-cats-row{display:flex;gap:.35rem;padding:.6rem 1.2rem;overflow-x:auto;scrollbar-width:none;flex-shrink:0;background:var(--cream);border-bottom:1px solid var(--border)}
+.sport-tabs::-webkit-scrollbar,.food-cats-row::-webkit-scrollbar{display:none}
+.sport-tab,.food-cat{padding:.35rem .9rem;border-radius:20px;border:1px solid var(--border-mid);background:var(--white);color:var(--text-mid);font-size:.72rem;cursor:pointer;white-space:nowrap;font-family:'DM Sans',sans-serif;transition:all .18s;font-weight:500}
+.sport-tab.active,.food-cat.active{background:var(--red);border-color:var(--red);color:#fff}
+.sports-body,.food-body{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:.75rem 1rem 5rem;background:var(--cream)}
+
+/* Team card */
+.team-card{display:flex;background:var(--white);border-radius:14px;overflow:hidden;margin-bottom:.75rem;box-shadow:var(--shadow);position:relative;border:1px solid var(--border)}
+.team-color-bar{width:4px;flex-shrink:0}
+.team-card-photo{width:100px;height:100px;flex-shrink:0;position:relative;background:var(--cream-dark);overflow:hidden}
+.team-card-photo img{width:100%;height:100%;object-fit:cover;display:block;transition:opacity .5s;opacity:0}
+.team-card-photo img.ok{opacity:1}
+.team-card-photo .ef{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:2.8rem;opacity:.35}
+.team-card-photo .shimmer{position:absolute;inset:0;background:linear-gradient(90deg,transparent,rgba(255,255,255,.5),transparent);background-size:200% 100%;animation:sh 1.4s infinite}
+.team-card-body{flex:1;padding:.8rem 1rem;min-width:0}
+.team-name{font-family:'Playfair Display',serif;font-size:1rem;color:var(--text);line-height:1.1}
+.team-league{font-size:.62rem;color:var(--text-soft);margin:.1rem 0 .35rem;text-transform:uppercase;letter-spacing:.08em}
+.team-desc{font-size:.72rem;color:var(--text-mid);line-height:1.5}
+.team-tags{display:flex;gap:.3rem;margin-top:.45rem;flex-wrap:wrap}
+.team-tag{font-size:.58rem;padding:.1rem .42rem;border-radius:20px;background:var(--red-light);color:var(--red);border:1px solid var(--red-mid)}
+
+/* ══ FOOD ══ */
+.resto-featured{border-radius:16px;overflow:hidden;background:var(--white);box-shadow:var(--shadow);margin-bottom:.85rem;cursor:pointer;position:relative;border:1px solid var(--border)}
+.resto-feat-photo{width:100%;height:175px;position:relative;background:var(--cream-dark);overflow:hidden}
+.resto-feat-photo img{width:100%;height:100%;object-fit:cover;display:block;transition:opacity .5s;opacity:0}
+.resto-feat-photo img.ok{opacity:1}
+.resto-feat-photo .ef{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:5rem;opacity:.25}
+.resto-feat-photo .shimmer{position:absolute;inset:0;background:linear-gradient(90deg,transparent,rgba(255,255,255,.5),transparent);background-size:200% 100%;animation:sh 1.4s infinite}
+.michelin-badge{position:absolute;top:.7rem;left:.7rem;background:var(--red);color:#fff;font-size:.68rem;font-weight:600;padding:.22rem .65rem;border-radius:20px}
+.feat-price-badge{position:absolute;top:.7rem;right:.7rem;background:rgba(255,255,255,.92);border:1px solid var(--border-mid);border-radius:20px;padding:.22rem .65rem;font-size:.72rem;color:var(--text-mid)}
+.resto-feat-body{padding:.9rem 1rem 1rem}
+.resto-feat-name{font-family:'Playfair Display',serif;font-size:1.3rem;color:var(--text);line-height:1.05}
+.resto-feat-cuisine{font-size:.65rem;color:var(--red);margin:.15rem 0 .4rem;letter-spacing:.1em;text-transform:uppercase;font-weight:500}
+.resto-feat-desc{font-size:.8rem;color:var(--text-mid);line-height:1.55;margin-bottom:.5rem}
+.resto-feat-meta{display:flex;gap:.5rem;flex-wrap:wrap;align-items:center}
+.resto-meta-item{font-size:.66rem;color:var(--text-soft)}
+.resto-tags{display:flex;gap:.35rem;flex-wrap:wrap;margin-top:.5rem}
+.resto-tag{font-size:.58rem;padding:.12rem .45rem;border-radius:20px;background:var(--red-light);color:var(--red);border:1px solid var(--red-mid)}
+.resto-gmap{position:absolute;bottom:.8rem;right:.8rem;font-size:.75rem;background:var(--red);color:#fff;border-radius:8px;padding:.28rem .6rem;cursor:pointer;font-weight:500}
+.resto-card{display:flex;border-radius:14px;overflow:hidden;background:var(--white);box-shadow:var(--shadow);margin-bottom:.65rem;cursor:pointer;position:relative;border:1px solid var(--border)}
+.resto-card-photo{width:95px;flex-shrink:0;position:relative;background:var(--cream-dark);overflow:hidden}
+.resto-card-photo img{width:100%;height:100%;object-fit:cover;display:block;transition:opacity .5s;opacity:0}
+.resto-card-photo img.ok{opacity:1}
+.resto-card-photo .ef{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:2.5rem;opacity:.3}
+.resto-card-photo .shimmer{position:absolute;inset:0;background:linear-gradient(90deg,transparent,rgba(255,255,255,.5),transparent);background-size:200% 100%;animation:sh 1.4s infinite}
+.resto-card-body{flex:1;padding:.75rem .9rem;min-width:0;display:flex;flex-direction:column;justify-content:center}
+.resto-card-name{font-family:'Playfair Display',serif;font-size:1rem;color:var(--text);line-height:1.1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.resto-card-cuisine{font-size:.6rem;color:var(--red);letter-spacing:.08em;text-transform:uppercase;margin:.08rem 0 .3rem;font-weight:500}
+.resto-card-desc{font-size:.72rem;color:var(--text-mid);line-height:1.45;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.resto-card-meta{display:flex;gap:.4rem;margin-top:.38rem;flex-wrap:wrap;align-items:center}
+.resto-card-gmap{position:absolute;top:.55rem;right:.55rem;font-size:.7rem;background:var(--cream);border:1px solid var(--border-mid);border-radius:5px;padding:.16rem .38rem;cursor:pointer;color:var(--text-mid)}
+.price-tag{font-size:.66rem;color:var(--text-soft);font-weight:500}
+
+/* ══ WEATHER PANEL ══ */
+#weather-overlay{position:fixed;inset:0;background:rgba(26,10,8,.3);backdrop-filter:blur(4px);z-index:200;display:none}
+#weather-overlay.show{display:block}
+#weather-panel{position:fixed;top:0;right:0;width:min(340px,92vw);height:100dvh;background:var(--white);border-left:1px solid var(--border);z-index:201;transform:translateX(100%);transition:transform .35s cubic-bezier(.32,.72,0,1);overflow-y:auto;padding-bottom:2rem;box-shadow:-8px 0 32px rgba(26,10,8,.12)}
+#weather-panel.open{transform:translateX(0)}
+.wx-panel-header{display:flex;align-items:center;justify-content:space-between;padding:1.2rem 1.2rem .8rem;position:sticky;top:0;background:var(--white);border-bottom:1px solid var(--border);z-index:2}
+.wx-panel-city{font-family:'Playfair Display',serif;font-size:1.3rem;color:var(--red)}
+.wx-panel-close{background:var(--cream);border:1px solid var(--border-mid);border-radius:50%;width:30px;height:30px;color:var(--text-mid);cursor:pointer;font-size:.85rem}
+.wx-panel-now{display:flex;align-items:center;gap:1rem;padding:1.2rem 1.2rem .6rem}
+.wx-panel-icon{font-size:3.5rem}
+.wx-panel-temp{font-family:'Playfair Display',serif;font-size:2.8rem;color:var(--red);line-height:1}
+.wx-panel-desc{font-size:.82rem;color:var(--text-mid);margin-top:.2rem}
+.wx-panel-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:.5rem;padding:.5rem 1.2rem 1rem}
+.wx-stat{background:var(--cream);border:1px solid var(--border);border-radius:10px;padding:.65rem .4rem;text-align:center}
+.wx-stat-val{font-family:'Playfair Display',serif;font-size:1rem;color:var(--red)}
+.wx-stat-lbl{font-size:.55rem;color:var(--text-soft);letter-spacing:.08em;text-transform:uppercase;margin-top:.1rem}
+.wx-section{font-size:.62rem;letter-spacing:.2em;text-transform:uppercase;color:var(--text-soft);padding:.5rem 1.2rem .4rem}
+.wx-forecast{display:flex;gap:.5rem;padding:0 1.2rem .8rem;overflow-x:auto;scrollbar-width:none}
+.wx-forecast::-webkit-scrollbar{display:none}
+.wx-day{background:var(--cream);border:1px solid var(--border);border-radius:10px;padding:.6rem .5rem;min-width:60px;text-align:center;flex-shrink:0}
+.wx-day-name{font-size:.6rem;color:var(--text-soft);letter-spacing:.08em;text-transform:uppercase}
+.wx-day-icon{font-size:1.3rem;margin:.3rem 0}
+.wx-day-max{font-family:'Playfair Display',serif;font-size:.95rem;color:var(--red)}
+.wx-day-min{font-size:.62rem;color:var(--text-soft)}
+.wx-day-rain{font-size:.58rem;color:#4A90D9;margin-top:.15rem}
+.wx-hourly{display:flex;gap:.4rem;padding:0 1.2rem .8rem;overflow-x:auto;scrollbar-width:none}
+.wx-hourly::-webkit-scrollbar{display:none}
+.wx-hour{background:var(--cream);border:1px solid var(--border);border-radius:8px;padding:.5rem .4rem;min-width:52px;text-align:center;flex-shrink:0}
+.wx-hour-time{font-size:.58rem;color:var(--text-soft)}
+.wx-hour-icon{font-size:1rem;margin:.2rem 0}
+.wx-hour-temp{font-family:'Playfair Display',serif;font-size:.9rem;color:var(--text)}
+.wx-hour-rain{font-size:.55rem;color:#4A90D9}
+.wx-credits{font-size:.58rem;color:var(--text-soft);text-align:center;padding:.8rem 1.2rem 0;letter-spacing:.05em}
+</style>
+</head>
+<body>
+
+<div id="loading">
+  <div class="ld-logo">Valence</div>
+  <div class="ld-sub">Drôme · Auvergne-Rhône-Alpes</div>
+  <div class="ld-ring"></div>
+</div>
+
+<div id="app">
+
+  <!-- TOP BAR -->
+  <div id="top-bar">
+    <div class="top-left">
+      <div class="top-accent"></div>
+      <div>
+        <div class="top-city">Valence</div>
+        <div class="top-region">Drôme · Rhône-Alpes</div>
+      </div>
+    </div>
+    <div id="weather-widget" onclick="openWeather()">
+      <div id="weather-loading" class="wx-loading"><div class="wx-spinner"></div></div>
+      <div id="weather-data" style="display:none">
+        <div class="wx-main"><span id="wx-icon">☀️</span><span id="wx-temp">—°</span></div>
+        <div class="wx-details"><span id="wx-desc">—</span><span id="wx-feels">—</span></div>
+        <div class="wx-extra"><span id="wx-wind">💨 —</span><span id="wx-rain">🌧 —</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MONUMENTS SCREEN -->
+  <div id="monuments-screen" class="screen active">
+    <div class="search-wrap">
+      <input type="text" id="search-input" placeholder="🔍  Rechercher un lieu…" oninput="filterMonuments(this.value)">
+    </div>
+    <div class="screen-body" id="monuments-body"></div>
+  </div>
+
+  <!-- ITINERARY SCREEN -->
+  <div id="itin-screen" class="screen">
+    <div id="itin-cfg" class="itin-bg">
+      <div class="section-screen-hdr" style="background:var(--white)">
+        <div class="section-ttl">Itinéraire <span>Valence</span></div>
+        <div class="section-sub">Parcours optimisé sur-mesure</div>
+      </div>
+      <div class="cfg-inner">
+        <div class="cfg-sec">
+          <div class="cfg-label">⏱ Combien de jours ?</div>
+          <div class="day-row">
+            <button class="day-pill" data-d="1" onclick="selDays(1)">1 jour</button>
+            <button class="day-pill active" data-d="2" onclick="selDays(2)">2 jours</button>
+            <button class="day-pill" data-d="3" onclick="selDays(3)">3 jours</button>
+          </div>
+        </div>
+        <div class="cfg-sec">
+          <div class="cfg-label">🎯 Centres d'intérêt</div>
+          <div class="pill-row" id="interest-pills"></div>
+        </div>
+        <div class="cfg-sec">
+          <div class="cfg-label">🚶 Déplacement</div>
+          <div class="pill-row">
+            <button class="pill active" data-m="walking" onclick="selTrans(this)">🚶 Marche</button>
+            <button class="pill" data-m="transit" onclick="selTrans(this)">🚲 Vélo</button>
+            <button class="pill" data-m="driving" onclick="selTrans(this)">🚗 Voiture</button>
+          </div>
+        </div>
+        <button class="gen-btn" onclick="generateItin()">✨ Générer mon parcours</button>
+      </div>
+    </div>
+    <div id="itin-res" class="screen-body" style="display:none;background:var(--cream)">
+      <div class="result-hdr">
+        <button class="back-btn" onclick="showCfg()">← Modifier</button>
+        <div class="result-title" id="res-title">Itinéraire</div>
+        <button class="share-btn" onclick="exportItin()">📤</button>
+      </div>
+      <div class="chips-row" id="res-chips"></div>
+      <div id="res-days" style="padding:.75rem 0"></div>
+      <div class="gmaps-blk"><button class="btn-gfull" onclick="openFullRoute()">📍 Ouvrir dans Google Maps</button></div>
+    </div>
+  </div>
+
+  <!-- SPORTS SCREEN -->
+  <div id="sports-screen" class="screen" style="flex-direction:column">
+    <div class="section-screen-hdr">
+      <div class="section-ttl">Sports à <span>Valence</span></div>
+      <div class="section-sub">Clubs locaux · Équipes emblématiques</div>
+    </div>
+    <div class="sport-tabs" id="sport-tabs"></div>
+    <div class="sports-body" id="sports-body"></div>
+  </div>
+
+  <!-- FOOD SCREEN -->
+  <div id="food-screen" class="screen" style="flex-direction:column">
+    <div class="section-screen-hdr">
+      <div class="section-ttl">Food à <span>Valence</span></div>
+      <div class="section-sub" id="food-sub">Restaurants · Spécialités drômoises</div>
+    </div>
+    <div class="food-cats-row" id="food-cats"></div>
+    <div class="food-body" id="food-body"></div>
+  </div>
+
+  <!-- BOTTOM NAV -->
+  <div id="bottom-nav">
+    <button class="nav-btn active" id="nav-monuments" onclick="switchTab('monuments')"><span class="nav-icon">🏛️</span><span class="nav-label">Lieux</span></button>
+    <button class="nav-btn" id="nav-itin" onclick="switchTab('itin')"><span class="nav-icon">🗺️</span><span class="nav-label">Itinéraire</span></button>
+    <button class="nav-btn" id="nav-sports" onclick="switchTab('sports')"><span class="nav-icon">🏆</span><span class="nav-label">Sports</span></button>
+    <button class="nav-btn" id="nav-food" onclick="switchTab('food')"><span class="nav-icon">🍽️</span><span class="nav-label">Food</span></button>
+  </div>
+
+  <!-- DETAIL PANEL -->
+  <div id="detail-panel">
+    <div class="panel-handle"></div>
+    <button id="close-panel" onclick="closePanel()">✕</button>
+    <div id="dp-photo-wrap">
+      <div class="shimmer" id="dp-shimmer"></div>
+      <img id="dp-img" src="" alt=""/>
+      <div class="ef" id="dp-ef" style="display:none"></div>
+      <div id="dp-grad"></div>
+      <div id="dp-badge"><span id="dp-emoji">🏛️</span></div>
+    </div>
+    <div class="p-title" id="p-name"></div>
+    <div class="p-hood" id="p-hood"></div>
+    <div class="p-tags" id="p-tags"></div>
+    <p class="p-desc" id="p-desc"></p>
+    <div class="p-stats">
+      <div class="stat"><div class="stat-val" id="p-h">—</div><div class="stat-label">Époque</div></div>
+      <div class="stat"><div class="stat-val" id="p-yr">—</div><div class="stat-label">Siècle</div></div>
+      <div class="stat"><div class="stat-val" id="p-tag1">—</div><div class="stat-label">Catégorie</div></div>
+    </div>
+    <div class="p-actions">
+      <button class="btn-pri" onclick="openMaps()">📍 Google Maps</button>
+      <button class="btn-sec" onclick="closePanel()">✕</button>
+    </div>
+  </div>
+
+  <!-- WEATHER PANEL -->
+  <div id="weather-overlay" onclick="closeWeather()"></div>
+  <div id="weather-panel">
+    <div class="wx-panel-header">
+      <div class="wx-panel-city">🌹 Valence — Drôme</div>
+      <button class="wx-panel-close" onclick="closeWeather()">✕</button>
+    </div>
+    <div class="wx-panel-now">
+      <span class="wx-panel-icon" id="wx-panel-icon">☀️</span>
+      <div><div class="wx-panel-temp" id="wx-panel-temp">—°C</div><div class="wx-panel-desc" id="wx-panel-desc">—</div></div>
+    </div>
+    <div class="wx-panel-stats">
+      <div class="wx-stat"><div class="wx-stat-val" id="wxp-feels">—</div><div class="wx-stat-lbl">Ressenti</div></div>
+      <div class="wx-stat"><div class="wx-stat-val" id="wxp-hum">—</div><div class="wx-stat-lbl">Humidité</div></div>
+      <div class="wx-stat"><div class="wx-stat-val" id="wxp-wind">—</div><div class="wx-stat-lbl">Vent</div></div>
+      <div class="wx-stat"><div class="wx-stat-val" id="wxp-uv">—</div><div class="wx-stat-lbl">UV</div></div>
+    </div>
+    <div class="wx-section">Prévisions 7 jours</div>
+    <div id="wx-forecast" class="wx-forecast"></div>
+    <div class="wx-section">Aujourd'hui heure par heure</div>
+    <div id="wx-hourly" class="wx-hourly"></div>
+    <div class="wx-credits">Météo · Open-Meteo.com · Temps réel</div>
+  </div>
+
+</div>
+
+<script>
+// ═══════════════════════════════════════
+//  DATA
+// ═══════════════════════════════════════
+const LANDMARKS = [
+  {id:'cathedrale',   e:'⛪', n:'Cathédrale Saint-Apollinaire',   hood:'Vieux Valence',     desc:"Cathédrale romane fondée au XIe siècle, remaniée aux XIIe et XVIIe siècles. Elle domine la ville depuis la falaise du Rhône. Le tombeau du pape Pie VI y est conservé.",    tags:['Roman','XIe siècle','Incontournable'], h:'XIe s.',  yr:'XIe',   lat:44.9326, lng:4.8912, g:'https://maps.google.com/?q=Cathédrale+Saint-Apollinaire+Valence', wiki:'Cathédrale_Saint-Apollinaire_de_Valence'},
+  {id:'pendentif',    e:'🏛️', n:'Le Pendentif',                   hood:'Vieux Valence',     desc:"Petit monument funéraire de style Renaissance (1548), construit en face de la cathédrale. Chef-d'œuvre méconnu de l'art Renaissance en France, classé Monument Historique.",  tags:['Renaissance','1548','Monument Historique'], h:'1548', yr:'XVIe',  lat:44.9324, lng:4.8910, g:'https://maps.google.com/?q=Pendentif+Valence', wiki:'Pendentif_de_Valence'},
+  {id:'champdemars',  e:'🌳', n:'Champ de Mars & Kiosque',         hood:'Centre-ville',      desc:"L'esplanade emblématique de Valence surplombant le Rhône. Vue panoramique sur le Vercors et les Alpes. Le kiosque à musique Belle Époque est le symbole de la ville.",        tags:['Vue Rhône','Belle Époque','Gratuit'],  h:'XIXe s.', yr:'XIXe',  lat:44.9330, lng:4.8895, g:'https://maps.google.com/?q=Champ+de+Mars+Valence', wiki:'Valence,_Drôme'},
+  {id:'musee',        e:'🖼️', n:'Musée de Valence',                hood:'Centre-ville',      desc:"Musée d'art et d'archéologie dans l'ancien évêché. Collections allant de l'Antiquité à nos jours — dessins de Hubert Robert et peintures régionalistes drômoises.",          tags:['Musée','Art','Archéologie'],          h:'—',       yr:'XIXe',  lat:44.9318, lng:4.8918, g:'https://maps.google.com/?q=Musée+de+Valence', wiki:'Musée_de_Valence'},
+  {id:'napoleon',     e:'⚔️', n:'Maison de Napoléon Bonaparte',    hood:'Centre-ville',      desc:"Napoléon Bonaparte vécut à Valence en 1785-1786 comme officier d'artillerie. La maison rue Bouffier est aujourd'hui un lieu de mémoire incontournable de la ville.",         tags:['Histoire','Napoléon','XVIIIe'],       h:'1785',    yr:'XVIIIe',lat:44.9328, lng:4.8920, g:'https://maps.google.com/?q=Maison+Napoléon+Valence', wiki:'Napoleon'},
+  {id:'maisonsdtetes',e:'🏠', n:'Maison des Têtes',                 hood:'Vieux Valence',     desc:"Hôtel particulier Renaissance (1530) orné de 71 têtes sculptées représentant les vents, les saisons et des personnages mythologiques. Chef-d'œuvre de la Renaissance valentinoise.", tags:['Renaissance','1530','Architecture'], h:'—',       yr:'XVIe',  lat:44.9320, lng:4.8925, g:'https://maps.google.com/?q=Maison+des+Têtes+Valence', wiki:'Maison_des_têtes_(Valence)'},
+  {id:'parcjouvet',   e:'🌸', n:'Parc Jouvet',                      hood:'Bords du Rhône',   desc:"Le plus beau parc de Valence en bord de Rhône. Roseraie, sculptures, fontaines et vue sur le Vercors. Lieu de promenade incontournable des valentinois depuis 1887.",         tags:['Parc','Rhône','Gratuit'],             h:'—',       yr:'1887',  lat:44.9298, lng:4.8875, g:'https://maps.google.com/?q=Parc+Jouvet+Valence', wiki:'Parc_Jouvet'},
+  {id:'vieuxvalence', e:'🏘️', n:'Vieux Valence',                   hood:'Centre historique', desc:"Le cœur historique avec ses ruelles médiévales, ses hôtels particuliers Renaissance et la Grande Rue animée. Flâner dans le Vieux Valence est un voyage dans le temps.",      tags:['Médiéval','Renaissance','Flânerie'],  h:'—',       yr:'Moyen Âge',lat:44.9322, lng:4.8928, g:'https://maps.google.com/?q=Vieux+Valence', wiki:'Valence,_Drôme'},
+  {id:'rhone',        e:'⛵', n:'Bords du Rhône & Port de l\'Épervière',hood:'Bords du Rhône',desc:"La promenade des bords du Rhône relie le parc Jouvet au port de plaisance de l'Épervière. Pistes cyclables, base nautique et vue sur l'Ardèche côté rhônalpin.",             tags:['Rhône','Vélo','Plein air'],           h:'—',       yr:'XXe',   lat:44.9285, lng:4.8855, g:'https://maps.google.com/?q=Port+Épervière+Valence', wiki:'Rhône'},
+  {id:'chabeuil',     e:'🌻', n:'Plaine de Valence & Chabeuil',    hood:'Périphérie',        desc:"La plaine valentinoise avec ses vergers d'abricots Bergeron AOC et ses vignobles de Crozes-Hermitage. Le terroir drômois à 10 minutes du centre — un voyage sensoriel.",       tags:['Terroir','Abricots AOC','Vignes'],    h:'—',       yr:'—',     lat:44.9200, lng:5.0200, g:'https://maps.google.com/?q=Chabeuil+Drôme', wiki:'Chabeuil'},
+];
+
+const SPORTS_DATA = {
+  sports:[
+    {sport:'🏉 Rugby', teams:[
+      {name:'Valence Romans Drôme Rugby', league:'Pro D2', stadium:'Stade Gilbert Tribut', color:'#C0392B', e:'🏉', desc:"Club phare né de la fusion Valence-Romans en 2013. Pensionnaire de Pro D2, il représente fièrement la Drôme dans le rugby professionnel français.", tags:['Pro D2','Drôme','Fusion 2013'], wiki:'Valence_Romans_Drôme_Rugby'},
+    ]},
+    {sport:'⚽ Football', teams:[
+      {name:'Valence FC (VFC)', league:'Régional / Nationale 3', stadium:'Stade Pompidou', color:'#E63946', e:'⚽', desc:"Le principal club de football de Valence, fondé en 1922. Évoluant entre les divisions régionales et nationales, le VFC est un pilier du sport valentinois.", tags:['Fondé 1922','Pompidou','Drôme'], wiki:'Valence,_Drôme'},
+    ]},
+    {sport:'🏀 Basket', teams:[
+      {name:'Valence Romans Basket', league:'NM2 / Régional', stadium:'Palais des Sports', color:'#2980B9', e:'🏀', desc:"L'un des clubs de basket les plus actifs de la Drôme. École de basket renommée, formant des joueurs pour les championnats régionaux et nationaux.", tags:['Basket','Formation','Drôme'], wiki:'Valence,_Drôme'},
+    ]},
+    {sport:'🎾 Tennis & Autres', teams:[
+      {name:'Tennis Club de Valence', league:'Ligue AURA', stadium:'TC Valence', color:'#27AE60', e:'🎾', desc:"L'un des clubs de tennis les plus importants de la région. Nombreux courts, école de tennis et tournois régionaux tout au long de l'année.", tags:['Tennis','Ligue AURA'], wiki:'Valence,_Drôme'},
+      {name:'Rowing Club Valentinois', league:'Fédération Française', stadium:"Port de l'Épervière", color:'#1ABC9C', e:'🚣', desc:"L'aviron sur le Rhône — l'un des clubs d'aviron les plus anciens de la région, pratiquant sur les eaux du magnifique Rhône valentinois.", tags:['Aviron','Rhône','Tradition'], wiki:'Rhône'},
+    ]},
+  ]
+};
+
+const FOOD_DATA = {
+  cats:['🌟 Gastronomique','🍽️ Bistrots','🥐 Café & Pâtisserie','🌿 Terroir local','🍕 Convivial'],
+  restaurants:[
+    {cat:0, name:'Maison Pic',              cuisine:'Haute cuisine française',    e:'👩‍🍳', price:'$$$$', michelin:'⭐⭐⭐', hood:'Centre-ville',       desc:"Anne-Sophie Pic, seule femme chef triplement étoilée au monde. La Maison Pic est une institution mondiale dans la même famille depuis 1891. Un voyage gastronomique absolu.",  tags:['3★ Michelin','Anne-Sophie Pic','Depuis 1891'], map:'https://maps.google.com/?q=Maison+Pic+Valence', wiki:'Anne-Sophie_Pic'},
+    {cat:0, name:'La Cachette',             cuisine:'Bistrot franco-japonais',    e:'🌿', price:'$$$',  michelin:'⭐',    hood:'Vieux Valence',      desc:"Restaurant de Masashi Ijichi — cuisine franco-japonaise d'une rare finesse. Étoilé Michelin, La Cachette propose une expérience fusion unique dans le Vieux Valence.",     tags:['1★ Michelin','Franco-japonais','Fusion'], map:'https://maps.google.com/?q=La+Cachette+Valence', wiki:'Valence,_Drôme'},
+    {cat:0, name:'André Coin des Halles',   cuisine:'Gastronomique régionale',    e:'🍷', price:'$$$',  michelin:'⭐',    hood:'Halles de Valence',  desc:"Une étoile Michelin au cœur des Halles. Cuisine du marché ancrée dans le terroir drômois — truffes, agneau des Baronnies et fromages de la Drôme.",                        tags:['1★ Michelin','Terroir','Halles'], map:'https://maps.google.com/?q=André+Valence', wiki:'Valence,_Drôme'},
+    {cat:1, name:'Le Saint-Ruf',            cuisine:'Bistrot traditionnel',       e:'🥘', price:'$$',   michelin:'',      hood:'Centre-ville',       desc:"Le bistrot emblématique du centre. Cuisine lyonnaise et drômoise généreuse — quenelles, daube et fromages de caractère dans une salle chaleureuse et animée.",             tags:['Lyonnais','Traditionnel','Charme'], map:'https://maps.google.com/?q=Le+Saint+Ruf+Valence', wiki:'Valence,_Drôme'},
+    {cat:1, name:'Brasserie Victor Hugo',   cuisine:'Brasserie alsacienne',       e:'🍺', price:'$$',   michelin:'',      hood:'Place Victor Hugo',  desc:"Brasserie animée sur la place Victor Hugo. Choucroute, côte de bœuf et plats de brasserie copieux. La terrasse en été face à la fontaine est incontournable.",            tags:['Brasserie','Terrasse','Animé'], map:'https://maps.google.com/?q=Brasserie+Victor+Hugo+Valence', wiki:'Valence,_Drôme'},
+    {cat:2, name:'Chabert & Guillot',       cuisine:'Pâtisserie & confiserie',    e:'🍰', price:'$$',   michelin:'',      hood:'Centre-ville',       desc:"La pâtisserie-confiserie de référence à Valence. La Pogne de Romans, la Suisse au chocolat et les pralines valentinoise sont les spécialités incontournables à ramener.",    tags:['Pogne','Suisse choco','Tradition'], map:'https://maps.google.com/?q=Chabert+Guillot+Valence', wiki:'Pogne_de_Romans'},
+    {cat:2, name:'Café Chez Céleste',       cuisine:'Café de spécialité',         e:'☕', price:'$',    michelin:'',      hood:'Vieux Valence',      desc:"Le café de spécialité branché du Vieux Valence. Torréfaction sélective, latte art soigné et ambiance cosy dans une vieille bâtisse restaurée. Brunch le week-end.",         tags:['Café spécialité','Brunch','Cosy'], map:'https://maps.google.com/?q=Café+Valence+Drôme', wiki:'Valence,_Drôme'},
+    {cat:3, name:'Les Halles de Valence',   cuisine:'Marché couvert',             e:'🧺', price:'$',    michelin:'',      hood:'Centre-ville',       desc:"Le cœur battant du terroir drômois. Abricots Bergeron, olives de la Drôme, fromages de chèvre, truffes noires et vins de Crozes-Hermitage sous les halles couvertes.",    tags:['Marché','Terroir drômois','AOC'], map:'https://maps.google.com/?q=Halles+de+Valence', wiki:'Valence,_Drôme'},
+    {cat:3, name:"Cave de Tain l'Hermitage",cuisine:'Cave de vignerons',           e:'🍷', price:'$$',   michelin:'',      hood:"Tain-l'Hermitage (15 min)", desc:"À 15 minutes de Valence, la cave produit les Crozes-Hermitage et Hermitage — parmi les plus grands vins de la Vallée du Rhône. Dégustation et vente directe.",       tags:['Crozes-Hermitage','Syrah','AOC'], map:"https://maps.google.com/?q=Cave+Tain+Hermitage", wiki:'Hermitage_AOC'},
+    {cat:4, name:'La Soupière',             cuisine:'Cuisine familiale',           e:'🍲', price:'$',    michelin:'',      hood:'Centre-ville',       desc:"Le rendez-vous des valentinois pour une cuisine familiale généreuse et sans chichis. Soupes, plats mijotés et desserts maison à prix doux dans une ambiance conviviale.",  tags:['Familial','Économique','Maison'], map:'https://maps.google.com/?q=La+Soupière+Valence', wiki:'Valence,_Drôme'},
+    {cat:4, name:'Les Péniches du Rhône',   cuisine:'Guinguette fluviale',         e:'⛵', price:'$$',   michelin:'',      hood:'Bords du Rhône',     desc:"Les péniches amarrées sur le Rhône proposent en été une ambiance guinguette unique. Moules-frites, planches apéro et concerts les soirs d'été — une institution.",       tags:['Guinguette','Rhône','Été'], map:'https://maps.google.com/?q=Péniches+Rhône+Valence', wiki:'Rhône'},
+  ]
+};
+
+// Itinéraire 2 jours curated
+const ITIN_2J = [
+  { label:'Jour 1', theme:'Patrimoine & Vieille Ville',
+    stops:[
+      {id:'cathedrale',  t:'09:00', dur:45,  tip:"Arrivez tôt pour admirer la nef romane dans le silence du matin."},
+      {id:'pendentif',   t:'10:00', dur:20,  tip:"Juste en face de la cathédrale — un joyau Renaissance souvent ignoré."},
+      {id:'maisonsdtetes',t:'10:30',dur:30,  tip:"Repérez les 71 têtes sculptées sur la façade — chacune est différente !"},
+      {id:'napoleon',    t:'11:15', dur:20,  tip:"Le futur Empereur vécut ici à 16 ans. Une étape historique insolite."},
+      {id:'vieuxvalence',t:'11:45', dur:60,  tip:"Flânez dans la Grande Rue et les ruelles médiévales sans destination fixe."},
+      {id:'musee',       t:'14:00', dur:90,  tip:"Les dessins de Hubert Robert et les collections drômoises valent le détour."},
+      {id:'champdemars', t:'16:00', dur:45,  tip:"Coucher de soleil sur le Vercors depuis l'esplanade — vue imprenable."},
+    ]
+  },
+  { label:'Jour 2', theme:'Nature, Rhône & Terroir',
+    stops:[
+      {id:'parcjouvet',  t:'09:00', dur:60,  tip:"La roseraie est magnifique le matin — promenade entre les sculptures."},
+      {id:'champdemars', t:'10:15', dur:30,  tip:"Vue panoramique sur les Alpes par temps clair."},
+      {id:'rhone',       t:'11:00', dur:60,  tip:"Louez un vélo pour longer le Rhône jusqu'au port de l'Épervière."},
+      {id:'chabeuil',    t:'14:00', dur:60,  tip:"Arrêt chez un producteur d'abricots Bergeron — la saveur du terroir drômois."},
+    ]
+  }
+];
+
+// ═══════════════════════════════════════
+//  PHOTO HELPER
+// ═══════════════════════════════════════
+const PC = {};
+async function fetchWikiPhoto(title) {
+  if (PC[title] !== undefined) return PC[title];
+  for (const lang of ['fr','en']) {
+    try {
+      const r = await fetch(`https://${lang}.wikipedia.org/api/rest_v1/page/summary/${encodeURIComponent(title)}`);
+      if (!r.ok) continue;
+      const d = await r.json();
+      const src = d.thumbnail?.source || d.originalimage?.source || null;
+      if (src) { PC[title] = src; return src; }
+    } catch {}
+  }
+  PC[title] = null; return null;
+}
+
+function loadPhoto(wrap, wiki, emoji) {
+  const img=wrap.querySelector('img'), sh=wrap.querySelector('.shimmer'), ef=wrap.querySelector('.ef');
+  if (!wiki) { sh&&(sh.style.display='none'); if(ef){ef.textContent=emoji;ef.style.display='flex';} return; }
+  fetchWikiPhoto(wiki).then(src => {
+    sh&&(sh.style.display='none');
+    if (src) {
+      img.onload  = () => { img.classList.add('ok'); if(ef)ef.style.display='none'; };
+      img.onerror = () => { if(ef){ef.textContent=emoji;ef.style.display='flex';} };
+      img.src = src;
+    } else { if(ef){ef.textContent=emoji;ef.style.display='flex';} }
+  });
+}
+
+// ═══════════════════════════════════════
+//  WEATHER
+// ═══════════════════════════════════════
+const WX_CODE={0:'☀️ Ciel dégagé',1:'🌤 Peu nuageux',2:'⛅ Partiellement nuageux',3:'☁️ Couvert',45:'🌫 Brouillard',48:'🌫 Brouillard givrant',51:'🌦 Bruine légère',53:'🌦 Bruine',55:'🌧 Bruine dense',61:'🌧 Pluie légère',63:'🌧 Pluie',65:'🌧 Pluie forte',71:'🌨 Neige légère',73:'🌨 Neige',75:'❄️ Neige forte',80:'🌦 Averses',81:'🌧 Averses modérées',82:'⛈ Averses fortes',95:'⛈ Orage',96:'⛈ Orage + grêle',99:'⛈ Orage violent'};
+const WX_ICON={0:'☀️',1:'🌤',2:'⛅',3:'☁️',45:'🌫',48:'🌫',51:'🌦',53:'🌦',55:'🌧',61:'🌧',63:'🌧',65:'🌧',71:'🌨',73:'🌨',75:'❄️',80:'🌦',81:'🌧',82:'⛈',95:'⛈',96:'⛈',99:'⛈'};
+const DAYS_FR=['Dim','Lun','Mar','Mer','Jeu','Ven','Sam'];
+let wxData=null;
+
+async function fetchWeather(){
+  try{
+    const r=await fetch('https://api.open-meteo.com/v1/forecast?latitude=44.9334&longitude=4.8924&current=temperature_2m,apparent_temperature,relative_humidity_2m,wind_speed_10m,weathercode,uv_index,precipitation&hourly=temperature_2m,weathercode,precipitation_probability&daily=weathercode,temperature_2m_max,temperature_2m_min,precipitation_sum&timezone=auto&forecast_days=7');
+    if(!r.ok)throw new Error();
+    wxData=await r.json();
+    const c=wxData.current,code=c.weathercode;
+    document.getElementById('wx-icon').textContent=WX_ICON[code]||'🌡️';
+    document.getElementById('wx-temp').textContent=Math.round(c.temperature_2m)+'°';
+    document.getElementById('wx-desc').textContent=(WX_CODE[code]||'').replace(/^.+?\s/,'');
+    document.getElementById('wx-feels').textContent='Ressenti '+Math.round(c.apparent_temperature)+'°';
+    document.getElementById('wx-wind').textContent='💨 '+Math.round(c.wind_speed_10m)+' km/h';
+    document.getElementById('wx-rain').textContent='🌧 '+c.precipitation+' mm';
+    document.getElementById('weather-loading').style.display='none';
+    document.getElementById('weather-data').style.display='block';
+  }catch(e){document.getElementById('weather-loading').style.display='none';}
+}
+
+function openWeather(){
+  if(!wxData)return;
+  const c=wxData.current,code=c.weathercode;
+  document.getElementById('wx-panel-icon').textContent=WX_ICON[code]||'🌡️';
+  document.getElementById('wx-panel-temp').textContent=Math.round(c.temperature_2m)+'°C';
+  document.getElementById('wx-panel-desc').textContent=WX_CODE[code]||'—';
+  document.getElementById('wxp-feels').textContent=Math.round(c.apparent_temperature)+'°C';
+  document.getElementById('wxp-hum').textContent=c.relative_humidity_2m+'%';
+  document.getElementById('wxp-wind').textContent=Math.round(c.wind_speed_10m)+' km/h';
+  document.getElementById('wxp-uv').textContent=Math.round(c.uv_index??0);
+  const fc=document.getElementById('wx-forecast');fc.innerHTML='';
+  wxData.daily.time.forEach((t,i)=>{const d=new Date(t),div=document.createElement('div');div.className='wx-day';div.innerHTML=`<div class="wx-day-name">${i===0?'Auj.':DAYS_FR[d.getDay()]}</div><div class="wx-day-icon">${WX_ICON[wxData.daily.weathercode[i]]||'🌡️'}</div><div class="wx-day-max">${Math.round(wxData.daily.temperature_2m_max[i])}°</div><div class="wx-day-min">${Math.round(wxData.daily.temperature_2m_min[i])}°</div><div class="wx-day-rain">${(wxData.daily.precipitation_sum[i]||0).toFixed(1)}mm</div>`;fc.appendChild(div);});
+  const hourly=document.getElementById('wx-hourly');hourly.innerHTML='';
+  const now=new Date();let count=0;
+  wxData.hourly.time.forEach((t,i)=>{if(count>=24)return;const dt=new Date(t);if(dt<now)return;count++;const div=document.createElement('div');div.className='wx-hour';div.innerHTML=`<div class="wx-hour-time">${String(dt.getHours()).padStart(2,'0')}h</div><div class="wx-hour-icon">${WX_ICON[wxData.hourly.weathercode[i]]||'🌡️'}</div><div class="wx-hour-temp">${Math.round(wxData.hourly.temperature_2m[i])}°</div><div class="wx-hour-rain">${wxData.hourly.precipitation_probability[i]||0}%</div>`;hourly.appendChild(div);});
+  document.getElementById('weather-panel').classList.add('open');
+  document.getElementById('weather-overlay').classList.add('show');
+}
+function closeWeather(){document.getElementById('weather-panel').classList.remove('open');document.getElementById('weather-overlay').classList.remove('show');}
+
+// ═══════════════════════════════════════
+//  TABS
+// ═══════════════════════════════════════
+function switchTab(tab){
+  ['monuments','itin','sports','food'].forEach(t=>{
+    document.getElementById('nav-'+t).classList.toggle('active',t===tab);
+    document.getElementById(t+'-screen').classList.toggle('active',t===tab);
+  });
+}
+
+// ═══════════════════════════════════════
+//  MONUMENTS
+// ═══════════════════════════════════════
+function renderMonuments(query){
+  const q=query.toLowerCase().trim();
+  const lms=LANDMARKS.filter(lm=>!q||lm.n.toLowerCase().includes(q)||lm.hood.toLowerCase().includes(q)||lm.tags.some(t=>t.toLowerCase().includes(q)));
+  const body=document.getElementById('monuments-body');body.innerHTML='';
+  if(!lms.length){body.innerHTML='<div style="padding:3rem;text-align:center;color:var(--text-soft);font-size:.85rem">Aucun lieu trouvé</div>';return;}
+  const grid=document.createElement('div');grid.className='monument-grid';
+  lms.forEach((lm,i)=>grid.appendChild(i===0?mkFeatured(lm):mkCard(lm)));
+  body.appendChild(grid);
+}
+function mkFeatured(lm){
+  const card=document.createElement('div');card.className='mc-featured';card.onclick=()=>showDetail(lm);
+  card.innerHTML=`<div class="mc-feat-photo"><div class="shimmer"></div><img alt="${lm.n}"><div class="ef">${lm.e}</div></div><div class="mc-feat-badge">${lm.tags[0]}</div><div class="mc-feat-gmap" onclick="event.stopPropagation();window.open('${lm.g}','_blank')">📍</div><div class="mc-feat-body"><div class="mc-feat-name">${lm.n}</div><div class="mc-feat-hood">${lm.hood}</div><div class="mc-feat-tags">${lm.tags.map(t=>`<span class="mc-tag">${t}</span>`).join('')}</div></div>`;
+  loadPhoto(card.querySelector('.mc-feat-photo'),lm.wiki,lm.e);
+  return card;
+}
+function mkCard(lm){
+  const card=document.createElement('div');card.className='mc-card';card.onclick=()=>showDetail(lm);
+  card.innerHTML=`<div class="mc-card-photo"><div class="shimmer"></div><img alt="${lm.n}"><div class="ef">${lm.e}</div></div><div class="mc-card-body"><div class="mc-card-name">${lm.n}</div><div class="mc-card-hood">${lm.hood}</div><div class="mc-card-tags">${lm.tags.map(t=>`<span class="mc-tag">${t}</span>`).join('')}</div></div><div class="mc-card-gmap" onclick="event.stopPropagation();window.open('${lm.g}','_blank')">📍</div>`;
+  loadPhoto(card.querySelector('.mc-card-photo'),lm.wiki,lm.e);
+  return card;
+}
+function filterMonuments(val){renderMonuments(val);}
+
+// ═══════════════════════════════════════
+//  DETAIL PANEL
+// ═══════════════════════════════════════
+let activeLM=null;
+function showDetail(lm){
+  activeLM=lm;
+  const img=document.getElementById('dp-img'),sh=document.getElementById('dp-shimmer'),ef=document.getElementById('dp-ef');
+  img.classList.remove('ok');img.src='';img.style.display='block';sh.style.display='block';ef.style.display='none';
+  document.getElementById('dp-emoji').textContent=lm.e;
+  if(lm.wiki){
+    fetchWikiPhoto(lm.wiki).then(src=>{
+      sh.style.display='none';
+      if(src){img.onload=()=>img.classList.add('ok');img.onerror=()=>{img.style.display='none';ef.textContent=lm.e;ef.style.display='flex';};img.src=src;}
+      else{img.style.display='none';ef.textContent=lm.e;ef.style.display='flex';}
+    });
+  }else{sh.style.display='none';img.style.display='none';ef.textContent=lm.e;ef.style.display='flex';}
+  document.getElementById('p-name').textContent=lm.n;
+  document.getElementById('p-hood').textContent=lm.hood;
+  document.getElementById('p-desc').textContent=lm.desc;
+  document.getElementById('p-tags').innerHTML=lm.tags.map((t,i)=>`<span class="tag${i===0?' hl':''}">${t}</span>`).join('');
+  document.getElementById('p-h').textContent=lm.h;
+  document.getElementById('p-yr').textContent=lm.yr;
+  document.getElementById('p-tag1').textContent=lm.tags[0]||'—';
+  document.getElementById('detail-panel').classList.add('open');
+}
+function closePanel(){document.getElementById('detail-panel').classList.remove('open');activeLM=null;}
+function openMaps(){if(activeLM)window.open(activeLM.g,'_blank');}
+
+// ═══════════════════════════════════════
+//  ITINERARY
+// ═══════════════════════════════════════
+let selDaysN=2,selInts=new Set(['all']),selTrns='walking',itinData=null;
+
+const CITY_TAGS=['Patrimoine','Nature','Gastronomie','Art','Histoire','Rhône','Plein air'];
+function buildInterestPills(){
+  const c=document.getElementById('interest-pills');c.innerHTML='';
+  const ab=document.createElement('button');ab.className='pill active';ab.dataset.t='all';ab.textContent='🌹 Tout';ab.onclick=()=>togInt(ab);c.appendChild(ab);
+  CITY_TAGS.forEach(tag=>{const btn=document.createElement('button');btn.className='pill';btn.dataset.t=tag;btn.textContent=tag;btn.onclick=()=>togInt(btn);c.appendChild(btn);});
+}
+function selDays(n){selDaysN=n;document.querySelectorAll('.day-pill').forEach(b=>b.classList.toggle('active',+b.dataset.d===n));}
+function togInt(btn){
+  const t=btn.dataset.t;
+  if(t==='all'){selInts=new Set(['all']);document.querySelectorAll('#interest-pills .pill').forEach(b=>b.classList.remove('active'));btn.classList.add('active');return;}
+  selInts.delete('all');document.querySelector('#interest-pills .pill[data-t="all"]').classList.remove('active');
+  selInts.has(t)?(selInts.delete(t),btn.classList.remove('active')):(selInts.add(t),btn.classList.add('active'));
+  if(!selInts.size){selInts.add('all');document.querySelector('#interest-pills .pill[data-t="all"]').classList.add('active');}
+}
+function selTrans(btn){selTrns=btn.dataset.m;document.querySelectorAll('.pill[data-m]').forEach(b=>b.classList.remove('active'));btn.classList.add('active');}
+
+function fmtT(m){return`${Math.floor(m/60)}h${String(m%60).padStart(2,'0')}`;}
+
+function generateItin(){
+  // Si 2 jours et "tout" → utilise le plan curated
+  if(selDaysN===2&&selInts.has('all')){
+    renderCuratedItin(ITIN_2J);
+    return;
+  }
+  // Sinon algorithme
+  const VD={cathedrale:45,pendentif:20,champdemars:30,musee:90,napoleon:20,maisonsdtetes:30,parcjouvet:60,vieuxvalence:60,rhone:60,chabeuil:60};
+  function getDur(id){return VD[id]||45;}
+  function tvt(a,b){const R=6371000,p1=a.lat*Math.PI/180,p2=b.lat*Math.PI/180,dp=(b.lat-a.lat)*Math.PI/180,dl=(b.lng-a.lng)*Math.PI/180,x=Math.sin(dp/2)**2+Math.cos(p1)*Math.cos(p2)*Math.sin(dl/2)**2;const d=R*2*Math.atan2(Math.sqrt(x),Math.sqrt(1-x));return Math.round(d/({walking:70,transit:200,driving:500}[selTrns]))+2;}
+  function nnRoute(pool,start){const rem=[...pool],route=[];let cur=start;while(rem.length){let mi=Infinity,ni=null,ni2=-1;rem.forEach((lm,i)=>{const d2=tvt(cur,lm);if(d2<mi){mi=d2;ni=lm;ni2=i;}});route.push(ni);rem.splice(ni2,1);cur=ni;}return route;}
+  const center={lat:44.9334,lng:4.8924};
+  let pool=selInts.has('all')?[...LANDMARKS]:LANDMARKS.filter(lm=>lm.tags.some(t=>selInts.has(t)));
+  pool=pool.slice(0,selDaysN*({walking:5,transit:7,driving:7}[selTrns]));
+  const route=nnRoute(pool,center);
+  const days=[];let cur=[];let m=540;let prev=center;
+  for(const lm of route){const tr=tvt(prev,lm),vi=getDur(lm.id);if(m+tr+vi>1200&&cur.length){days.push(cur);cur=[];m=540;prev=center;}cur.push({lm,arrival:m+tr,dur:vi,tr});m+=tr+vi;prev=lm;}
+  if(cur.length)days.push(cur);
+  itinData=days;
+  const themes=['Patrimoine & Histoire','Nature & Rhône','Gastronomie & Culture'];
+  const dayObjs=days.map((stops,di)=>({label:`Jour ${di+1}`,theme:themes[di%themes.length],stops:stops.map(s=>({lm:s.lm,t:fmtT(s.arrival),dur:s.dur,tr:s.tr,tip:null}))}));
+  renderDaysUI(dayObjs,days.length);
+}
+
+function renderCuratedItin(plan){
+  itinData=plan.map(d=>d.stops.map(s=>{const[h,min]=s.t.split(':');return{lm:LANDMARKS.find(l=>l.id===s.id),arrival:+h*60+ +min,dur:s.dur,tr:0};}));
+  const dayObjs=plan.map(d=>({label:d.label,theme:d.theme,stops:d.stops.map(s=>({lm:LANDMARKS.find(l=>l.id===s.id),t:s.t,dur:s.dur,tr:0,tip:s.tip}))}));
+  renderDaysUI(dayObjs,plan.length);
+}
+
+function renderDaysUI(dayObjs,nDays){
+  document.getElementById('itin-cfg').style.display='none';
+  const res=document.getElementById('itin-res');res.style.display='flex';res.style.flexDirection='column';
+  const total=dayObjs.reduce((s,d)=>s+d.stops.length,0);
+  const tl={walking:'🚶 Marche',transit:'🚲 Vélo',driving:'🚗 Voiture'}[selTrns];
+  document.getElementById('res-chips').innerHTML=`<div class="chip"><span>${nDays}</span> jour${nDays>1?'s':''}</div><div class="chip"><span>${total}</span> lieux</div><div class="chip">${tl}</div>`;
+  document.getElementById('res-title').textContent=`Valence · ${nDays}j`;
+  const container=document.getElementById('res-days');container.innerHTML='';
+  dayObjs.forEach((day,di)=>{
+    const blk=document.createElement('div');blk.className='day-block';
+    blk.innerHTML=`<div class="day-block-hdr"><div class="day-num-badge">${day.label}</div><div class="day-theme-lbl">${day.theme}</div></div>`;
+    day.stops.forEach((s,si)=>{if(s.lm)blk.appendChild(mkStop(s.lm,s.t||fmtT(s.arrival||540),s.dur,s.tr||0,si===day.stops.length-1,s.tip));});
+    container.appendChild(blk);
+    // Maps button per day
+    const ids=day.stops.map(s=>s.lm).filter(Boolean);
+    if(ids.length>1){
+      const wp=ids.slice(1,-1).map(l=>`${l.lat},${l.lng}`).join('|');
+      const url=`https://www.google.com/maps/dir/?api=1&origin=${ids[0].lat},${ids[0].lng}&destination=${ids[ids.length-1].lat},${ids[ids.length-1].lng}&waypoints=${wp}&travelmode=${selTrns}`;
+      const gb=document.createElement('div');gb.style.padding='0 0 .5rem';
+      gb.innerHTML=`<button class="btn-gfull" onclick="window.open('${url}','_blank')">📍 ${day.label} dans Google Maps</button>`;
+      container.appendChild(gb);
+    }
+  });
+}
+
+function mkStop(lm,tStr,durMin,trMin,isLast,tip){
+  const card=document.createElement('div');card.className='stop-card';
+  card.onclick=()=>{switchTab('monuments');setTimeout(()=>showDetail(lm),200);};
+  const tipB=tip?`<div class="stop-tip">💡 ${tip}</div>`:'';
+  card.innerHTML=`
+    <div class="stop-tl">
+      <div class="stop-time">${tStr}</div>
+      <div class="stop-dot"></div>
+      ${!isLast?'<div class="stop-line"></div>':''}
+    </div>
+    <div class="stop-thumb"><img alt="${lm.n}"><div class="ef">${lm.e}</div></div>
+    <div class="stop-info">
+      <div class="stop-name">${lm.n}</div>
+      <div class="stop-hood">${lm.hood}</div>
+      <div class="stop-meta">
+        <span class="sb">⏱ ${durMin}min</span>
+        ${lm.tags[0]?`<span class="sb">${lm.tags[0]}</span>`:''}
+        ${trMin>0?`<span class="sb g">🚶 ${trMin}min</span>`:''}
+      </div>
+      ${tipB}
+    </div>
+    <div class="stop-gmap" onclick="event.stopPropagation();window.open('${lm.g}','_blank')">📍</div>`;
+  const wrap=card.querySelector('.stop-thumb'),img=wrap.querySelector('img'),ef2=wrap.querySelector('.ef');
+  if(lm.wiki){fetchWikiPhoto(lm.wiki).then(src=>{if(src){img.onload=()=>{img.classList.add('ok');ef2.style.display='none';};img.onerror=()=>{ef2.style.display='flex';};img.src=src;}else{ef2.style.display='flex';}});}
+  else{ef2.style.display='flex';}
+  return card;
+}
+function showCfg(){document.getElementById('itin-cfg').style.display='block';document.getElementById('itin-res').style.display='none';}
+function openFullRoute(){
+  if(!itinData)return;
+  const all=itinData.flat().map(s=>s.lm||s).filter(Boolean);
+  const wp=all.slice(1,-1).map(l=>`${l.lat},${l.lng}`).join('|');
+  window.open(`https://www.google.com/maps/dir/?api=1&origin=${all[0].lat},${all[0].lng}&destination=${all[all.length-1].lat},${all[all.length-1].lng}&waypoints=${wp}&travelmode=${selTrns}`,'_blank');
+}
+function exportItin(){
+  let txt='🌹 Itinéraire Valence\n'+'-'.repeat(26)+'\n';
+  if(itinData){itinData.forEach((stops,di)=>{txt+=`\n📅 JOUR ${di+1}\n`;stops.forEach(s=>{const lm=s.lm||s;txt+=`  — ${lm.n||lm.n}\n`;});});}
+  navigator.share?navigator.share({title:'Itinéraire Valence',text:txt}):navigator.clipboard?.writeText(txt).then(()=>alert('Copié !'));
+}
+
+// ═══════════════════════════════════════
+//  SPORTS
+// ═══════════════════════════════════════
+let activeSportTab=0;
+function buildSports(){
+  const tabs=document.getElementById('sport-tabs');tabs.innerHTML='';
+  SPORTS_DATA.sports.forEach((s,i)=>{const btn=document.createElement('button');btn.className='sport-tab'+(i===0?' active':'');btn.textContent=s.sport;btn.onclick=()=>selSportTab(i);tabs.appendChild(btn);});
+  renderSport(0);
+}
+function selSportTab(i){activeSportTab=i;document.querySelectorAll('.sport-tab').forEach((b,j)=>b.classList.toggle('active',j===i));renderSport(i);}
+function renderSport(i){
+  const section=SPORTS_DATA.sports[i],body=document.getElementById('sports-body');body.innerHTML='';
+  section.teams.forEach(team=>{
+    const card=document.createElement('div');card.className='team-card';
+    card.innerHTML=`<div class="team-color-bar" style="background:${team.color}"></div><div class="team-card-photo"><div class="shimmer"></div><img alt="${team.name}"><div class="ef">${team.e}</div></div><div class="team-card-body"><div class="team-name">${team.name}</div><div class="team-league">🏟️ ${team.stadium} · ${team.league}</div><div class="team-desc">${team.desc}</div><div class="team-tags">${team.tags.map(t=>`<span class="team-tag">${t}</span>`).join('')}</div></div>`;
+    const wrap=card.querySelector('.team-card-photo');
+    if(team.wiki){fetchWikiPhoto(team.wiki).then(src=>{wrap.querySelector('.shimmer').style.display='none';if(src){const img=wrap.querySelector('img');img.onload=()=>img.classList.add('ok');img.src=src;}else{wrap.querySelector('.ef').style.display='flex';}});}
+    else{wrap.querySelector('.shimmer').style.display='none';wrap.querySelector('.ef').style.display='flex';}
+    body.appendChild(card);
+  });
+}
+
+// ═══════════════════════════════════════
+//  FOOD
+// ═══════════════════════════════════════
+let activeFoodCat=0;
+function buildFood(){
+  document.getElementById('food-sub').textContent=`${FOOD_DATA.restaurants.length} restaurants · ${FOOD_DATA.cats.length} catégories`;
+  const cats=document.getElementById('food-cats');cats.innerHTML='';
+  FOOD_DATA.cats.forEach((c,i)=>{const btn=document.createElement('button');btn.className='food-cat'+(i===0?' active':'');btn.textContent=c;btn.onclick=()=>selFoodCat(i);cats.appendChild(btn);});
+  FOOD_DATA.restaurants.forEach(r=>{if(r.wiki)fetchWikiPhoto(r.wiki);});
+  renderFood(0);
+}
+function selFoodCat(i){activeFoodCat=i;document.querySelectorAll('.food-cat').forEach((b,j)=>b.classList.toggle('active',j===i));renderFood(i);}
+function renderFood(catIdx){
+  const restos=FOOD_DATA.restaurants.filter(r=>r.cat===catIdx),body=document.getElementById('food-body');body.innerHTML='';
+  if(!restos.length){body.innerHTML='<div style="padding:3rem;text-align:center;color:var(--text-soft)">Aucun restaurant</div>';return;}
+  restos.forEach((r,i)=>body.appendChild(i===0?mkRestoFeatured(r):mkRestoCard(r)));
+}
+function loadRestoPhoto(wrap,wiki,emoji){
+  const img=wrap.querySelector('img'),sh=wrap.querySelector('.shimmer'),ef2=wrap.querySelector('.ef');
+  if(wiki){fetchWikiPhoto(wiki).then(src=>{sh.style.display='none';if(src){img.onload=()=>{img.classList.add('ok');ef2.style.display='none';};img.onerror=()=>{ef2.style.display='flex';};img.src=src;}else{ef2.style.display='flex';}});}
+  else{sh.style.display='none';ef2.style.display='flex';}
+}
+function mkRestoFeatured(r){
+  const card=document.createElement('div');card.className='resto-featured';
+  const stars=r.michelin?`<div class="michelin-badge">${r.michelin}</div>`:'';
+  card.innerHTML=`<div class="resto-feat-photo"><div class="shimmer"></div><img alt="${r.name}"><div class="ef">${r.e}</div>${stars}<div class="feat-price-badge">${r.price}</div></div><div class="resto-feat-body"><div class="resto-feat-name">${r.name}</div><div class="resto-feat-cuisine">${r.cuisine}</div><div class="resto-feat-desc">${r.desc}</div><div class="resto-feat-meta"><span class="resto-meta-item">📍 ${r.hood}</span></div><div class="resto-tags">${r.tags.map(t=>`<span class="resto-tag">${t}</span>`).join('')}</div></div><div class="resto-gmap" onclick="window.open('${r.map}','_blank')">📍 Maps</div>`;
+  loadRestoPhoto(card.querySelector('.resto-feat-photo'),r.wiki,r.e);
+  return card;
+}
+function mkRestoCard(r){
+  const card=document.createElement('div');card.className='resto-card';
+  const stars=r.michelin?`<span class="sb">${r.michelin}</span>`:'';
+  card.innerHTML=`<div class="resto-card-photo"><div class="shimmer"></div><img alt="${r.name}"><div class="ef">${r.e}</div></div><div class="resto-card-body"><div class="resto-card-name">${r.name}</div><div class="resto-card-cuisine">${r.cuisine}</div><div class="resto-card-desc">${r.desc}</div><div class="resto-card-meta">${stars}<span class="price-tag">${r.price}</span><span class="resto-meta-item" style="font-size:.6rem">📍 ${r.hood}</span></div></div><div class="resto-card-gmap" onclick="event.stopPropagation();window.open('${r.map}','_blank')">📍</div>`;
+  loadRestoPhoto(card.querySelector('.resto-card-photo'),r.wiki,r.e);
+  return card;
+}
+
+// ═══════════════════════════════════════
+//  BOOT
+// ═══════════════════════════════════════
+window.addEventListener('DOMContentLoaded',()=>{
+  LANDMARKS.forEach(lm=>{if(lm.wiki)fetchWikiPhoto(lm.wiki);});
+  fetchWeather();
+  renderMonuments('');
+  buildInterestPills();
+  buildSports();
+  buildFood();
+  setTimeout(()=>document.getElementById('loading').classList.add('done'),900);
+});
+</script>
+</body>
+</html>
