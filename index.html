@@ -458,6 +458,9 @@ const LANDMARKS = [
   {id:'vieuxvalence', e:'🏘️', n:'Vieux Valence',                   hood:'Centre historique', desc:"Le cœur historique avec ses ruelles médiévales, ses hôtels particuliers Renaissance et la Grande Rue animée. Flâner dans le Vieux Valence est un voyage dans le temps.",      tags:['Médiéval','Renaissance','Flânerie'],  h:'—',       yr:'Moyen Âge',lat:44.9322, lng:4.8928, g:'https://maps.google.com/?q=Vieux+Valence', wiki:'Valence,_Drôme'},
   {id:'rhone',        e:'⛵', n:'Bords du Rhône & Port de l\'Épervière',hood:'Bords du Rhône',desc:"La promenade des bords du Rhône relie le parc Jouvet au port de plaisance de l'Épervière. Pistes cyclables, base nautique et vue sur l'Ardèche côté rhônalpin.",             tags:['Rhône','Vélo','Plein air'],           h:'—',       yr:'XXe',   lat:44.9285, lng:4.8855, g:'https://maps.google.com/?q=Port+Épervière+Valence', wiki:'Rhône'},
   {id:'chabeuil',     e:'🌻', n:'Plaine de Valence & Chabeuil',    hood:'Périphérie',        desc:"La plaine valentinoise avec ses vergers d'abricots Bergeron AOC et ses vignobles de Crozes-Hermitage. Le terroir drômois à 10 minutes du centre — un voyage sensoriel.",       tags:['Terroir','Abricots AOC','Vignes'],    h:'—',       yr:'—',     lat:44.9200, lng:5.0200, g:'https://maps.google.com/?q=Chabeuil+Drôme', wiki:'Chabeuil'},
+  {id:'crussol',      e:'🏰', n:'Château de Crussol',               hood:'Saint-Péray (7 km)',desc:"Les ruines majestueuses du château de Crussol dominent le Rhône depuis un piton rocheux à 300 m d'altitude. Fondé au XIIe siècle, il offre un panorama exceptionnel sur Valence, le Vercors et les Alpes. Un site médiéval incontournable à 7 km de Valence.", tags:['Médiéval','XIIe siècle','Panorama 360°'], h:'300 m', yr:'XIIe', lat:44.9487, lng:4.8340, g:'https://maps.google.com/?q=Château+de+Crussol+Saint-Péray', wiki:'Château_de_Crussol'},
+  {id:'citechocolat', e:'🍫', n:'Cité du Chocolat Valrhona',        hood:"Tain-l'Hermitage (15 min)",desc:"Le musée du chocolat de la maison Valrhona, créateur du célèbre Guanaja et du Manjari. Ateliers de dégustation, découverte de la fabrication du chocolat bean-to-bar et boutique avec toutes les créations Valrhona. Une expérience sensorielle unique dans la capitale mondiale du chocolat gastronomique.", tags:['Chocolat','Valrhona','Tain-l\'Hermitage'], h:'—', yr:'2013', lat:45.0695, lng:4.8498, g:'https://maps.google.com/?q=Cité+du+Chocolat+Valrhona+Tain+Hermitage', wiki:'Valrhona'},
+  {id:'chapoutier',   e:'🍷', n:'Maison Chapoutier',                 hood:"Tain-l'Hermitage (15 min)",desc:"L'une des plus grandes maisons de vins de la Vallée du Rhône, fondée en 1808. Michel Chapoutier produit les crus mythiques de l'Hermitage, Crozes-Hermitage et Saint-Joseph en biodynamie. La cave de dégustation et le chai de vinification sont ouverts à la visite — une plongée dans l'excellence viticole rhônalpin.", tags:['Hermitage AOC','Biodynamie','Depuis 1808'], h:'—', yr:'1808', lat:45.0700, lng:4.8492, g:'https://maps.google.com/?q=Maison+Chapoutier+Tain+Hermitage', wiki:'Chapoutier'},
 ];
 
 const SPORTS_DATA = {
@@ -479,7 +482,7 @@ const SPORTS_DATA = {
 };
 
 const FOOD_DATA = {
-  cats:['🌟 Gastronomique','🍽️ Bistrots','🥐 Café & Pâtisserie','🌿 Terroir local','🍕 Convivial'],
+  cats:['🌟 Gastronomique','🍽️ Bistrots','🥐 Café & Pâtisserie','🌿 Terroir local','🍕 Convivial','🗺️ Excursions'],
   restaurants:[
     {cat:0, name:'Maison Pic',              cuisine:'Haute cuisine française',    e:'👩‍🍳', price:'$$$$', michelin:'⭐⭐⭐', hood:'Centre-ville',       desc:"Anne-Sophie Pic, seule femme chef triplement étoilée au monde. La Maison Pic est une institution mondiale dans la même famille depuis 1891. Un voyage gastronomique absolu.",  tags:['3★ Michelin','Anne-Sophie Pic','Depuis 1891'], map:'https://maps.google.com/?q=Maison+Pic+Valence', wiki:'Anne-Sophie_Pic'},
     {cat:0, name:'La Cachette',             cuisine:'Bistrot franco-japonais',    e:'🌿', price:'$$$',  michelin:'⭐',    hood:'Vieux Valence',      desc:"Restaurant de Masashi Ijichi — cuisine franco-japonaise d'une rare finesse. Étoilé Michelin, La Cachette propose une expérience fusion unique dans le Vieux Valence.",     tags:['1★ Michelin','Franco-japonais','Fusion'], map:'https://maps.google.com/?q=La+Cachette+Valence', wiki:'Valence,_Drôme'},
@@ -492,6 +495,10 @@ const FOOD_DATA = {
     {cat:3, name:"Cave de Tain l'Hermitage",cuisine:'Cave de vignerons',           e:'🍷', price:'$$',   michelin:'',      hood:"Tain-l'Hermitage (15 min)", desc:"À 15 minutes de Valence, la cave produit les Crozes-Hermitage et Hermitage — parmi les plus grands vins de la Vallée du Rhône. Dégustation et vente directe.",       tags:['Crozes-Hermitage','Syrah','AOC'], map:"https://maps.google.com/?q=Cave+Tain+Hermitage", wiki:'Hermitage_AOC'},
     {cat:4, name:'La Soupière',             cuisine:'Cuisine familiale',           e:'🍲', price:'$',    michelin:'',      hood:'Centre-ville',       desc:"Le rendez-vous des valentinois pour une cuisine familiale généreuse et sans chichis. Soupes, plats mijotés et desserts maison à prix doux dans une ambiance conviviale.",  tags:['Familial','Économique','Maison'], map:'https://maps.google.com/?q=La+Soupière+Valence', wiki:'Valence,_Drôme'},
     {cat:4, name:'Les Péniches du Rhône',   cuisine:'Guinguette fluviale',         e:'⛵', price:'$$',   michelin:'',      hood:'Bords du Rhône',     desc:"Les péniches amarrées sur le Rhône proposent en été une ambiance guinguette unique. Moules-frites, planches apéro et concerts les soirs d'été — une institution.",       tags:['Guinguette','Rhône','Été'], map:'https://maps.google.com/?q=Péniches+Rhône+Valence', wiki:'Rhône'},
+    {cat:5, name:'Cité du Chocolat Valrhona',cuisine:'Musée & ateliers chocolat',  e:'🍫', price:'$$',   michelin:'',      hood:"Tain-l'Hermitage · 15 min", desc:"Le musée du chocolat de la maison Valrhona. Ateliers de dégustation, découverte du bean-to-bar et boutique. Guanaja, Manjari, Dulcey — tous les grands crus à portée de main.", tags:['Valrhona','Ateliers','Incontournable'], map:"https://maps.google.com/?q=Cité+du+Chocolat+Valrhona+Tain+Hermitage", wiki:'Valrhona'},
+    {cat:5, name:'Maison Chapoutier',        cuisine:'Cave & dégustation de vins', e:'🍷', price:'$$',   michelin:'',      hood:"Tain-l'Hermitage · 15 min", desc:"Fondée en 1808, Chapoutier produit les grands crus de l'Hermitage en biodynamie. Visite du chai, dégustation des Crozes-Hermitage et Saint-Joseph et vente directe domaine.", tags:['Hermitage AOC','Biodynamie','1808'], map:"https://maps.google.com/?q=Maison+Chapoutier+Tain+Hermitage", wiki:'Chapoutier'},
+    {cat:5, name:'Château de Crussol',       cuisine:'Site médiéval & panorama',   e:'🏰', price:'$',    michelin:'',      hood:'Saint-Péray · 7 min',       desc:"Ruines majestueuses du XIIe siècle sur un piton rocheux à 300 m. Vue à 360° sur Valence, le Vercors et les Alpes. Randonnée 45 min depuis le parking de Saint-Péray.",       tags:['Médiéval','Panorama','Randonnée'],  map:'https://maps.google.com/?q=Château+de+Crussol+Saint-Péray', wiki:'Château_de_Crussol'},
+    {cat:5, name:"Cave de Tain l'Hermitage", cuisine:'Cave coopérative de vignerons',e:'🍾',price:'$',   michelin:'',      hood:"Tain-l'Hermitage · 15 min", desc:"La cave coopérative de Tain produit une large gamme de Crozes-Hermitage et Saint-Joseph accessibles. Dégustation libre et vente directe — la porte d'entrée idéale des vins du Rhône.", tags:['Crozes-Hermitage','Cave','Dégustation'], map:"https://maps.google.com/?q=Cave+Tain+Hermitage", wiki:'Hermitage_AOC'},
   ]
 };
 
@@ -508,12 +515,13 @@ const ITIN_2J = [
       {id:'champdemars', t:'16:00', dur:45,  tip:"Coucher de soleil sur le Vercors depuis l'esplanade — vue imprenable."},
     ]
   },
-  { label:'Jour 2', theme:'Nature, Rhône & Terroir',
+  { label:'Jour 2', theme:'Nature, Rhône, Crussol & Tain',
     stops:[
-      {id:'parcjouvet',  t:'09:00', dur:60,  tip:"La roseraie est magnifique le matin — promenade entre les sculptures."},
-      {id:'champdemars', t:'10:15', dur:30,  tip:"Vue panoramique sur les Alpes par temps clair."},
-      {id:'rhone',       t:'11:00', dur:60,  tip:"Louez un vélo pour longer le Rhône jusqu'au port de l'Épervière."},
-      {id:'chabeuil',    t:'14:00', dur:60,  tip:"Arrêt chez un producteur d'abricots Bergeron — la saveur du terroir drômois."},
+      {id:'crussol',     t:'09:00', dur:90,  tip:"Départ tôt pour profiter de la lumière matinale sur le Vercors. Chaussures de marche recommandées — 45 min de sentier depuis Saint-Péray."},
+      {id:'parcjouvet',  t:'11:30', dur:45,  tip:"Retour sur les bords du Rhône — la roseraie est belle en toute saison."},
+      {id:'rhone',       t:'12:30', dur:45,  tip:"Balade vélo le long du Rhône jusqu'au port de l'Épervière."},
+      {id:'citechocolat',t:'14:30', dur:90,  tip:"À 15 min en voiture. Réservez un atelier en ligne — complet rapidement en week-end !"},
+      {id:'chapoutier',  t:'16:30', dur:60,  tip:"Juste à côté de la Cité du Chocolat. Demandez à visiter le chai de vinification — spectaculaire."},
     ]
   }
 ];
