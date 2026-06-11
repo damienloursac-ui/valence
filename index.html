@@ -7,26 +7,29 @@
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600&family=DM+Sans:wght@300;400;500&display=swap');
 *{margin:0;padding:0;box-sizing:border-box}
-:root{
-  --red:#E63946;
-  --red-light:rgba(230,57,70,.1);
-  --red-mid:rgba(230,57,70,.2);
-  --cream:#F7F2EB;
-  --cream-dark:#EDE6DB;
-  --white:#FFFFFF;
-  --text:#1A0A08;
-  --text-mid:#6B4A40;
-  --text-soft:#A08070;
-  --border:rgba(160,100,80,.12);
-  --border-mid:rgba(160,100,80,.2);
-  --card:#FFFFFF;
-  --shadow:0 2px 12px rgba(26,10,8,.08);
-  --shadow-lg:0 8px 32px rgba(26,10,8,.12);
-}
+:root{--red:#E63946;--red-light:rgba(230,57,70,.1);--red-mid:rgba(230,57,70,.2);--cream:#F7F2EB;--cream-dark:#EDE6DB;--white:#FFFFFF;--text:#1A0A08;--text-mid:#6B4A40;--text-soft:#A08070;--border:rgba(160,100,80,.12);--border-mid:rgba(160,100,80,.2);--shadow:0 2px 12px rgba(26,10,8,.08);--shadow-lg:0 8px 32px rgba(26,10,8,.12)}
 body{background:var(--cream);color:var(--text);font-family:'DM Sans',sans-serif;overflow:hidden;height:100dvh;width:100vw;user-select:none;-webkit-user-select:none}
 
+/* ══ LANGUAGE SELECT SCREEN ══ */
+#lang-screen{position:fixed;inset:0;background:var(--cream);z-index:500;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:2rem}
+#lang-screen.hidden{display:none}
+.ls-logo{font-family:'Playfair Display',serif;font-size:2.5rem;color:var(--red);letter-spacing:.05em;text-align:center;line-height:1}
+.ls-city{font-size:.75rem;letter-spacing:.3em;text-transform:uppercase;color:var(--text-soft);margin-top:.5rem;text-align:center}
+.ls-divider{width:48px;height:2px;background:var(--red);border-radius:1px;margin:2rem auto}
+.ls-title{font-family:'Playfair Display',serif;font-size:1.2rem;color:var(--text);text-align:center;margin-bottom:1.5rem}
+.ls-grid{display:grid;grid-template-columns:1fr 1fr;gap:.85rem;width:100%;max-width:320px}
+.ls-btn{display:flex;align-items:center;gap:.85rem;background:var(--white);border:1.5px solid var(--border-mid);border-radius:14px;padding:.9rem 1.1rem;cursor:pointer;transition:all .2s;box-shadow:var(--shadow)}
+.ls-btn:active{border-color:var(--red);background:var(--red-light);transform:scale(.97)}
+.ls-btn.selected{border-color:var(--red);background:var(--red-light)}
+.ls-flag{font-size:2rem;line-height:1}
+.ls-lang-name{font-family:'Playfair Display',serif;font-size:1rem;color:var(--text)}
+.ls-lang-sub{font-size:.65rem;color:var(--text-soft);margin-top:.05rem}
+.ls-confirm{margin-top:2rem;width:100%;max-width:320px;padding:.95rem;background:var(--red);border:none;border-radius:12px;color:#fff;font-family:'Playfair Display',serif;font-size:1.1rem;cursor:pointer;box-shadow:0 4px 16px rgba(230,57,70,.3);transition:opacity .15s,transform .15s}
+.ls-confirm:active{opacity:.85;transform:scale(.98)}
+.ls-switch{margin-top:1rem;font-size:.72rem;color:var(--text-soft);text-align:center;cursor:pointer;text-decoration:underline}
+
 /* ══ LOADING ══ */
-#loading{position:fixed;inset:0;background:var(--cream);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1rem;z-index:500;transition:opacity .6s}
+#loading{position:fixed;inset:0;background:var(--cream);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1rem;z-index:400;transition:opacity .6s}
 #loading.done{opacity:0;pointer-events:none}
 .ld-logo{font-family:'Playfair Display',serif;font-size:2rem;color:var(--red);letter-spacing:.05em}
 .ld-sub{font-size:.72rem;letter-spacing:.25em;text-transform:uppercase;color:var(--text-soft)}
@@ -42,8 +45,9 @@ body{background:var(--cream);color:var(--text);font-family:'DM Sans',sans-serif;
 .top-accent{width:4px;height:36px;background:var(--red);border-radius:2px;flex-shrink:0}
 .top-city{font-family:'Playfair Display',serif;font-size:1.3rem;color:var(--text);line-height:1}
 .top-region{font-size:.6rem;color:var(--red);letter-spacing:.2em;text-transform:uppercase;margin-top:.1rem}
-
-/* Weather widget */
+.top-right{display:flex;align-items:center;gap:.5rem}
+.lang-flag-btn{font-size:1.3rem;cursor:pointer;padding:.2rem .4rem;border-radius:8px;border:1px solid var(--border-mid);background:var(--cream);transition:background .18s}
+.lang-flag-btn:active{background:var(--cream-dark)}
 #weather-widget{cursor:pointer;text-align:right;padding:.35rem .7rem;border-radius:12px;border:1px solid var(--border-mid);background:var(--cream);transition:background .18s}
 #weather-widget:active{background:var(--cream-dark)}
 .wx-loading{display:flex;align-items:center;justify-content:center;height:38px}
@@ -70,8 +74,6 @@ body{background:var(--cream);color:var(--text);font-family:'DM Sans',sans-serif;
 
 /* ══ MONUMENT CARDS ══ */
 .monument-grid{padding:.75rem 1rem 5rem;display:flex;flex-direction:column;gap:.75rem;background:var(--cream)}
-
-/* Featured */
 .mc-featured{border-radius:16px;overflow:hidden;cursor:pointer;background:var(--white);box-shadow:var(--shadow);transition:box-shadow .18s;position:relative}
 .mc-featured:active{box-shadow:var(--shadow-lg)}
 .mc-feat-photo{width:100%;height:190px;position:relative;background:var(--cream-dark);overflow:hidden}
@@ -80,15 +82,13 @@ body{background:var(--cream);color:var(--text);font-family:'DM Sans',sans-serif;
 .mc-feat-photo .ef{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:5rem;opacity:.25}
 .mc-feat-photo .shimmer{position:absolute;inset:0;background:linear-gradient(90deg,transparent,rgba(255,255,255,.5),transparent);background-size:200% 100%;animation:sh 1.4s infinite}
 @keyframes sh{0%{background-position:-200% 0}100%{background-position:200% 0}}
-.mc-feat-badge{position:absolute;top:.75rem;left:.75rem;background:var(--red);color:#fff;font-size:.65rem;font-weight:600;padding:.25rem .65rem;border-radius:20px;letter-spacing:.05em}
-.mc-feat-gmap{position:absolute;top:.75rem;right:.75rem;background:rgba(255,255,255,.9);backdrop-filter:blur(8px);border:1px solid var(--border-mid);border-radius:8px;font-size:.72rem;padding:.25rem .5rem;cursor:pointer;color:var(--text)}
+.mc-feat-badge{position:absolute;top:.75rem;left:.75rem;background:var(--red);color:#fff;font-size:.65rem;font-weight:600;padding:.25rem .65rem;border-radius:20px}
+.mc-feat-gmap{position:absolute;top:.75rem;right:.75rem;background:rgba(255,255,255,.92);border:1px solid var(--border-mid);border-radius:8px;font-size:.72rem;padding:.25rem .5rem;cursor:pointer;color:var(--text)}
 .mc-feat-body{padding:.9rem 1rem 1rem}
 .mc-feat-name{font-family:'Playfair Display',serif;font-size:1.3rem;color:var(--text);line-height:1.1}
 .mc-feat-hood{font-size:.65rem;color:var(--text-soft);margin:.2rem 0 .55rem;letter-spacing:.08em;text-transform:uppercase}
 .mc-feat-tags{display:flex;gap:.35rem;flex-wrap:wrap}
 .mc-tag{font-size:.6rem;padding:.15rem .5rem;border-radius:20px;background:var(--red-light);color:var(--red);border:1px solid var(--red-mid);font-weight:500}
-
-/* Regular */
 .mc-card{display:flex;border-radius:14px;overflow:hidden;cursor:pointer;background:var(--white);box-shadow:var(--shadow);transition:box-shadow .18s;position:relative}
 .mc-card:active{box-shadow:var(--shadow-lg)}
 .mc-card-photo{width:90px;flex-shrink:0;position:relative;background:var(--cream-dark);overflow:hidden}
@@ -137,7 +137,7 @@ body{background:var(--cream);color:var(--text);font-family:'DM Sans',sans-serif;
 .btn-pri:active{opacity:.85}
 .btn-sec{background:var(--cream);color:var(--text-mid);border:1px solid var(--border-mid);padding:.8rem 1rem;border-radius:10px;cursor:pointer}
 
-/* ══ SECTION HEADERS ══ */
+/* ══ SECTION HEADER ══ */
 .section-screen-hdr{padding:1rem 1.2rem .6rem;background:var(--white);border-bottom:1px solid var(--border);flex-shrink:0}
 .section-ttl{font-family:'Playfair Display',serif;font-size:1.6rem;color:var(--text)}
 .section-ttl span{color:var(--red)}
@@ -156,8 +156,6 @@ body{background:var(--cream);color:var(--text);font-family:'DM Sans',sans-serif;
 .day-pill.active{background:var(--red);border-color:var(--red);color:#fff}
 .gen-btn{width:100%;padding:1rem;background:var(--red);border:none;border-radius:12px;color:#fff;font-family:'Playfair Display',serif;font-size:1.1rem;cursor:pointer;margin-top:.5rem;transition:opacity .15s,transform .15s;box-shadow:0 4px 16px rgba(230,57,70,.3)}
 .gen-btn:active{opacity:.85;transform:scale(.98)}
-
-/* Result */
 .result-hdr{display:flex;align-items:center;justify-content:space-between;padding:.85rem 1.2rem .5rem;position:sticky;top:0;background:var(--white);z-index:2;border-bottom:1px solid var(--border)}
 .result-title{font-family:'Playfair Display',serif;font-size:1.2rem;color:var(--text)}
 .back-btn,.share-btn{background:var(--cream);border:1px solid var(--border-mid);border-radius:8px;padding:.35rem .7rem;color:var(--text-mid);font-size:.78rem;cursor:pointer;font-family:'DM Sans',sans-serif}
@@ -165,8 +163,6 @@ body{background:var(--cream);color:var(--text);font-family:'DM Sans',sans-serif;
 .chips-row::-webkit-scrollbar{display:none}
 .chip{background:var(--cream);border:1px solid var(--border-mid);border-radius:20px;padding:.25rem .75rem;font-size:.68rem;color:var(--text-mid);white-space:nowrap}
 .chip span{color:var(--red);font-weight:600}
-
-/* Day blocks */
 .day-block{margin:1rem 1rem 0}
 .day-block-hdr{display:flex;align-items:center;gap:.65rem;margin-bottom:.65rem}
 .day-num-badge{background:var(--red);color:#fff;font-size:.68rem;font-weight:600;letter-spacing:.15em;padding:.2rem .6rem;border-radius:20px}
@@ -200,8 +196,6 @@ body{background:var(--cream);color:var(--text);font-family:'DM Sans',sans-serif;
 .sport-tab,.food-cat{padding:.35rem .9rem;border-radius:20px;border:1px solid var(--border-mid);background:var(--white);color:var(--text-mid);font-size:.72rem;cursor:pointer;white-space:nowrap;font-family:'DM Sans',sans-serif;transition:all .18s;font-weight:500}
 .sport-tab.active,.food-cat.active{background:var(--red);border-color:var(--red);color:#fff}
 .sports-body,.food-body{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:.75rem 1rem 5rem;background:var(--cream)}
-
-/* Team card */
 .team-card{display:flex;background:var(--white);border-radius:14px;overflow:hidden;margin-bottom:.75rem;box-shadow:var(--shadow);position:relative;border:1px solid var(--border)}
 .team-color-bar{width:4px;flex-shrink:0}
 .team-card-photo{width:100px;height:100px;flex-shrink:0;position:relative;background:var(--cream-dark);overflow:hidden}
@@ -229,7 +223,7 @@ body{background:var(--cream);color:var(--text);font-family:'DM Sans',sans-serif;
 .resto-feat-name{font-family:'Playfair Display',serif;font-size:1.3rem;color:var(--text);line-height:1.05}
 .resto-feat-cuisine{font-size:.65rem;color:var(--red);margin:.15rem 0 .4rem;letter-spacing:.1em;text-transform:uppercase;font-weight:500}
 .resto-feat-desc{font-size:.8rem;color:var(--text-mid);line-height:1.55;margin-bottom:.5rem}
-.resto-feat-meta{display:flex;gap:.5rem;flex-wrap:wrap;align-items:center}
+.resto-feat-meta{display:flex;gap:.5rem;flex-wrap:wrap}
 .resto-meta-item{font-size:.66rem;color:var(--text-soft)}
 .resto-tags{display:flex;gap:.35rem;flex-wrap:wrap;margin-top:.5rem}
 .resto-tag{font-size:.58rem;padding:.12rem .45rem;border-radius:20px;background:var(--red-light);color:var(--red);border:1px solid var(--red-mid)}
@@ -280,103 +274,150 @@ body{background:var(--cream);color:var(--text);font-family:'DM Sans',sans-serif;
 .wx-hour-icon{font-size:1rem;margin:.2rem 0}
 .wx-hour-temp{font-family:'Playfair Display',serif;font-size:.9rem;color:var(--text)}
 .wx-hour-rain{font-size:.55rem;color:#4A90D9}
-.wx-credits{font-size:.58rem;color:var(--text-soft);text-align:center;padding:.8rem 1.2rem 0;letter-spacing:.05em}
+.wx-credits{font-size:.58rem;color:var(--text-soft);text-align:center;padding:.8rem 1.2rem 0}
 </style>
 </head>
 <body>
 
-<div id="loading">
+<!-- ══ LANGUAGE SELECT ══ -->
+<div id="lang-screen">
+  <div class="ls-logo">CityExplorer</div>
+  <div class="ls-city">🌹 Valence · Drôme</div>
+  <div class="ls-divider"></div>
+  <div class="ls-title" id="ls-title">Choisissez votre langue</div>
+  <div class="ls-grid">
+    <button class="ls-btn selected" data-lang="fr" onclick="selectLang('fr',this)">
+      <span class="ls-flag">🇫🇷</span>
+      <div><div class="ls-lang-name">Français</div><div class="ls-lang-sub">France</div></div>
+    </button>
+    <button class="ls-btn" data-lang="en" onclick="selectLang('en',this)">
+      <span class="ls-flag">🇬🇧</span>
+      <div><div class="ls-lang-name">English</div><div class="ls-lang-sub">United Kingdom</div></div>
+    </button>
+    <button class="ls-btn" data-lang="es" onclick="selectLang('es',this)">
+      <span class="ls-flag">🇪🇸</span>
+      <div><div class="ls-lang-name">Español</div><div class="ls-lang-sub">España</div></div>
+    </button>
+    <button class="ls-btn" data-lang="de" onclick="selectLang('de',this)">
+      <span class="ls-flag">🇩🇪</span>
+      <div><div class="ls-lang-name">Deutsch</div><div class="ls-lang-sub">Deutschland</div></div>
+    </button>
+    <button class="ls-btn" data-lang="it" onclick="selectLang('it',this)" style="grid-column:1/-1;max-width:calc(50% - .43rem);margin:0 auto">
+      <span class="ls-flag">🇮🇹</span>
+      <div><div class="ls-lang-name">Italiano</div><div class="ls-lang-sub">Italia</div></div>
+    </button>
+    <button class="ls-btn" data-lang="zh" onclick="selectLang('zh',this)" style="grid-column:1/-1;max-width:calc(50% - .43rem);margin:0 auto">
+      <span class="ls-flag">🇨🇳</span>
+      <div><div class="ls-lang-name">中文</div><div class="ls-lang-sub">中国</div></div>
+    </button>
+    <button class="ls-btn" data-lang="ja" onclick="selectLang('ja',this)" style="grid-column:1/-1;max-width:calc(50% - .43rem);margin:0 auto">
+      <span class="ls-flag">🇯🇵</span>
+      <div><div class="ls-lang-name">日本語</div><div class="ls-lang-sub">日本</div></div>
+    </button>
+    <button class="ls-btn" data-lang="ja" onclick="selectLang('ja',this)" style="grid-column:1/-1;max-width:calc(50% - .43rem);margin:0 auto">
+      <span class="ls-flag">🇯🇵</span>
+      <div><div class="ls-lang-name">日本語</div><div class="ls-lang-sub">日本</div></div>
+    </button>
+  </div>
+  <button class="ls-confirm" id="ls-confirm" onclick="launchApp()">Continuer →</button>
+</div>
+
+<!-- ══ LOADING ══ -->
+<div id="loading" style="display:none">
   <div class="ld-logo">Valence</div>
-  <div class="ld-sub">Drôme · Auvergne-Rhône-Alpes</div>
+  <div class="ld-sub" id="ld-sub">Drôme · Rhône-Alpes</div>
   <div class="ld-ring"></div>
 </div>
 
-<div id="app">
+<!-- ══ APP ══ -->
+<div id="app" style="display:none">
 
-  <!-- TOP BAR -->
   <div id="top-bar">
     <div class="top-left">
       <div class="top-accent"></div>
       <div>
         <div class="top-city">Valence</div>
-        <div class="top-region">Drôme · Rhône-Alpes</div>
+        <div class="top-region" id="top-region">Drôme · Rhône-Alpes</div>
       </div>
     </div>
-    <div id="weather-widget" onclick="openWeather()">
-      <div id="weather-loading" class="wx-loading"><div class="wx-spinner"></div></div>
-      <div id="weather-data" style="display:none">
-        <div class="wx-main"><span id="wx-icon">☀️</span><span id="wx-temp">—°</span></div>
-        <div class="wx-details"><span id="wx-desc">—</span><span id="wx-feels">—</span></div>
-        <div class="wx-extra"><span id="wx-wind">💨 —</span><span id="wx-rain">🌧 —</span></div>
+    <div class="top-right">
+      <div class="lang-flag-btn" id="lang-flag-btn" onclick="showLangSwitch()">🇫🇷</div>
+      <div id="weather-widget" onclick="openWeather()">
+        <div id="weather-loading" class="wx-loading"><div class="wx-spinner"></div></div>
+        <div id="weather-data" style="display:none">
+          <div class="wx-main"><span id="wx-icon">☀️</span><span id="wx-temp">—°</span></div>
+          <div class="wx-details"><span id="wx-desc">—</span><span id="wx-feels">—</span></div>
+          <div class="wx-extra"><span id="wx-wind">💨 —</span><span id="wx-rain">🌧 —</span></div>
+        </div>
       </div>
     </div>
   </div>
 
-  <!-- MONUMENTS SCREEN -->
+  <!-- MONUMENTS -->
   <div id="monuments-screen" class="screen active">
     <div class="search-wrap">
-      <input type="text" id="search-input" placeholder="🔍  Rechercher un lieu…" oninput="filterMonuments(this.value)">
+      <input type="text" id="search-input" placeholder="🔍" oninput="filterMonuments(this.value)">
     </div>
     <div class="screen-body" id="monuments-body"></div>
   </div>
 
-  <!-- ITINERARY SCREEN -->
+  <!-- ITINERARY -->
   <div id="itin-screen" class="screen">
     <div id="itin-cfg" class="itin-bg">
       <div class="section-screen-hdr" style="background:var(--white)">
-        <div class="section-ttl">Itinéraire <span>Valence</span></div>
-        <div class="section-sub">Parcours optimisé sur-mesure</div>
+        <div class="section-ttl" id="itin-title-hdr">Itinéraire <span>Valence</span></div>
+        <div class="section-sub" id="itin-sub-hdr">Parcours optimisé sur-mesure</div>
       </div>
       <div class="cfg-inner">
         <div class="cfg-sec">
-          <div class="cfg-label">⏱ Combien de jours ?</div>
+          <div class="cfg-label" id="cfg-days-lbl">⏱ Combien de jours ?</div>
           <div class="day-row">
-            <button class="day-pill" data-d="1" onclick="selDays(1)">1 jour</button>
-            <button class="day-pill active" data-d="2" onclick="selDays(2)">2 jours</button>
-            <button class="day-pill" data-d="3" onclick="selDays(3)">3 jours</button>
+            <button class="day-pill" data-d="1" onclick="selDays(1)" id="dp1">1</button>
+            <button class="day-pill active" data-d="2" onclick="selDays(2)" id="dp2">2</button>
+            <button class="day-pill" data-d="3" onclick="selDays(3)" id="dp3">3</button>
           </div>
         </div>
         <div class="cfg-sec">
-          <div class="cfg-label">🎯 Centres d'intérêt</div>
+          <div class="cfg-label" id="cfg-int-lbl">🎯 Centres d'intérêt</div>
           <div class="pill-row" id="interest-pills"></div>
         </div>
         <div class="cfg-sec">
-          <div class="cfg-label">🚶 Déplacement</div>
+          <div class="cfg-label" id="cfg-trans-lbl">🚶 Déplacement</div>
           <div class="pill-row">
-            <button class="pill active" data-m="walking" onclick="selTrans(this)">🚶 Marche</button>
-            <button class="pill" data-m="transit" onclick="selTrans(this)">🚲 Vélo</button>
-            <button class="pill" data-m="driving" onclick="selTrans(this)">🚗 Voiture</button>
+            <button class="pill active" data-m="walking" onclick="selTrans(this)" id="trans-walk">🚶 Marche</button>
+            <button class="pill" data-m="transit" onclick="selTrans(this)" id="trans-bike">🚲 Vélo</button>
+            <button class="pill" data-m="driving" onclick="selTrans(this)" id="trans-car">🚗 Voiture</button>
           </div>
         </div>
-        <button class="gen-btn" onclick="generateItin()">✨ Générer mon parcours</button>
+        <button class="gen-btn" id="gen-btn" onclick="generateItin()">✨ Générer mon parcours</button>
       </div>
     </div>
     <div id="itin-res" class="screen-body" style="display:none;background:var(--cream)">
       <div class="result-hdr">
-        <button class="back-btn" onclick="showCfg()">← Modifier</button>
+        <button class="back-btn" id="back-btn" onclick="showCfg()">← Modifier</button>
         <div class="result-title" id="res-title">Itinéraire</div>
         <button class="share-btn" onclick="exportItin()">📤</button>
       </div>
       <div class="chips-row" id="res-chips"></div>
       <div id="res-days" style="padding:.75rem 0"></div>
-      <div class="gmaps-blk"><button class="btn-gfull" onclick="openFullRoute()">📍 Ouvrir dans Google Maps</button></div>
+      <div class="gmaps-blk"><button class="btn-gfull" id="gmaps-full-btn" onclick="openFullRoute()">📍 Ouvrir dans Google Maps</button></div>
     </div>
   </div>
 
-  <!-- SPORTS SCREEN -->
+  <!-- SPORTS -->
   <div id="sports-screen" class="screen" style="flex-direction:column">
     <div class="section-screen-hdr">
-      <div class="section-ttl">Sports à <span>Valence</span></div>
-      <div class="section-sub">Clubs locaux · Équipes emblématiques</div>
+      <div class="section-ttl" id="sports-title-hdr">Sports à <span>Valence</span></div>
+      <div class="section-sub" id="sports-sub-hdr">Clubs locaux · Équipes emblématiques</div>
     </div>
     <div class="sport-tabs" id="sport-tabs"></div>
     <div class="sports-body" id="sports-body"></div>
   </div>
 
-  <!-- FOOD SCREEN -->
+  <!-- FOOD -->
   <div id="food-screen" class="screen" style="flex-direction:column">
     <div class="section-screen-hdr">
-      <div class="section-ttl">Food à <span>Valence</span></div>
+      <div class="section-ttl" id="food-title-hdr">Food à <span>Valence</span></div>
       <div class="section-sub" id="food-sub">Restaurants · Spécialités drômoises</div>
     </div>
     <div class="food-cats-row" id="food-cats"></div>
@@ -385,10 +426,10 @@ body{background:var(--cream);color:var(--text);font-family:'DM Sans',sans-serif;
 
   <!-- BOTTOM NAV -->
   <div id="bottom-nav">
-    <button class="nav-btn active" id="nav-monuments" onclick="switchTab('monuments')"><span class="nav-icon">🏛️</span><span class="nav-label">Lieux</span></button>
-    <button class="nav-btn" id="nav-itin" onclick="switchTab('itin')"><span class="nav-icon">🗺️</span><span class="nav-label">Itinéraire</span></button>
-    <button class="nav-btn" id="nav-sports" onclick="switchTab('sports')"><span class="nav-icon">🏆</span><span class="nav-label">Sports</span></button>
-    <button class="nav-btn" id="nav-food" onclick="switchTab('food')"><span class="nav-icon">🍽️</span><span class="nav-label">Food</span></button>
+    <button class="nav-btn active" id="nav-monuments" onclick="switchTab('monuments')"><span class="nav-icon">🏛️</span><span class="nav-label" id="nav-lbl-monuments">Lieux</span></button>
+    <button class="nav-btn" id="nav-itin" onclick="switchTab('itin')"><span class="nav-icon">🗺️</span><span class="nav-label" id="nav-lbl-itin">Itinéraire</span></button>
+    <button class="nav-btn" id="nav-sports" onclick="switchTab('sports')"><span class="nav-icon">🏆</span><span class="nav-label" id="nav-lbl-sports">Sports</span></button>
+    <button class="nav-btn" id="nav-food" onclick="switchTab('food')"><span class="nav-icon">🍽️</span><span class="nav-label" id="nav-lbl-food">Food</span></button>
   </div>
 
   <!-- DETAIL PANEL -->
@@ -407,12 +448,12 @@ body{background:var(--cream);color:var(--text);font-family:'DM Sans',sans-serif;
     <div class="p-tags" id="p-tags"></div>
     <p class="p-desc" id="p-desc"></p>
     <div class="p-stats">
-      <div class="stat"><div class="stat-val" id="p-h">—</div><div class="stat-label">Époque</div></div>
-      <div class="stat"><div class="stat-val" id="p-yr">—</div><div class="stat-label">Siècle</div></div>
-      <div class="stat"><div class="stat-val" id="p-tag1">—</div><div class="stat-label">Catégorie</div></div>
+      <div class="stat"><div class="stat-val" id="p-h">—</div><div class="stat-label" id="p-lbl-h">Époque</div></div>
+      <div class="stat"><div class="stat-val" id="p-yr">—</div><div class="stat-label" id="p-lbl-yr">Siècle</div></div>
+      <div class="stat"><div class="stat-val" id="p-tag1">—</div><div class="stat-label" id="p-lbl-cat">Catégorie</div></div>
     </div>
     <div class="p-actions">
-      <button class="btn-pri" onclick="openMaps()">📍 Google Maps</button>
+      <button class="btn-pri" id="gmaps-btn" onclick="openMaps()">📍 Google Maps</button>
       <button class="btn-sec" onclick="closePanel()">✕</button>
     </div>
   </div>
@@ -429,106 +470,432 @@ body{background:var(--cream);color:var(--text);font-family:'DM Sans',sans-serif;
       <div><div class="wx-panel-temp" id="wx-panel-temp">—°C</div><div class="wx-panel-desc" id="wx-panel-desc">—</div></div>
     </div>
     <div class="wx-panel-stats">
-      <div class="wx-stat"><div class="wx-stat-val" id="wxp-feels">—</div><div class="wx-stat-lbl">Ressenti</div></div>
-      <div class="wx-stat"><div class="wx-stat-val" id="wxp-hum">—</div><div class="wx-stat-lbl">Humidité</div></div>
-      <div class="wx-stat"><div class="wx-stat-val" id="wxp-wind">—</div><div class="wx-stat-lbl">Vent</div></div>
+      <div class="wx-stat"><div class="wx-stat-val" id="wxp-feels">—</div><div class="wx-stat-lbl" id="wx-lbl-feels">Ressenti</div></div>
+      <div class="wx-stat"><div class="wx-stat-val" id="wxp-hum">—</div><div class="wx-stat-lbl" id="wx-lbl-hum">Humidité</div></div>
+      <div class="wx-stat"><div class="wx-stat-val" id="wxp-wind">—</div><div class="wx-stat-lbl" id="wx-lbl-wind">Vent</div></div>
       <div class="wx-stat"><div class="wx-stat-val" id="wxp-uv">—</div><div class="wx-stat-lbl">UV</div></div>
     </div>
-    <div class="wx-section">Prévisions 7 jours</div>
+    <div class="wx-section" id="wx-sec-forecast">Prévisions 7 jours</div>
     <div id="wx-forecast" class="wx-forecast"></div>
-    <div class="wx-section">Aujourd'hui heure par heure</div>
+    <div class="wx-section" id="wx-sec-hourly">Aujourd'hui heure par heure</div>
     <div id="wx-hourly" class="wx-hourly"></div>
-    <div class="wx-credits">Météo · Open-Meteo.com · Temps réel</div>
+    <div class="wx-credits" id="wx-credits">Météo · Open-Meteo.com · Temps réel</div>
   </div>
-
 </div>
 
 <script>
-// ═══════════════════════════════════════
-//  DATA
-// ═══════════════════════════════════════
+// ═══════════════════════════════════════════════════════════
+//  TRANSLATIONS
+// ═══════════════════════════════════════════════════════════
+const T = {
+  fr:{
+    langSelect:'Choisissez votre langue', confirm:'Continuer →',
+    loading:'Chargement…', region:'Drôme · Rhône-Alpes',
+    nav:['Lieux','Itinéraire','Sports','Food'],
+    searchPlaceholder:'🔍  Rechercher un lieu…',
+    itinTitle:'Itinéraire', itinSub:'Parcours optimisé sur-mesure',
+    cfgDays:'⏱ Combien de jours ?', cfgInt:'🎯 Centres d\'intérêt', cfgTrans:'🚶 Déplacement',
+    dayLabels:['1 jour','2 jours','3 jours'],
+    transLabels:['🚶 Marche','🚲 Vélo','🚗 Voiture'],
+    allInterest:'🌹 Tout', generateBtn:'✨ Générer mon parcours', backBtn:'← Modifier',
+    openMaps:'📍 Google Maps', openMapsAll:'📍 Ouvrir dans Google Maps',
+    sportsTitle:'Sports à', sportsSub:'Clubs locaux · Équipes emblématiques',
+    foodTitle:'Food à', foodSub:'Restaurants · Spécialités drômoises',
+    foodCats:['🌟 Gastronomique','🍽️ Bistrots','🥐 Café & Pâtisserie','🌿 Terroir local','🍕 Convivial','🗺️ Excursions'],
+    statEpoque:'Époque', statSiecle:'Siècle', statCat:'Catégorie',
+    wxFeels:'Ressenti', wxHum:'Humidité', wxWind:'Vent',
+    wxForecast:'Prévisions 7 jours', wxHourly:"Aujourd'hui heure par heure", wxCredits:'Météo · Open-Meteo.com · Temps réel',
+    day1Theme:'Patrimoine & Vieille Ville', day2Theme:'Nature, Rhône, Crussol & Tain',
+    travelWalk:'🚶 Marche', travelBike:'🚲 Vélo', travelCar:'🚗 Voiture',
+    noResult:'Aucun lieu trouvé', dayLabel:'Jour', daysLabel:'jours', dayLabelSingular:'jour', sitesLabel:'lieux',
+    changeLanguage:'Changer de langue',
+  },
+  en:{
+    langSelect:'Choose your language', confirm:'Continue →',
+    loading:'Loading…', region:'Drôme · Rhône-Alpes',
+    nav:['Places','Itinerary','Sports','Food'],
+    searchPlaceholder:'🔍  Search a place…',
+    itinTitle:'Itinerary', itinSub:'Optimised route, tailored for you',
+    cfgDays:'⏱ How many days?', cfgInt:'🎯 Interests', cfgTrans:'🚶 Getting around',
+    dayLabels:['1 day','2 days','3 days'],
+    transLabels:['🚶 Walking','🚲 Cycling','🚗 Driving'],
+    allInterest:'🌹 Everything', generateBtn:'✨ Generate my itinerary', backBtn:'← Edit',
+    openMaps:'📍 Google Maps', openMapsAll:'📍 Open in Google Maps',
+    sportsTitle:'Sports in', sportsSub:'Local clubs · Iconic teams',
+    foodTitle:'Food in', foodSub:'Restaurants · Local specialities',
+    foodCats:['🌟 Fine Dining','🍽️ Bistros','🥐 Café & Bakery','🌿 Local Produce','🍕 Casual','🗺️ Day Trips'],
+    statEpoque:'Period', statSiecle:'Century', statCat:'Category',
+    wxFeels:'Feels like', wxHum:'Humidity', wxWind:'Wind',
+    wxForecast:'7-day forecast', wxHourly:'Today by the hour', wxCredits:'Weather · Open-Meteo.com · Real-time',
+    day1Theme:'Heritage & Old Town', day2Theme:'Nature, Rhône, Crussol & Tain',
+    travelWalk:'🚶 Walking', travelBike:'🚲 Cycling', travelCar:'🚗 Driving',
+    noResult:'No place found', dayLabel:'Day', daysLabel:'days', dayLabelSingular:'day', sitesLabel:'places',
+    changeLanguage:'Change language',
+  },
+  es:{
+    langSelect:'Elige tu idioma', confirm:'Continuar →',
+    loading:'Cargando…', region:'Drôme · Ródano-Alpes',
+    nav:['Lugares','Itinerario','Deportes','Gastronomía'],
+    searchPlaceholder:'🔍  Buscar un lugar…',
+    itinTitle:'Itinerario', itinSub:'Ruta optimizada a tu medida',
+    cfgDays:'⏱ ¿Cuántos días?', cfgInt:'🎯 Intereses', cfgTrans:'🚶 Desplazamiento',
+    dayLabels:['1 día','2 días','3 días'],
+    transLabels:['🚶 A pie','🚲 Bicicleta','🚗 Coche'],
+    allInterest:'🌹 Todo', generateBtn:'✨ Generar mi ruta', backBtn:'← Modificar',
+    openMaps:'📍 Google Maps', openMapsAll:'📍 Abrir en Google Maps',
+    sportsTitle:'Deportes en', sportsSub:'Clubes locales · Equipos emblemáticos',
+    foodTitle:'Gastronomía en', foodSub:'Restaurantes · Especialidades del Drôme',
+    foodCats:['🌟 Alta cocina','🍽️ Bistrós','🥐 Café & Pastelería','🌿 Producto local','🍕 Casual','🗺️ Excursiones'],
+    statEpoque:'Época', statSiecle:'Siglo', statCat:'Categoría',
+    wxFeels:'Sensación', wxHum:'Humedad', wxWind:'Viento',
+    wxForecast:'Previsión 7 días', wxHourly:'Hoy hora a hora', wxCredits:'Clima · Open-Meteo.com · Tiempo real',
+    day1Theme:'Patrimonio & Casco Antiguo', day2Theme:'Naturaleza, Ródano, Crussol & Tain',
+    travelWalk:'🚶 A pie', travelBike:'🚲 Bicicleta', travelCar:'🚗 Coche',
+    noResult:'Ningún lugar encontrado', dayLabel:'Día', daysLabel:'días', dayLabelSingular:'día', sitesLabel:'lugares',
+    changeLanguage:'Cambiar idioma',
+  },
+  de:{
+    langSelect:'Sprache wählen', confirm:'Weiter →',
+    loading:'Wird geladen…', region:'Drôme · Rhône-Alpen',
+    nav:['Orte','Reiseroute','Sport','Food'],
+    searchPlaceholder:'🔍  Ort suchen…',
+    itinTitle:'Reiseroute', itinSub:'Optimierte Route nach Maß',
+    cfgDays:'⏱ Wie viele Tage?', cfgInt:'🎯 Interessen', cfgTrans:'🚶 Fortbewegung',
+    dayLabels:['1 Tag','2 Tage','3 Tage'],
+    transLabels:['🚶 Zu Fuß','🚲 Fahrrad','🚗 Auto'],
+    allInterest:'🌹 Alles', generateBtn:'✨ Reiseroute erstellen', backBtn:'← Bearbeiten',
+    openMaps:'📍 Google Maps', openMapsAll:'📍 In Google Maps öffnen',
+    sportsTitle:'Sport in', sportsSub:'Lokale Vereine · Emblematische Teams',
+    foodTitle:'Food in', foodSub:'Restaurants · Regionale Spezialitäten',
+    foodCats:['🌟 Gourmet','🍽️ Bistros','🥐 Café & Bäckerei','🌿 Lokale Produkte','🍕 Casual','🗺️ Ausflüge'],
+    statEpoque:'Epoche', statSiecle:'Jahrhundert', statCat:'Kategorie',
+    wxFeels:'Gefühlt', wxHum:'Luftfeuchte', wxWind:'Wind',
+    wxForecast:'7-Tage-Vorhersage', wxHourly:'Heute stündlich', wxCredits:'Wetter · Open-Meteo.com · Echtzeit',
+    day1Theme:'Kulturerbe & Altstadt', day2Theme:'Natur, Rhône, Crussol & Tain',
+    travelWalk:'🚶 Zu Fuß', travelBike:'🚲 Fahrrad', travelCar:'🚗 Auto',
+    noResult:'Kein Ort gefunden', dayLabel:'Tag', daysLabel:'Tage', dayLabelSingular:'Tag', sitesLabel:'Orte',
+    changeLanguage:'Sprache wechseln',
+  },
+  it:{
+    langSelect:'Scegli la tua lingua', confirm:'Continua →',
+    loading:'Caricamento…', region:'Drôme · Rodano-Alpi',
+    nav:['Luoghi','Itinerario','Sport','Food'],
+    searchPlaceholder:'🔍  Cerca un luogo…',
+    itinTitle:'Itinerario', itinSub:'Percorso ottimizzato su misura',
+    cfgDays:'⏱ Quanti giorni?', cfgInt:'🎯 Interessi', cfgTrans:'🚶 Spostamento',
+    dayLabels:['1 giorno','2 giorni','3 giorni'],
+    transLabels:['🚶 A piedi','🚲 Bici','🚗 Auto'],
+    allInterest:'🌹 Tutto', generateBtn:'✨ Crea il mio itinerario', backBtn:'← Modifica',
+    openMaps:'📍 Google Maps', openMapsAll:'📍 Apri in Google Maps',
+    sportsTitle:'Sport a', sportsSub:'Club locali · Squadre emblematiche',
+    foodTitle:'Food a', foodSub:'Ristoranti · Specialità della Drôme',
+    foodCats:['🌟 Alta cucina','🍽️ Bistrot','🥐 Caffè & Pasticceria','🌿 Prodotti locali','🍕 Conviviale','🗺️ Escursioni'],
+    statEpoque:'Epoca', statSiecle:'Secolo', statCat:'Categoria',
+    wxFeels:'Percepita', wxHum:'Umidità', wxWind:'Vento',
+    wxForecast:'Previsioni 7 giorni', wxHourly:'Oggi ora per ora', wxCredits:'Meteo · Open-Meteo.com · Tempo reale',
+    day1Theme:'Patrimonio & Centro Storico', day2Theme:'Natura, Rodano, Crussol & Tain',
+    travelWalk:'🚶 A piedi', travelBike:'🚲 Bici', travelCar:'🚗 Auto',
+    noResult:'Nessun luogo trovato', dayLabel:'Giorno', daysLabel:'giorni', dayLabelSingular:'giorno', sitesLabel:'luoghi',
+    changeLanguage:'Cambia lingua',
+  },
+  zh:{
+    langSelect:'请选择语言', confirm:'开始 →',
+    loading:'加载中…', region:'德龙省 · 罗纳-阿尔卑斯',
+    nav:['景点','行程','体育','美食'],
+    searchPlaceholder:'🔍  搜索景点…',
+    itinTitle:'行程', itinSub:'为您量身定制的最优路线',
+    cfgDays:'⏱ 几天？', cfgInt:'🎯 兴趣爱好', cfgTrans:'🚶 出行方式',
+    dayLabels:['1天','2天','3天'],
+    transLabels:['🚶 步行','🚲 骑行','🚗 驾车'],
+    allInterest:'🌹 全部', generateBtn:'✨ 生成行程', backBtn:'← 修改',
+    openMaps:'📍 谷歌地图', openMapsAll:'📍 在谷歌地图中打开',
+    sportsTitle:'体育 ·', sportsSub:'本地俱乐部 · 著名球队',
+    foodTitle:'美食 ·', foodSub:'餐厅 · 德龙省特色美食',
+    foodCats:['🌟 精致美食','🍽️ 小餐馆','🥐 咖啡与糕点','🌿 本地特产','🍕 休闲餐饮','🗺️ 周边游'],
+    statEpoque:'时代', statSiecle:'世纪', statCat:'类别',
+    wxFeels:'体感温度', wxHum:'湿度', wxWind:'风速',
+    wxForecast:'7天预报', wxHourly:'今日逐时', wxCredits:'天气 · Open-Meteo.com · 实时',
+    day1Theme:'历史遗产与古城', day2Theme:'自然、罗纳河、克鲁索与丹',
+    travelWalk:'🚶 步行', travelBike:'🚲 骑行', travelCar:'🚗 驾车',
+    noResult:'未找到景点', dayLabel:'第', daysLabel:'天', dayLabelSingular:'天', sitesLabel:'个景点',
+    changeLanguage:'切换语言',
+  },
+  ja:{
+    langSelect:'言語を選択してください', confirm:'続ける →',
+    loading:'読み込み中…', region:'ドローム県 · ローヌ=アルプ',
+    nav:['観光地','旅程','スポーツ','グルメ'],
+    searchPlaceholder:'🔍  観光地を検索…',
+    itinTitle:'旅程', itinSub:'あなたにぴったりの最適ルート',
+    cfgDays:'⏱ 何日間？', cfgInt:'🎯 興味・関心', cfgTrans:'🚶 移動手段',
+    dayLabels:['1日間','2日間','3日間'],
+    transLabels:['🚶 徒歩','🚲 自転車','🚗 車'],
+    allInterest:'🌹 すべて', generateBtn:'✨ 旅程を作成する', backBtn:'← 修正',
+    openMaps:'📍 Googleマップ', openMapsAll:'📍 Googleマップで開く',
+    sportsTitle:'スポーツ ·', sportsSub:'地元クラブ · 著名チーム',
+    foodTitle:'グルメ ·', foodSub:'レストラン · ドローム県の郷土料理',
+    foodCats:['🌟 高級グルメ','🍽️ ビストロ','🥐 カフェ & パティスリー','🌿 地元特産品','🍕 カジュアル','🗺️ 周辺観光'],
+    statEpoque:'時代', statSiecle:'世紀', statCat:'カテゴリー',
+    wxFeels:'体感温度', wxHum:'湿度', wxWind:'風速',
+    wxForecast:'7日間予報', wxHourly:'本日の時間別天気', wxCredits:'天気 · Open-Meteo.com · リアルタイム',
+    day1Theme:'歴史遺産と旧市街', day2Theme:'自然・ローヌ川・クリュソル城・タン',
+    travelWalk:'🚶 徒歩', travelBike:'🚲 自転車', travelCar:'🚗 車',
+    noResult:'観光地が見つかりません', dayLabel:'第', daysLabel:'日間', dayLabelSingular:'日間', sitesLabel:'か所',
+    changeLanguage:'言語を変更',
+  },
+  ja:{
+    langSelect:'言語を選んでください', confirm:'続ける →',
+    loading:'読み込み中…', region:'ドローム県 · ローヌ＝アルプ',
+    nav:['観光','行程','スポーツ','グルメ'],
+    searchPlaceholder:'🔍  場所を検索…',
+    itinTitle:'旅程', itinSub:'あなただけの最適ルート',
+    cfgDays:'⏱ 何日間？', cfgInt:'🎯 興味・関心', cfgTrans:'🚶 移動手段',
+    dayLabels:['1日間','2日間','3日間'],
+    transLabels:['🚶 徒歩','🚲 自転車','🚗 車'],
+    allInterest:'🌹 すべて', generateBtn:'✨ 旅程を作成', backBtn:'← 修正',
+    openMaps:'📍 Googleマップ', openMapsAll:'📍 Googleマップで開く',
+    sportsTitle:'スポーツ ·', sportsSub:'地元クラブ · 主要チーム',
+    foodTitle:'グルメ ·', foodSub:'レストラン · ドローム県の名物',
+    foodCats:['🌟 高級料理','🍽️ ビストロ','🥐 カフェ＆菓子','🌿 地元食材','🍕 カジュアル','🗺️ 日帰り旅行'],
+    statEpoque:'時代', statSiecle:'世紀', statCat:'カテゴリー',
+    wxFeels:'体感温度', wxHum:'湿度', wxWind:'風速',
+    wxForecast:'7日間予報', wxHourly:'本日の時間別予報', wxCredits:'天気 · Open-Meteo.com · リアルタイム',
+    day1Theme:'歴史遺産と旧市街', day2Theme:'自然・ローヌ川・クリュゾール城・タン',
+    travelWalk:'🚶 徒歩', travelBike:'🚲 自転車', travelCar:'🚗 車',
+    noResult:'場所が見つかりません', dayLabel:'第', daysLabel:'日間', dayLabelSingular:'日間', sitesLabel:'か所',
+    changeLanguage:'言語を変更',
+  },
+  zh:{
+    langSelect:'请选择您的语言', confirm:'继续 →',
+    loading:'加载中…', region:'德龙省 · 罗纳-阿尔卑斯',
+    nav:['景点','行程','体育','美食'],
+    searchPlaceholder:'🔍  搜索景点…',
+    itinTitle:'行程规划', itinSub:'为您量身定制的最优路线',
+    cfgDays:'⏱ 几天？', cfgInt:'🎯 兴趣爱好', cfgTrans:'🚶 出行方式',
+    dayLabels:['1天','2天','3天'],
+    transLabels:['🚶 步行','🚲 骑行','🚗 驾车'],
+    allInterest:'🌹 全部', generateBtn:'✨ 生成我的行程', backBtn:'← 修改',
+    openMaps:'📍 Google地图', openMapsAll:'📍 在Google地图中打开',
+    sportsTitle:'瓦朗斯体育', sportsSub:'本地俱乐部 · 著名球队',
+    foodTitle:'瓦朗斯美食', foodSub:'餐厅 · 德龙省特色美食',
+    foodCats:['🌟 精致美食','🍽️ 小餐馆','🥐 咖啡与糕点','🌿 本地特产','🍕 休闲餐饮','🗺️ 周边游'],
+    statEpoque:'时代', statSiecle:'世纪', statCat:'类别',
+    wxFeels:'体感温度', wxHum:'湿度', wxWind:'风速',
+    wxForecast:'7天天气预报', wxHourly:'今日逐时天气', wxCredits:'天气数据 · Open-Meteo.com · 实时',
+    day1Theme:'历史遗产与古城', day2Theme:'自然、罗纳河、克鲁索城堡与丹',
+    travelWalk:'🚶 步行', travelBike:'🚲 骑行', travelCar:'🚗 驾车',
+    noResult:'未找到景点', dayLabel:'第', daysLabel:'天', dayLabelSingular:'天', sitesLabel:'个景点',
+    changeLanguage:'切换语言',
+  },
+  ja:{
+    langSelect:'言語を選択してください', confirm:'続ける →',
+    loading:'読み込み中…', region:'ドローム県 · ローヌ=アルプ',
+    nav:['観光地','旅程','スポーツ','グルメ'],
+    searchPlaceholder:'🔍  観光地を検索…',
+    itinTitle:'旅程', itinSub:'あなたにぴったりの最適ルート',
+    cfgDays:'⏱ 何日間？', cfgInt:'🎯 興味・関心', cfgTrans:'🚶 移動手段',
+    dayLabels:['1日間','2日間','3日間'],
+    transLabels:['🚶 徒歩','🚲 自転車','🚗 車'],
+    allInterest:'🌹 すべて', generateBtn:'✨ 旅程を作成する', backBtn:'← 修正',
+    openMaps:'📍 Googleマップ', openMapsAll:'📍 Googleマップで開く',
+    sportsTitle:'スポーツ ·', sportsSub:'地元クラブ · 著名チーム',
+    foodTitle:'グルメ ·', foodSub:'レストラン · ドローム県の郷土料理',
+    foodCats:['🌟 高級グルメ','🍽️ ビストロ','🥐 カフェ & パティスリー','🌿 地元特産品','🍕 カジュアル','🗺️ 周辺観光'],
+    statEpoque:'時代', statSiecle:'世紀', statCat:'カテゴリー',
+    wxFeels:'体感温度', wxHum:'湿度', wxWind:'風速',
+    wxForecast:'7日間予報', wxHourly:'本日の時間別天気', wxCredits:'天気 · Open-Meteo.com · リアルタイム',
+    day1Theme:'歴史遺産と旧市街', day2Theme:'自然・ローヌ川・クリュソル城・タン',
+    travelWalk:'🚶 徒歩', travelBike:'🚲 自転車', travelCar:'🚗 車',
+    noResult:'観光地が見つかりません', dayLabel:'第', daysLabel:'日間', dayLabelSingular:'日間', sitesLabel:'か所',
+    changeLanguage:'言語を変更',
+  },
+  ja:{
+    langSelect:'言語を選んでください', confirm:'続ける →',
+    loading:'読み込み中…', region:'ドローム県 · ローヌ＝アルプ',
+    nav:['観光','行程','スポーツ','グルメ'],
+    searchPlaceholder:'🔍  場所を検索…',
+    itinTitle:'旅程', itinSub:'あなただけの最適ルート',
+    cfgDays:'⏱ 何日間？', cfgInt:'🎯 興味・関心', cfgTrans:'🚶 移動手段',
+    dayLabels:['1日間','2日間','3日間'],
+    transLabels:['🚶 徒歩','🚲 自転車','🚗 車'],
+    allInterest:'🌹 すべて', generateBtn:'✨ 旅程を作成', backBtn:'← 修正',
+    openMaps:'📍 Googleマップ', openMapsAll:'📍 Googleマップで開く',
+    sportsTitle:'スポーツ ·', sportsSub:'地元クラブ · 主要チーム',
+    foodTitle:'グルメ ·', foodSub:'レストラン · ドローム県の名物',
+    foodCats:['🌟 高級料理','🍽️ ビストロ','🥐 カフェ＆菓子','🌿 地元食材','🍕 カジュアル','🗺️ 日帰り旅行'],
+    statEpoque:'時代', statSiecle:'世紀', statCat:'カテゴリー',
+    wxFeels:'体感温度', wxHum:'湿度', wxWind:'風速',
+    wxForecast:'7日間予報', wxHourly:'本日の時間別予報', wxCredits:'天気 · Open-Meteo.com · リアルタイム',
+    day1Theme:'歴史遺産と旧市街', day2Theme:'自然・ローヌ川・クリュゾール城・タン',
+    travelWalk:'🚶 徒歩', travelBike:'🚲 自転車', travelCar:'🚗 車',
+    noResult:'場所が見つかりません', dayLabel:'第', daysLabel:'日間', dayLabelSingular:'日間', sitesLabel:'か所',
+    changeLanguage:'言語を変更',
+  }
+
+const FLAGS = {fr:'🇫🇷', en:'🇬🇧', es:'🇪🇸', de:'🇩🇪', it:'🇮🇹', zh:'🇨🇳', ja:'🇯🇵'};
+
+// ═══════════════════════════════════════════════════════════
+//  LANDMARKS (multilingual descriptions)
+// ═══════════════════════════════════════════════════════════
 const LANDMARKS = [
-  {id:'cathedrale',   e:'⛪', n:'Cathédrale Saint-Apollinaire',   hood:'Vieux Valence',     desc:"Cathédrale romane fondée au XIe siècle, remaniée aux XIIe et XVIIe siècles. Elle domine la ville depuis la falaise du Rhône. Le tombeau du pape Pie VI y est conservé.",    tags:['Roman','XIe siècle','Incontournable'], h:'XIe s.',  yr:'XIe',   lat:44.9326, lng:4.8912, g:'https://maps.google.com/?q=Cathédrale+Saint-Apollinaire+Valence', wiki:'Cathédrale_Saint-Apollinaire_de_Valence'},
-  {id:'pendentif',    e:'🏛️', n:'Le Pendentif',                   hood:'Vieux Valence',     desc:"Petit monument funéraire de style Renaissance (1548), construit en face de la cathédrale. Chef-d'œuvre méconnu de l'art Renaissance en France, classé Monument Historique.",  tags:['Renaissance','1548','Monument Historique'], h:'1548', yr:'XVIe',  lat:44.9324, lng:4.8910, g:'https://maps.google.com/?q=Pendentif+Valence', wiki:'Pendentif_de_Valence'},
-  {id:'champdemars',  e:'🌳', n:'Champ de Mars & Kiosque',         hood:'Centre-ville',      desc:"L'esplanade emblématique de Valence surplombant le Rhône. Vue panoramique sur le Vercors et les Alpes. Le kiosque à musique Belle Époque est le symbole de la ville.",        tags:['Vue Rhône','Belle Époque','Gratuit'],  h:'XIXe s.', yr:'XIXe',  lat:44.9330, lng:4.8895, g:'https://maps.google.com/?q=Champ+de+Mars+Valence', wiki:'Valence,_Drôme'},
-  {id:'musee',        e:'🖼️', n:'Musée de Valence',                hood:'Centre-ville',      desc:"Musée d'art et d'archéologie dans l'ancien évêché. Collections allant de l'Antiquité à nos jours — dessins de Hubert Robert et peintures régionalistes drômoises.",          tags:['Musée','Art','Archéologie'],          h:'—',       yr:'XIXe',  lat:44.9318, lng:4.8918, g:'https://maps.google.com/?q=Musée+de+Valence', wiki:'Musée_de_Valence'},
-  {id:'napoleon',     e:'⚔️', n:'Maison de Napoléon Bonaparte',    hood:'Centre-ville',      desc:"Napoléon Bonaparte vécut à Valence en 1785-1786 comme officier d'artillerie. La maison rue Bouffier est aujourd'hui un lieu de mémoire incontournable de la ville.",         tags:['Histoire','Napoléon','XVIIIe'],       h:'1785',    yr:'XVIIIe',lat:44.9328, lng:4.8920, g:'https://maps.google.com/?q=Maison+Napoléon+Valence', wiki:'Napoleon'},
-  {id:'maisonsdtetes',e:'🏠', n:'Maison des Têtes',                 hood:'Vieux Valence',     desc:"Hôtel particulier Renaissance (1530) orné de 71 têtes sculptées représentant les vents, les saisons et des personnages mythologiques. Chef-d'œuvre de la Renaissance valentinoise.", tags:['Renaissance','1530','Architecture'], h:'—',       yr:'XVIe',  lat:44.9320, lng:4.8925, g:'https://maps.google.com/?q=Maison+des+Têtes+Valence', wiki:'Maison_des_têtes_(Valence)'},
-  {id:'parcjouvet',   e:'🌸', n:'Parc Jouvet',                      hood:'Bords du Rhône',   desc:"Le plus beau parc de Valence en bord de Rhône. Roseraie, sculptures, fontaines et vue sur le Vercors. Lieu de promenade incontournable des valentinois depuis 1887.",         tags:['Parc','Rhône','Gratuit'],             h:'—',       yr:'1887',  lat:44.9298, lng:4.8875, g:'https://maps.google.com/?q=Parc+Jouvet+Valence', wiki:'Parc_Jouvet'},
-  {id:'vieuxvalence', e:'🏘️', n:'Vieux Valence',                   hood:'Centre historique', desc:"Le cœur historique avec ses ruelles médiévales, ses hôtels particuliers Renaissance et la Grande Rue animée. Flâner dans le Vieux Valence est un voyage dans le temps.",      tags:['Médiéval','Renaissance','Flânerie'],  h:'—',       yr:'Moyen Âge',lat:44.9322, lng:4.8928, g:'https://maps.google.com/?q=Vieux+Valence', wiki:'Valence,_Drôme'},
-  {id:'rhone',        e:'⛵', n:'Bords du Rhône & Port de l\'Épervière',hood:'Bords du Rhône',desc:"La promenade des bords du Rhône relie le parc Jouvet au port de plaisance de l'Épervière. Pistes cyclables, base nautique et vue sur l'Ardèche côté rhônalpin.",             tags:['Rhône','Vélo','Plein air'],           h:'—',       yr:'XXe',   lat:44.9285, lng:4.8855, g:'https://maps.google.com/?q=Port+Épervière+Valence', wiki:'Rhône'},
-  {id:'chabeuil',     e:'🌻', n:'Plaine de Valence & Chabeuil',    hood:'Périphérie',        desc:"La plaine valentinoise avec ses vergers d'abricots Bergeron AOC et ses vignobles de Crozes-Hermitage. Le terroir drômois à 10 minutes du centre — un voyage sensoriel.",       tags:['Terroir','Abricots AOC','Vignes'],    h:'—',       yr:'—',     lat:44.9200, lng:5.0200, g:'https://maps.google.com/?q=Chabeuil+Drôme', wiki:'Chabeuil'},
-  {id:'crussol',      e:'🏰', n:'Château de Crussol',               hood:'Saint-Péray (7 km)',desc:"Les ruines majestueuses du château de Crussol dominent le Rhône depuis un piton rocheux à 300 m d'altitude. Fondé au XIIe siècle, il offre un panorama exceptionnel sur Valence, le Vercors et les Alpes. Un site médiéval incontournable à 7 km de Valence.", tags:['Médiéval','XIIe siècle','Panorama 360°'], h:'300 m', yr:'XIIe', lat:44.9487, lng:4.8340, g:'https://maps.google.com/?q=Château+de+Crussol+Saint-Péray', wiki:'Château_de_Crussol'},
-  {id:'citechocolat', e:'🍫', n:'Cité du Chocolat Valrhona',        hood:"Tain-l'Hermitage (15 min)",desc:"Le musée du chocolat de la maison Valrhona, créateur du célèbre Guanaja et du Manjari. Ateliers de dégustation, découverte de la fabrication du chocolat bean-to-bar et boutique avec toutes les créations Valrhona. Une expérience sensorielle unique dans la capitale mondiale du chocolat gastronomique.", tags:['Chocolat','Valrhona','Tain-l\'Hermitage'], h:'—', yr:'2013', lat:45.0695, lng:4.8498, g:'https://maps.google.com/?q=Cité+du+Chocolat+Valrhona+Tain+Hermitage', wiki:'Valrhona'},
-  {id:'chapoutier',   e:'🍷', n:'Maison Chapoutier',                 hood:"Tain-l'Hermitage (15 min)",desc:"L'une des plus grandes maisons de vins de la Vallée du Rhône, fondée en 1808. Michel Chapoutier produit les crus mythiques de l'Hermitage, Crozes-Hermitage et Saint-Joseph en biodynamie. La cave de dégustation et le chai de vinification sont ouverts à la visite — une plongée dans l'excellence viticole rhônalpin.", tags:['Hermitage AOC','Biodynamie','Depuis 1808'], h:'—', yr:'1808', lat:45.0700, lng:4.8492, g:'https://maps.google.com/?q=Maison+Chapoutier+Tain+Hermitage', wiki:'Chapoutier'},
+  {id:'cathedrale',   e:'⛪', names:{fr:'Cathédrale Saint-Apollinaire',en:'Saint-Apollinaire Cathedral',es:'Catedral de San Apolinar',de:'Kathedrale Saint-Apollinaire',it:'Cattedrale di Sant\'Apollinare',zh:'圣阿波利奈尔大教堂',ja:'サン＝アポリネール大聖堂'}, hoods:{fr:'Vieux Valence',en:'Old Town',es:'Casco antiguo',de:'Altstadt',it:'Città vecchia',zh:'老城区',ja:'旧市街'}, descs:{fr:"Cathédrale romane fondée au XIe siècle. Le tombeau du pape Pie VI y est conservé. Elle domine la falaise du Rhône depuis plus de 900 ans.",en:"Romanesque cathedral founded in the 11th century. It houses the tomb of Pope Pius VI and overlooks the Rhône cliffs for over 900 years.",es:"Catedral románica del siglo XI. Alberga la tumba del papa Pío VI y domina los acantilados del Ródano.",de:"Romanische Kathedrale aus dem 11. Jahrhundert. Sie beherbergt das Grab von Papst Pius VI.",it:"Cattedrale romanica fondata nell'XI secolo. Ospita la tomba di Papa Pio VI.",zh:"建于11世纪的罗曼式大教堂，保存有教皇庇护六世的陵墓。九百余年来俯瞰罗纳河畔峭壁。",ja:"11世紀に創建されたロマネスク様式の大聖堂。教皇ピウス6世の墓を所蔵し、900年以上ローヌ川の崖を見下ろしています。",ja:"11世紀に建てられたロマネスク様式の大聖堂。ピウス6世の墓が安置され、900年以上にわたりローヌ川の崖から街を見守っています。"}, tags:['Roman','XIe s.','Incontournable'], h:'XIe s.', yr:'XIe', lat:44.9326,lng:4.8912, g:'https://maps.google.com/?q=Cathédrale+Saint-Apollinaire+Valence', wiki:'Cathédrale_Saint-Apollinaire_de_Valence'},
+  {id:'pendentif',    e:'🏛️', names:{fr:'Le Pendentif',en:'Le Pendentif',es:'Le Pendentif',de:'Le Pendentif',it:'Le Pendentif',zh:'悬石纪念碑',ja:'ル・パンダンティフ',ja:'ル・パンダンティフ'}, hoods:{fr:'Vieux Valence',en:'Old Town',es:'Casco antiguo',de:'Altstadt',it:'Città vecchia',zh:'老城区',ja:'旧市街'}, descs:{fr:"Monument funéraire Renaissance (1548), en face de la cathédrale. Chef-d'œuvre méconnu de la Renaissance française, classé Monument Historique.",en:"Funerary Renaissance monument (1548), opposite the cathedral. A little-known masterpiece of French Renaissance, listed as a Historic Monument.",es:"Monumento funerario renacentista (1548), frente a la catedral. Obra maestra poco conocida del Renacimiento francés.",de:"Funeräres Renaissancemonument (1548), gegenüber der Kathedrale. Wenig bekanntes Meisterwerk der französischen Renaissance.",it:"Monumento funerario rinascimentale (1548), di fronte alla cattedrale. Capolavoro poco noto del Rinascimento francese.",zh:"1548年文艺复兴风格葬礼纪念碑，位于大教堂对面，法国文艺复兴鲜为人知的杰作，已列为历史古迹。",ja:"大聖堂向かいのルネサンス様式霊廟（1548年）。フランス・ルネサンスの知られざる傑作で歴史的建造物に指定。"}, tags:['Renaissance','1548','Monument Historique'], h:'1548', yr:'XVIe', lat:44.9324,lng:4.8910, g:'https://maps.google.com/?q=Pendentif+Valence', wiki:'Pendentif_de_Valence'},
+  {id:'champdemars',  e:'🌳', names:{fr:'Champ de Mars & Kiosque',en:'Champ de Mars & Bandstand',es:'Campo de Marte y Quiosco',de:'Champ de Mars & Musikpavillon',it:'Champ de Mars & Chiosco',zh:'战神广场与音乐亭',ja:'シャン・ド・マルスと音楽堂',ja:'シャン・ド・マルスと音楽亭'}, hoods:{fr:'Centre-ville',en:'City centre',es:'Centro ciudad',de:'Stadtzentrum',it:'Centro città',zh:'市中心',ja:'市街中心部'}, descs:{fr:"L'esplanade emblématique surplombant le Rhône. Vue panoramique sur le Vercors et les Alpes. Le kiosque Belle Époque est le symbole de Valence.",en:"The iconic esplanade overlooking the Rhône. Panoramic views of the Vercors and the Alps. The Belle Époque bandstand is Valence's symbol.",es:"La emblemática explanada con vistas al Ródano. Panorámica de los Alpes y el Vercors. El quiosco Belle Époque es símbolo de Valence.",de:"Die ikonische Esplanade mit Blick auf die Rhône. Panoramablick auf die Alpen und das Vercors-Massiv.",it:"L'iconica esplanade che domina il Rodano. Vista panoramica sulle Alpi e sul Vercors.",zh:"俯瞰罗纳河的标志性广场，可全景眺望韦科尔山脉与阿尔卑斯山。美好年代音乐亭是瓦朗斯的城市象征。",ja:"ローヌ川を見下ろす象徴的な広場。ヴェルコールとアルプスのパノラマ。ベル・エポック様式の音楽堂はヴァランスの象徴。",ja:"ローヌ川を見下ろすヴァランスのシンボル的な広場。ヴェルコール山地とアルプスの全景が広がり、ベル・エポック様式の音楽亭は街の象徴です。"}, tags:['Vue Rhône','Belle Époque','Gratuit'], h:'XIXe s.', yr:'XIXe', lat:44.9330,lng:4.8895, g:'https://maps.google.com/?q=Champ+de+Mars+Valence', wiki:'Valence,_Drôme'},
+  {id:'musee',        e:'🖼️', names:{fr:'Musée de Valence',en:'Valence Museum',es:'Museo de Valence',de:'Museum Valence',it:'Museo di Valence',zh:'瓦朗斯博物馆',ja:'ヴァランス美術館',ja:'ヴァランス美術館'}, hoods:{fr:'Centre-ville',en:'City centre',es:'Centro ciudad',de:'Stadtzentrum',it:'Centro città',zh:'市中心',ja:'市街中心部'}, descs:{fr:"Musée d'art et d'archéologie dans l'ancien évêché. Dessins de Hubert Robert et collections drômoises.",en:"Art and archaeology museum in the former bishop's palace. Drawings by Hubert Robert and Drôme regional collections.",es:"Museo de arte y arqueología en el antiguo palacio episcopal. Dibujos de Hubert Robert y colecciones regionales.",de:"Kunst- und Archäologiemuseum im ehemaligen Bischofspalast. Zeichnungen von Hubert Robert.",it:"Museo d'arte e archeologia nell'antico palazzo vescovile. Disegni di Hubert Robert e collezioni regionali.",zh:"坐落于昔日主教宫的艺术与考古博物馆，馆藏胡贝尔·罗贝尔素描及德龙省地区珍贵藏品。",ja:"旧司教館の美術・考古博物館。ユベール・ロベールのデッサンとドローム地方のコレクションを所蔵。",ja:"旧司教館に設けられた美術・考古学博物館。ユベール・ロベールのデッサンやドローム地方のコレクションを所蔵しています。"}, tags:['Musée','Art','Archéologie'], h:'—', yr:'XIXe', lat:44.9318,lng:4.8918, g:'https://maps.google.com/?q=Musée+de+Valence', wiki:'Musée_de_Valence'},
+  {id:'napoleon',     e:'⚔️', names:{fr:'Maison de Napoléon Bonaparte',en:'Napoleon Bonaparte\'s House',es:'Casa de Napoleón Bonaparte',de:'Haus von Napoleon Bonaparte',it:'Casa di Napoleone Bonaparte',zh:'拿破仑·波拿巴故居',ja:'ナポレオン・ボナパルトの家',ja:'ナポレオン・ボナパルトの家'}, hoods:{fr:'Centre-ville',en:'City centre',es:'Centro ciudad',de:'Stadtzentrum',it:'Centro città',zh:'市中心',ja:'市街中心部'}, descs:{fr:"Napoléon Bonaparte vécut à Valence en 1785-1786 comme jeune officier d'artillerie. La maison rue Bouffier est un lieu de mémoire incontournable.",en:"Napoleon Bonaparte lived in Valence in 1785-1786 as a young artillery officer. The house on Rue Bouffier is an unmissable historic site.",es:"Napoleón Bonaparte vivió en Valence en 1785-1786 como joven oficial de artillería. La casa es un lugar histórico imprescindible.",de:"Napoleon Bonaparte lebte 1785-1786 als junger Artillerieoffizier in Valence. Das Haus in der Rue Bouffier ist ein Pflichtbesuch.",it:"Napoleone Bonaparte visse a Valence nel 1785-1786 come giovane ufficiale di artiglieria. La casa è un luogo storico imperdibile.",zh:"拿破仑于1785至1786年作为年轻炮兵军官在此居住，布菲尔街故居是不可错过的历史遗迹。",ja:"ナポレオンは1785〜1786年に若き砲兵将校としてヴァランスに滞在。ブフィエ街の旧居は必訪の歴史スポット。",ja:"ナポレオン・ボナパルトが1785〜1786年に若き砲兵将校として滞在した地。ブフィエ通りのこの家は必見の歴史的史跡です。"}, tags:['Histoire','Napoléon','XVIIIe'], h:'1785', yr:'XVIIIe', lat:44.9328,lng:4.8920, g:'https://maps.google.com/?q=Maison+Napoléon+Valence', wiki:'Napoleon'},
+  {id:'maisonsdtetes', e:'🏠', names:{fr:'Maison des Têtes',en:'House of Heads',es:'Casa de las Cabezas',de:'Haus der Köpfe',it:'Casa delle Teste',zh:'人头宅邸',ja:'テットの館',ja:'マゾン・デ・テート（頭の館）'}, hoods:{fr:'Vieux Valence',en:'Old Town',es:'Casco antiguo',de:'Altstadt',it:'Città vecchia',zh:'老城区',ja:'旧市街'}, descs:{fr:"Hôtel particulier Renaissance (1530) orné de 71 têtes sculptées représentant les vents, saisons et personnages mythologiques.",en:"Renaissance mansion (1530) decorated with 71 sculpted heads representing winds, seasons and mythological figures.",es:"Mansión renacentista (1530) decorada con 71 cabezas esculpidas que representan vientos, estaciones y figuras mitológicas.",de:"Renaissancepalast (1530) mit 71 gemeißelten Köpfen, die Winde, Jahreszeiten und mythologische Figuren darstellen.",it:"Palazzo rinascimentale (1530) decorato con 71 teste scolpite che rappresentano venti, stagioni e figure mitologiche.",zh:"1530年文艺复兴风格府邸，外墙装饰着71个雕刻头像，分别代表风神、四季与神话人物。",ja:"71の彫刻された頭部で飾られたルネサンス様式の邸宅（1530年）。風、四季、神話の人物を表現しています。",ja:"1530年建造のルネサンス様式の館。風・四季・神話の登場人物を表す71体の彫刻された頭部で飾られた外観が見事です。"}, tags:['Renaissance','1530','Architecture'], h:'—', yr:'XVIe', lat:44.9320,lng:4.8925, g:'https://maps.google.com/?q=Maison+des+Têtes+Valence', wiki:'Maison_des_têtes_(Valence)'},
+  {id:'parcjouvet',   e:'🌸', names:{fr:'Parc Jouvet',en:'Jouvet Park',es:'Parque Jouvet',de:'Park Jouvet',it:'Parco Jouvet',zh:'茹韦公园',ja:'ジュヴェ公園',ja:'ジュヴェ公園'}, hoods:{fr:'Bords du Rhône',en:'Rhône riverside',es:'Orillas del Ródano',de:'Rhôneufer',it:'Rive del Rodano',zh:'罗纳河畔',ja:'ローヌ川沿い'}, descs:{fr:"Le plus beau parc de Valence en bord de Rhône. Roseraie, sculptures, fontaines et vue sur le Vercors depuis 1887.",en:"Valence's most beautiful park on the Rhône riverside. Rose garden, sculptures, fountains and views of the Vercors since 1887.",es:"El parque más hermoso de Valence a orillas del Ródano. Rosaleda, esculturas, fuentes y vistas al Vercors desde 1887.",de:"Valences schönster Park am Rhôneufer. Rosengarten, Skulpturen, Brunnen und Blick auf das Vercors seit 1887.",it:"Il parco più bello di Valence sulle rive del Rodano. Giardino di rose, sculture, fontane e vista sul Vercors dal 1887.",zh:"瓦朗斯最美罗纳河畔公园，自1887年起以玫瑰园、雕塑、喷泉及韦科尔山脉壮丽景色著称。",ja:"1887年以来、バラ園、彫刻、噴泉、ヴェルコールの眺めで知られるヴァランス最美のローヌ川沿い公園。",ja:"ローヌ川沿いにあるヴァランス最美の公園。1887年から続くバラ園・彫刻・噴水・ヴェルコール山地の眺望が魅力です。"}, tags:['Parc','Rhône','Gratuit'], h:'—', yr:'1887', lat:44.9298,lng:4.8875, g:'https://maps.google.com/?q=Parc+Jouvet+Valence', wiki:'Parc_Jouvet'},
+  {id:'vieuxvalence', e:'🏘️', names:{fr:'Vieux Valence',en:'Old Valence',es:'Valence histórica',de:'Altstadt Valence',it:'Valence storica',zh:'老城瓦朗斯',ja:'旧市街ヴァランス',ja:'旧市街ヴァランス'}, hoods:{fr:'Centre historique',en:'Historic centre',es:'Centro histórico',de:'Historisches Zentrum',it:'Centro storico',zh:'历史中心',ja:'歴史地区',ja:'歴史地区'}, descs:{fr:"Ruelles médiévales, hôtels particuliers Renaissance et la Grande Rue animée. Flâner dans le Vieux Valence est un voyage dans le temps.",en:"Medieval alleys, Renaissance mansions and the lively Grande Rue. Strolling through Old Valence is a journey through time.",es:"Callejuelas medievales, mansiones renacentistas y la animada Grande Rue. Pasear por la Valence histórica es viajar en el tiempo.",de:"Mittelalterliche Gassen, Renaissancepaläste und die lebhafte Grande Rue. Ein Spaziergang durch Valences Altstadt ist eine Zeitreise.",it:"Vicoli medievali, palazzi rinascimentali e la vivace Grande Rue. Passeggiare nella Valence storica è un viaggio nel tempo.",zh:"中世纪小巷、文艺复兴宅邸与热闹大街交相辉映，漫步老城如同穿越时光隧道。",ja:"中世の路地、ルネサンスの邸宅、活気あるグランド・リュー。旧市街を散策することは時間の旅です。"}, tags:['Médiéval','Renaissance','Flânerie'], h:'—', yr:'Moyen Âge', lat:44.9322,lng:4.8928, g:'https://maps.google.com/?q=Vieux+Valence', wiki:'Valence,_Drôme'},
+  {id:'rhone',        e:'⛵', names:{fr:"Bords du Rhône & Port de l'Épervière",en:"Rhône Riverside & Épervière Marina",es:"Orillas del Ródano & Puerto Épervière",de:"Rhôneufer & Yachthafen Épervière",it:"Rive del Rodano & Porto dell'Épervière",zh:'罗纳河畔与埃佩维埃尔港',ja:'ローヌ川沿いとエペルヴィエール港',ja:'ローヌ川沿いとエペルヴィエール港'}, hoods:{fr:'Bords du Rhône',en:'Rhône riverside',es:'Orillas del Ródano',de:'Rhôneufer',it:'Rive del Rodano',zh:'罗纳河畔',ja:'ローヌ川沿い'}, descs:{fr:"Promenade reliant le parc Jouvet au port de l'Épervière. Pistes cyclables, base nautique et vue sur l'Ardèche.",en:"Riverside walk linking Jouvet Park to Épervière marina. Cycling paths, water sports centre and views of Ardèche.",es:"Paseo que une el parque Jouvet con el puerto Épervière. Carriles bici, base náutica y vistas a la Ardèche.",de:"Uferpromenade vom Park Jouvet bis zum Yachthafen Épervière. Radwege, Wassersportzentrum und Blick auf die Ardèche.",it:"Passeggiata che collega il parco Jouvet al porto dell'Épervière. Piste ciclabili, base nautica e vista sull'Ardèche.",zh:"连接茹韦公园与埃佩维埃尔港的河岸步道，设有自行车道、水上运动基地，可眺望阿尔代什河景色。",ja:"ジュヴェ公園からエペルヴィエール港へ続く遊歩道。サイクリングコース、マリンスポーツ施設、アルデシュの眺望。",ja:"ジュヴェ公園からエペルヴィエール港を結ぶ川沿いの遊歩道。サイクリングロード・ウォータースポーツ施設・アルデッシュ川の眺望があります。"}, tags:['Rhône','Vélo','Plein air'], h:'—', yr:'XXe', lat:44.9285,lng:4.8855, g:'https://maps.google.com/?q=Port+Épervière+Valence', wiki:'Rhône'},
+  {id:'chabeuil',     e:'🌻', names:{fr:'Plaine de Valence & Chabeuil',en:'Valence Plain & Chabeuil',es:'Llanura de Valence & Chabeuil',de:'Ebene von Valence & Chabeuil',it:'Pianura di Valence & Chabeuil',zh:'瓦朗斯平原与沙伯伊',ja:'ヴァランス平野とシャブイユ',ja:'ヴァランス平原とシャブイユ'}, hoods:{fr:'Périphérie',en:'Surroundings',es:'Periferia',de:'Umgebung',it:'Periferia',zh:'郊区',ja:'郊外',ja:'郊外'}, descs:{fr:"Vergers d'abricots Bergeron AOC et vignobles de Crozes-Hermitage. Le terroir drômois à 10 minutes du centre.",en:"Bergeron AOC apricot orchards and Crozes-Hermitage vineyards. The Drôme terroir 10 minutes from the city centre.",es:"Huertos de albaricoques Bergeron AOC y viñedos de Crozes-Hermitage. El terruño del Drôme a 10 minutos del centro.",de:"Bergeron-AOC-Aprikosenhaine und Crozes-Hermitage-Weinberge. Das Drôme-Terroir, nur 10 Minuten vom Stadtzentrum entfernt.",it:"Frutteti di albicocche Bergeron AOC e vigneti di Crozes-Hermitage. Il terroir della Drôme a 10 minuti dal centro.",zh:"AOC认证贝尔热隆杏园与克罗泽-埃米塔日葡萄园，距市中心仅10分钟的德龙省风土精华。",ja:"AOC認定ベルジュロン杏の果樹園とクロゼ・エルミタージュのブドウ畑。市中心から10分のドローム県テロワール。",ja:"AOC認定ベルジュロン杏の果樹園とクローズ・エルミタージュのブドウ畑。街の中心から10分、ドローム県の風土の精髄が息づいています。"}, tags:['Terroir','Abricots AOC','Vignes'], h:'—', yr:'—', lat:44.9200,lng:5.0200, g:'https://maps.google.com/?q=Chabeuil+Drôme', wiki:'Chabeuil'},
+  {id:'crussol',      e:'🏰', names:{fr:'Château de Crussol',en:'Crussol Castle',es:'Castillo de Crussol',de:'Burg Crussol',it:'Castello di Crussol',zh:'克鲁索城堡',ja:'クリュソル城',ja:'クリュゾール城'}, hoods:{fr:'Saint-Péray (7 km)',en:'Saint-Péray (7 km)',es:'Saint-Péray (7 km)',de:'Saint-Péray (7 km)',it:'Saint-Péray (7 km)',zh:'圣佩雷（7公里）',ja:'サン=ペレ（7km）',ja:'サン＝ペレ（7km）'}, descs:{fr:"Ruines majestueuses du XIIe siècle sur un piton rocheux à 300 m. Vue à 360° sur Valence, le Vercors et les Alpes. Randonnée 45 min.",en:"Majestic 12th-century ruins on a rocky peak at 300 m. 360° views over Valence, the Vercors and the Alps. 45-minute hike.",es:"Majestuosas ruinas del siglo XII sobre un pico rocoso a 300 m. Vistas de 360° sobre Valence, el Vercors y los Alpes.",de:"Majestätische Ruinen aus dem 12. Jahrhundert auf einem Felsen auf 300 m. 360°-Panorama über Valence, das Vercors und die Alpen.",it:"Maestose rovine del XII secolo su uno sperone roccioso a 300 m. Vista a 360° su Valence, il Vercors e le Alpi.",zh:"雄踞300米岩石峭壁的12世纪壮观遗址，可360度俯瞰瓦朗斯、韦科尔与阿尔卑斯山，徒步约45分钟。",ja:"標高300mの岩山の12世紀の廃墟。ヴァランス、ヴェルコール、アルプスを360度一望。ハイキング45分。",ja:"標高300mの岩山にそびえる12世紀の雄大な廃墟。ヴァランス・ヴェルコール・アルプスを360度見渡せ、ハイキング所要時間は約45分です。"}, tags:['Médiéval','XIIe s.','Panorama 360°'], h:'300 m', yr:'XIIe', lat:44.9487,lng:4.8340, g:'https://maps.google.com/?q=Château+de+Crussol+Saint-Péray', wiki:'Château_de_Crussol'},
+  {id:'citechocolat', e:'🍫', names:{fr:'Cité du Chocolat Valrhona',en:'Valrhona Chocolate City',es:'Ciudad del Chocolate Valrhona',de:'Valrhona Schokoladenstadt',it:'Città del Cioccolato Valrhona',zh:'法芙娜巧克力城',ja:'ヴァローナ チョコレート シティ',ja:'ヴァローナ・チョコレートの里'}, hoods:{fr:"Tain-l'Hermitage (15 min)",en:"Tain-l'Hermitage (15 min)",es:"Tain-l'Hermitage (15 min)",de:"Tain-l'Hermitage (15 min)",it:"Tain-l'Hermitage (15 min)",zh:'丹-埃米塔日（15分钟）',ja:'タン＝レルミタージュ（15分）'}, descs:{fr:"Le musée du chocolat Valrhona — ateliers de dégustation et découverte du bean-to-bar. Guanaja, Manjari, Dulcey à déguster.",en:"Valrhona's chocolate museum — tasting workshops and bean-to-bar discovery. Guanaja, Manjari and Dulcey to taste.",es:"El museo del chocolate Valrhona — talleres de cata y descubrimiento del bean-to-bar. Guanaja, Manjari y Dulcey para degustar.",de:"Das Schokoladenmuseum Valrhona — Verkostungsworkshops und Bean-to-Bar-Entdeckung. Guanaja, Manjari und Dulcey zum Probieren.",it:"Il museo del cioccolato Valrhona — laboratori di degustazione e scoperta del bean-to-bar. Guanaja, Manjari e Dulcey da assaggiare.",zh:"法芙娜巧克力博物馆，提供品鉴工作坊与从可可豆到巧克力全程体验，可品尝瓜纳哈、曼加里、杜尔塞等经典产品。",ja:"ヴァローナのチョコレート博物館。テイスティングワークショップとビーン・トゥ・バー体験。グアナハ、マンジャリ、デュルセを試して。",ja:"ヴァローナのチョコレート博物館。テイスティングワークショップとビーン・トゥ・バーの製造工程を体験でき、グアナラ・マンジャリ・ドゥルセーを試食できます。"}, tags:['Chocolat','Valrhona','Ateliers'], h:'—', yr:'2013', lat:45.0695,lng:4.8498, g:'https://maps.google.com/?q=Cité+du+Chocolat+Valrhona+Tain+Hermitage', wiki:'Valrhona'},
+  {id:'chapoutier',   e:'🍷', names:{fr:'Maison Chapoutier',en:'Chapoutier Winery',es:'Bodega Chapoutier',de:'Weingut Chapoutier',it:'Cantina Chapoutier',zh:'夏普蒂尔酒庄',ja:'シャプティエ醸造所',ja:'メゾン・シャプティエ'}, hoods:{fr:"Tain-l'Hermitage (15 min)",en:"Tain-l'Hermitage (15 min)",es:"Tain-l'Hermitage (15 min)",de:"Tain-l'Hermitage (15 min)",it:"Tain-l'Hermitage (15 min)",zh:'丹-埃米塔日（15分钟）',ja:'タン＝レルミタージュ（15分）'}, descs:{fr:"Fondée en 1808, Chapoutier produit les grands crus de l'Hermitage en biodynamie. Visite du chai et dégustation.",en:"Founded in 1808, Chapoutier produces great Hermitage wines using biodynamics. Cellar tours and tastings.",es:"Fundada en 1808, Chapoutier produce los grandes vinos del Hermitage en biodinámica. Visitas y degustaciones.",de:"1808 gegründet, produziert Chapoutier biodynamisch große Hermitage-Weine. Kellerführungen und Verkostungen.",it:"Fondata nel 1808, Chapoutier produce i grandi vini dell'Hermitage in biodinamica. Visite in cantina e degustazioni.",zh:"创立于1808年，夏普蒂尔采用生物动力法酿造埃米塔日特级葡萄酒，可参观酒窖并品鉴各款佳酿。",ja:"1808年創業。シャプティエはビオディナミ農法でエルミタージュのグラン・クリュを醸造。セラー見学とテイスティングが楽しめます。"}, tags:['Hermitage AOC','Biodynamie','Depuis 1808'], h:'—', yr:'1808', lat:45.0700,lng:4.8492, g:'https://maps.google.com/?q=Maison+Chapoutier+Tain+Hermitage', wiki:'Chapoutier'},
 ];
 
 const SPORTS_DATA = {
   sports:[
-    {sport:'🏉 Rugby', teams:[
-      {name:'Valence Romans Drôme Rugby', league:'Pro D2', stadium:'Stade Gilbert Tribut', color:'#C0392B', e:'🏉', desc:"Club phare né de la fusion Valence-Romans en 2013. Pensionnaire de Pro D2, il représente fièrement la Drôme dans le rugby professionnel français.", tags:['Pro D2','Drôme','Fusion 2013'], wiki:'Valence_Romans_Drôme_Rugby'},
-    ]},
-    {sport:'⚽ Football', teams:[
-      {name:'Valence FC (VFC)', league:'Régional / Nationale 3', stadium:'Stade Pompidou', color:'#E63946', e:'⚽', desc:"Le principal club de football de Valence, fondé en 1922. Évoluant entre les divisions régionales et nationales, le VFC est un pilier du sport valentinois.", tags:['Fondé 1922','Pompidou','Drôme'], wiki:'Valence,_Drôme'},
-    ]},
-    {sport:'🏀 Basket', teams:[
-      {name:'Valence Romans Basket', league:'NM2 / Régional', stadium:'Palais des Sports', color:'#2980B9', e:'🏀', desc:"L'un des clubs de basket les plus actifs de la Drôme. École de basket renommée, formant des joueurs pour les championnats régionaux et nationaux.", tags:['Basket','Formation','Drôme'], wiki:'Valence,_Drôme'},
-    ]},
-    {sport:'🎾 Tennis & Autres', teams:[
-      {name:'Tennis Club de Valence', league:'Ligue AURA', stadium:'TC Valence', color:'#27AE60', e:'🎾', desc:"L'un des clubs de tennis les plus importants de la région. Nombreux courts, école de tennis et tournois régionaux tout au long de l'année.", tags:['Tennis','Ligue AURA'], wiki:'Valence,_Drôme'},
-      {name:'Rowing Club Valentinois', league:'Fédération Française', stadium:"Port de l'Épervière", color:'#1ABC9C', e:'🚣', desc:"L'aviron sur le Rhône — l'un des clubs d'aviron les plus anciens de la région, pratiquant sur les eaux du magnifique Rhône valentinois.", tags:['Aviron','Rhône','Tradition'], wiki:'Rhône'},
+    {sport:'🏉 Rugby', teams:[{name:'Valence Romans Drôme Rugby',league:'Pro D2',stadium:'Stade Gilbert Tribut',color:'#C0392B',e:'🏉',descs:{fr:"Club né de la fusion Valence-Romans en 2013. Pensionnaire de Pro D2, il représente fièrement la Drôme dans le rugby professionnel.",en:"Club born from the Valence-Romans merger in 2013. A Pro D2 regular, proudly representing Drôme in professional rugby.",es:"Club nacido de la fusión Valence-Romans en 2013. Equipo de Pro D2, representa con orgullo el Drôme en el rugby profesional.",de:"Aus der Fusion Valence-Romans 2013 entstandener Club. Regelmäßig in der Pro D2, stolzer Vertreter der Drôme im Profi-Rugby.",it:"Club nato dalla fusione Valence-Romans nel 2013. Militante in Pro D2, rappresenta con orgoglio la Drôme nel rugby professionistico.",zh:"2013年瓦朗斯-罗曼合并成立的俱乐部，在Pro D2职业联赛中自豪代表德龙省。",ja:"2013年にヴァランスとロマンが合併して誕生。プロD2でドローム県を誇り高く代表しています。",ja:"2013年にヴァランスとロマンが合併して誕生したクラブ。プロD2に所属し、ドローム県を代表してプロラグビーの舞台で活躍しています。"},tags:['Pro D2','Drôme','Fusion 2013'],wiki:'Valence_Romans_Drôme_Rugby'}]},
+    {sport:'⚽ Football', teams:[{name:'Valence FC (VFC)',league:'Régional / Nationale 3',stadium:'Stade Pompidou',color:'#E63946',e:'⚽',descs:{fr:"Le principal club de football de Valence, fondé en 1922. Pilier du sport valentinois entre les divisions régionales et nationales.",en:"Valence's main football club, founded in 1922. A cornerstone of local sport, competing between regional and national divisions.",es:"El principal club de fútbol de Valence, fundado en 1922. Pilar del deporte local entre las divisiones regionales y nacionales.",de:"Valences wichtigster Fußballclub, 1922 gegründet. Ein Pfeiler des lokalen Sports zwischen regionalen und nationalen Ligen.",it:"Il principale club calcistico di Valence, fondato nel 1922. Pilastro dello sport locale tra le divisioni regionali e nazionali.",zh:"瓦朗斯主要足球俱乐部，创建于1922年，在地区级与全国级别联赛间征战，是本地体育的重要支柱。",ja:"1922年創設のヴァランス主要サッカークラブ。地域と全国リーグ間で活躍する地元スポーツの要。",ja:"1922年創設のヴァランスの主要サッカークラブ。地域リーグと全国リーグを行き来しながら、地元スポーツの重要な柱として活動しています。"},tags:['Fondé 1922','Pompidou','Drôme'],wiki:'Valence,_Drôme'}]},
+    {sport:'🏀 Basket', teams:[{name:'Valence Romans Basket',league:'NM2 / Régional',stadium:'Palais des Sports',color:'#2980B9',e:'🏀',descs:{fr:"L'un des clubs de basket les plus actifs de la Drôme. École de basket renommée, formant des joueurs pour les championnats.",en:"One of Drôme's most active basketball clubs. A renowned basketball school, training players for regional and national championships.",es:"Uno de los clubes de baloncesto más activos del Drôme. Escuela de baloncesto reconocida que forma jugadores.",de:"Einer der aktivsten Basketballvereine der Drôme. Eine renommierte Basketballschule, die Spieler für Meisterschaften ausbildet.",it:"Uno dei club di basket più attivi della Drôme. Scuola di basket rinomata che forma giocatori per i campionati.",zh:"德龙省最活跃的篮球俱乐部之一，拥有享誉盛名的篮球学校，为各级联赛培养球员。",ja:"ドローム県で最も活発なバスケットボールクラブの一つ。リーグ戦のために選手を育成する有名スクール。",ja:"ドローム県で最も活発なバスケットボールクラブのひとつ。定評あるバスケットボールアカデミーで地域・全国大会に向けた選手を育成しています。"},tags:['Basket','Formation','Drôme'],wiki:'Valence,_Drôme'}]},
+    {sport:'🎾 Tennis & Aviron', teams:[
+      {name:'Tennis Club de Valence',league:'Ligue AURA',stadium:'TC Valence',color:'#27AE60',e:'🎾',descs:{fr:"L'un des clubs de tennis les plus importants de la région. Nombreux courts et tournois régionaux tout au long de l'année.",en:"One of the region's most important tennis clubs. Numerous courts and regional tournaments throughout the year.",es:"Uno de los clubes de tenis más importantes de la región. Numerosas pistas y torneos regionales durante todo el año.",de:"Einer der bedeutendsten Tennisclubs der Region. Zahlreiche Plätze und regionale Turniere das ganze Jahr über.",it:"Uno dei club di tennis più importanti della regione. Numerosi campi e tornei regionali durante tutto l'anno.",zh:"该地区最重要的网球俱乐部之一，拥有多片球场，全年举办地区级网球赛事。",ja:"地域で最も重要なテニスクラブの一つ。多数のコートと年間を通じた地域トーナメントを誇ります。",ja:"地域で最も重要なテニスクラブのひとつ。多数のコートを備え、年間を通じて地域大会を開催しています。"},tags:['Tennis','Ligue AURA'],wiki:'Valence,_Drôme'},
+      {name:'Rowing Club Valentinois',league:'Fédération Française',stadium:"Port de l'Épervière",color:'#1ABC9C',e:'🚣',descs:{fr:"L'aviron sur le Rhône — l'un des clubs d'aviron les plus anciens de la région, pratiquant sur les eaux du Rhône.",en:"Rowing on the Rhône — one of the oldest rowing clubs in the region, training on the magnificent Rhône waters.",es:"Remo en el Ródano — uno de los clubes de remo más antiguos de la región, practicando en las aguas del Ródano.",de:"Rudern auf der Rhône — einer der ältesten Ruderclubs der Region auf den Gewässern der Rhône.",it:"Canottaggio sul Rodano — uno dei club di canottaggio più antichi della regione, sulle acque del Rodano.",zh:"罗纳河上的赛艇运动——该地区历史最悠久的赛艇俱乐部之一，在壮美的罗纳河水道上训练竞技。",ja:"ローヌ川でのボート競技——地域最古のボートクラブの一つ。雄大なローヌ川で練習と競技を行います。",ja:"ローヌ川でのボート競技—地域最古のボートクラブのひとつで、雄大なローヌ川の水面で練習・競技に励んでいます。"},tags:['Aviron','Rhône','Tradition'],wiki:'Rhône'},
     ]},
   ]
 };
 
-const FOOD_DATA = {
-  cats:['🌟 Gastronomique','🍽️ Bistrots','🥐 Café & Pâtisserie','🌿 Terroir local','🍕 Convivial','🗺️ Excursions'],
-  restaurants:[
-    {cat:0, name:'Maison Pic',              cuisine:'Haute cuisine française',    e:'👩‍🍳', price:'$$$$', michelin:'⭐⭐⭐', hood:'Centre-ville',       desc:"Anne-Sophie Pic, seule femme chef triplement étoilée au monde. La Maison Pic est une institution mondiale dans la même famille depuis 1891. Un voyage gastronomique absolu.",  tags:['3★ Michelin','Anne-Sophie Pic','Depuis 1891'], map:'https://maps.google.com/?q=Maison+Pic+Valence', wiki:'Anne-Sophie_Pic'},
-    {cat:0, name:'La Cachette',             cuisine:'Bistrot franco-japonais',    e:'🌿', price:'$$$',  michelin:'⭐',    hood:'Vieux Valence',      desc:"Restaurant de Masashi Ijichi — cuisine franco-japonaise d'une rare finesse. Étoilé Michelin, La Cachette propose une expérience fusion unique dans le Vieux Valence.",     tags:['1★ Michelin','Franco-japonais','Fusion'], map:'https://maps.google.com/?q=La+Cachette+Valence', wiki:'Valence,_Drôme'},
-    {cat:0, name:'André Coin des Halles',   cuisine:'Gastronomique régionale',    e:'🍷', price:'$$$',  michelin:'⭐',    hood:'Halles de Valence',  desc:"Une étoile Michelin au cœur des Halles. Cuisine du marché ancrée dans le terroir drômois — truffes, agneau des Baronnies et fromages de la Drôme.",                        tags:['1★ Michelin','Terroir','Halles'], map:'https://maps.google.com/?q=André+Valence', wiki:'Valence,_Drôme'},
-    {cat:1, name:'Le Saint-Ruf',            cuisine:'Bistrot traditionnel',       e:'🥘', price:'$$',   michelin:'',      hood:'Centre-ville',       desc:"Le bistrot emblématique du centre. Cuisine lyonnaise et drômoise généreuse — quenelles, daube et fromages de caractère dans une salle chaleureuse et animée.",             tags:['Lyonnais','Traditionnel','Charme'], map:'https://maps.google.com/?q=Le+Saint+Ruf+Valence', wiki:'Valence,_Drôme'},
-    {cat:1, name:'Brasserie Victor Hugo',   cuisine:'Brasserie alsacienne',       e:'🍺', price:'$$',   michelin:'',      hood:'Place Victor Hugo',  desc:"Brasserie animée sur la place Victor Hugo. Choucroute, côte de bœuf et plats de brasserie copieux. La terrasse en été face à la fontaine est incontournable.",            tags:['Brasserie','Terrasse','Animé'], map:'https://maps.google.com/?q=Brasserie+Victor+Hugo+Valence', wiki:'Valence,_Drôme'},
-    {cat:2, name:'Chabert & Guillot',       cuisine:'Pâtisserie & confiserie',    e:'🍰', price:'$$',   michelin:'',      hood:'Centre-ville',       desc:"La pâtisserie-confiserie de référence à Valence. La Pogne de Romans, la Suisse au chocolat et les pralines valentinoise sont les spécialités incontournables à ramener.",    tags:['Pogne','Suisse choco','Tradition'], map:'https://maps.google.com/?q=Chabert+Guillot+Valence', wiki:'Pogne_de_Romans'},
-    {cat:2, name:'Café Chez Céleste',       cuisine:'Café de spécialité',         e:'☕', price:'$',    michelin:'',      hood:'Vieux Valence',      desc:"Le café de spécialité branché du Vieux Valence. Torréfaction sélective, latte art soigné et ambiance cosy dans une vieille bâtisse restaurée. Brunch le week-end.",         tags:['Café spécialité','Brunch','Cosy'], map:'https://maps.google.com/?q=Café+Valence+Drôme', wiki:'Valence,_Drôme'},
-    {cat:3, name:'Les Halles de Valence',   cuisine:'Marché couvert',             e:'🧺', price:'$',    michelin:'',      hood:'Centre-ville',       desc:"Le cœur battant du terroir drômois. Abricots Bergeron, olives de la Drôme, fromages de chèvre, truffes noires et vins de Crozes-Hermitage sous les halles couvertes.",    tags:['Marché','Terroir drômois','AOC'], map:'https://maps.google.com/?q=Halles+de+Valence', wiki:'Valence,_Drôme'},
-    {cat:3, name:"Cave de Tain l'Hermitage",cuisine:'Cave de vignerons',           e:'🍷', price:'$$',   michelin:'',      hood:"Tain-l'Hermitage (15 min)", desc:"À 15 minutes de Valence, la cave produit les Crozes-Hermitage et Hermitage — parmi les plus grands vins de la Vallée du Rhône. Dégustation et vente directe.",       tags:['Crozes-Hermitage','Syrah','AOC'], map:"https://maps.google.com/?q=Cave+Tain+Hermitage", wiki:'Hermitage_AOC'},
-    {cat:4, name:'La Soupière',             cuisine:'Cuisine familiale',           e:'🍲', price:'$',    michelin:'',      hood:'Centre-ville',       desc:"Le rendez-vous des valentinois pour une cuisine familiale généreuse et sans chichis. Soupes, plats mijotés et desserts maison à prix doux dans une ambiance conviviale.",  tags:['Familial','Économique','Maison'], map:'https://maps.google.com/?q=La+Soupière+Valence', wiki:'Valence,_Drôme'},
-    {cat:4, name:'Les Péniches du Rhône',   cuisine:'Guinguette fluviale',         e:'⛵', price:'$$',   michelin:'',      hood:'Bords du Rhône',     desc:"Les péniches amarrées sur le Rhône proposent en été une ambiance guinguette unique. Moules-frites, planches apéro et concerts les soirs d'été — une institution.",       tags:['Guinguette','Rhône','Été'], map:'https://maps.google.com/?q=Péniches+Rhône+Valence', wiki:'Rhône'},
-    {cat:5, name:'Cité du Chocolat Valrhona',cuisine:'Musée & ateliers chocolat',  e:'🍫', price:'$$',   michelin:'',      hood:"Tain-l'Hermitage · 15 min", desc:"Le musée du chocolat de la maison Valrhona. Ateliers de dégustation, découverte du bean-to-bar et boutique. Guanaja, Manjari, Dulcey — tous les grands crus à portée de main.", tags:['Valrhona','Ateliers','Incontournable'], map:"https://maps.google.com/?q=Cité+du+Chocolat+Valrhona+Tain+Hermitage", wiki:'Valrhona'},
-    {cat:5, name:'Maison Chapoutier',        cuisine:'Cave & dégustation de vins', e:'🍷', price:'$$',   michelin:'',      hood:"Tain-l'Hermitage · 15 min", desc:"Fondée en 1808, Chapoutier produit les grands crus de l'Hermitage en biodynamie. Visite du chai, dégustation des Crozes-Hermitage et Saint-Joseph et vente directe domaine.", tags:['Hermitage AOC','Biodynamie','1808'], map:"https://maps.google.com/?q=Maison+Chapoutier+Tain+Hermitage", wiki:'Chapoutier'},
-    {cat:5, name:'Château de Crussol',       cuisine:'Site médiéval & panorama',   e:'🏰', price:'$',    michelin:'',      hood:'Saint-Péray · 7 min',       desc:"Ruines majestueuses du XIIe siècle sur un piton rocheux à 300 m. Vue à 360° sur Valence, le Vercors et les Alpes. Randonnée 45 min depuis le parking de Saint-Péray.",       tags:['Médiéval','Panorama','Randonnée'],  map:'https://maps.google.com/?q=Château+de+Crussol+Saint-Péray', wiki:'Château_de_Crussol'},
-    {cat:5, name:"Cave de Tain l'Hermitage", cuisine:'Cave coopérative de vignerons',e:'🍾',price:'$',   michelin:'',      hood:"Tain-l'Hermitage · 15 min", desc:"La cave coopérative de Tain produit une large gamme de Crozes-Hermitage et Saint-Joseph accessibles. Dégustation libre et vente directe — la porte d'entrée idéale des vins du Rhône.", tags:['Crozes-Hermitage','Cave','Dégustation'], map:"https://maps.google.com/?q=Cave+Tain+Hermitage", wiki:'Hermitage_AOC'},
-  ]
-};
-
-// Itinéraire 2 jours curated
-const ITIN_2J = [
-  { label:'Jour 1', theme:'Patrimoine & Vieille Ville',
-    stops:[
-      {id:'cathedrale',  t:'09:00', dur:45,  tip:"Arrivez tôt pour admirer la nef romane dans le silence du matin."},
-      {id:'pendentif',   t:'10:00', dur:20,  tip:"Juste en face de la cathédrale — un joyau Renaissance souvent ignoré."},
-      {id:'maisonsdtetes',t:'10:30',dur:30,  tip:"Repérez les 71 têtes sculptées sur la façade — chacune est différente !"},
-      {id:'napoleon',    t:'11:15', dur:20,  tip:"Le futur Empereur vécut ici à 16 ans. Une étape historique insolite."},
-      {id:'vieuxvalence',t:'11:45', dur:60,  tip:"Flânez dans la Grande Rue et les ruelles médiévales sans destination fixe."},
-      {id:'musee',       t:'14:00', dur:90,  tip:"Les dessins de Hubert Robert et les collections drômoises valent le détour."},
-      {id:'champdemars', t:'16:00', dur:45,  tip:"Coucher de soleil sur le Vercors depuis l'esplanade — vue imprenable."},
-    ]
-  },
-  { label:'Jour 2', theme:'Nature, Rhône, Crussol & Tain',
-    stops:[
-      {id:'crussol',     t:'09:00', dur:90,  tip:"Départ tôt pour profiter de la lumière matinale sur le Vercors. Chaussures de marche recommandées — 45 min de sentier depuis Saint-Péray."},
-      {id:'parcjouvet',  t:'11:30', dur:45,  tip:"Retour sur les bords du Rhône — la roseraie est belle en toute saison."},
-      {id:'rhone',       t:'12:30', dur:45,  tip:"Balade vélo le long du Rhône jusqu'au port de l'Épervière."},
-      {id:'citechocolat',t:'14:30', dur:90,  tip:"À 15 min en voiture. Réservez un atelier en ligne — complet rapidement en week-end !"},
-      {id:'chapoutier',  t:'16:30', dur:60,  tip:"Juste à côté de la Cité du Chocolat. Demandez à visiter le chai de vinification — spectaculaire."},
-    ]
-  }
+const FOOD_RESTAURANTS = [
+  {cat:0,name:'Maison Pic',cuisine:{fr:'Haute cuisine française',en:'French haute cuisine',es:'Alta cocina francesa',de:'Französische Haute Cuisine',it:'Alta cucina francese',zh:'法式精致料理',ja:'フランス高級料理'}},e:'👩‍🍳',price:'$$$$',michelin:'⭐⭐⭐',hood:"Centre-ville",descs:{fr:"Anne-Sophie Pic, seule femme chef triplement étoilée au monde. La Maison Pic est une institution mondiale depuis 1891. Un voyage gastronomique absolu.",en:"Anne-Sophie Pic, the world's only female triple-starred chef. Maison Pic has been a global institution since 1891. An absolute gastronomic journey.",es:"Anne-Sophie Pic, la única mujer chef con tres estrellas en el mundo. La Maison Pic es una institución mundial desde 1891.",de:"Anne-Sophie Pic, die einzige dreifach ausgezeichnete Frau-Chefköchin der Welt. Maison Pic ist seit 1891 eine weltweite Institution.",it:"Anne-Sophie Pic, unica donna chef tristellata al mondo. La Maison Pic è un'istituzione mondiale dal 1891.",zh:"安娜-索菲·皮克，全球唯一女性三星主厨。马松·皮克自1891年起便是世界级美食殿堂，绝对难忘的美食之旅。",ja:"アンヌ=ソフィー・ピックは世界唯一の女性三つ星シェフ。メゾン・ピックは1891年から世界的美食の殿堂。忘れられない体験。",ja:"アンヌ＝ソフィー・ピック、世界唯一の女性三ツ星シェフ。メゾン・ピックは1891年から続く世界的な美食の殿堂で、忘れがたい食の旅を約束します。"},tags:['3★ Michelin','Anne-Sophie Pic','Depuis 1891'],map:'https://maps.google.com/?q=Maison+Pic+Valence',wiki:'Anne-Sophie_Pic'},
+  {cat:0,name:'La Cachette',cuisine:{fr:'Bistrot franco-japonais',en:'Franco-Japanese bistro',es:'Bistró franco-japonés',de:'Französisch-japanisches Bistro',it:'Bistrot franco-giapponese',zh:'法日融合小馆',ja:'仏日フュージョンビストロ'}},e:'🌿',price:'$$$',michelin:'⭐',hood:'Vieux Valence',descs:{fr:"Cuisine franco-japonaise étoilée Michelin de Masashi Ijichi. Une expérience fusion unique dans le Vieux Valence.",en:"Michelin-starred Franco-Japanese cuisine by Masashi Ijichi. A unique fusion experience in Old Valence.",es:"Cocina franco-japonesa con estrella Michelin de Masashi Ijichi. Una experiencia fusión única en la Valence histórica.",de:"Michelin-ausgezeichnete französisch-japanische Küche von Masashi Ijichi. Ein einzigartiges Fusion-Erlebnis in der Altstadt.",it:"Cucina franco-giapponese stellata Michelin di Masashi Ijichi. Un'esperienza fusion unica nella Valence storica.",zh:"井一正志主厨的米其林星级法日融合料理，在老城瓦朗斯带来独一无二的融合餐饮体验。",ja:"井一正志シェフによるミシュラン一つ星の仏日フュージョン料理。旧市街ヴァランスで唯一無二の体験。",ja:"マサシ・イジチシェフによるミシュラン一ツ星の仏日フュージョン料理。旧市街ヴァランスで唯一無二のフュージョン体験を提供しています。"},tags:['1★ Michelin','Franco-japonais'],map:'https://maps.google.com/?q=La+Cachette+Valence',wiki:'Valence,_Drôme'},
+  {cat:0,name:'André Coin des Halles',cuisine:{fr:'Gastronomique régionale',en:'Regional gastronomy',es:'Gastronomía regional',de:'Regionale Gastronomie',it:'Gastronomia regionale',zh:'地区精致料理',ja:'地域の高級料理'}},e:'🍷',price:'$$$',michelin:'⭐',hood:'Halles de Valence',descs:{fr:"Une étoile Michelin au cœur des Halles. Cuisine du marché ancrée dans le terroir drômois — truffes, agneau des Baronnies.",en:"A Michelin star at the heart of the covered market. Market-driven cuisine rooted in Drôme terroir — truffles, Baronnies lamb.",es:"Una estrella Michelin en el corazón de las Halles. Cocina de mercado arraigada en el terruño del Drôme.",de:"Ein Michelin-Stern im Herzen der Markthalle. Marktküche, verankert im Drôme-Terroir — Trüffel, Baronnies-Lamm.",it:"Una stella Michelin nel cuore delle Halles. Cucina di mercato radicata nel terroir della Drôme — tartufi, agnello delle Baronnies.",zh:"市场大厅中心的米其林一星餐厅，以德龙省风土为灵感的时令料理，松露、巴罗尼绵羊肉令人难忘。",ja:"市場ホールのミシュラン一つ星。ドローム県テロワールに根ざした料理——トリュフ、バロニー産ラムが格別。",ja:"市場の中心に位置するミシュラン一ツ星レストラン。ドローム県の風土に根ざしたマーケット料理—トリュフやバロニー産子羊は格別です。"},tags:['1★ Michelin','Terroir','Halles'],map:'https://maps.google.com/?q=André+Valence',wiki:'Valence,_Drôme'},
+  {cat:1,name:'Le Saint-Ruf',cuisine:{fr:'Bistrot traditionnel',en:'Traditional bistro',es:'Bistró tradicional',de:'Traditionelles Bistro',it:'Bistrot tradizionale',zh:'传统小酒馆',ja:'伝統的なビストロ'}},e:'🥘',price:'$$',michelin:'',hood:'Centre-ville',descs:{fr:"Cuisine lyonnaise et drômoise généreuse — quenelles, daube et fromages de caractère dans une salle chaleureuse.",en:"Generous Lyonnaise and Drôme cuisine — quenelles, daube and characterful cheeses in a warm dining room.",es:"Cocina lionesa y drômoise generosa — quenelles, daube y quesos de carácter en un comedor acogedor.",de:"Großzügige lyoner und Drôme-Küche — Quenelles, Daube und charakterstarke Käse in einem warmen Speisesaal.",it:"Cucina lionese e drômoise generosa — quenelles, daube e formaggi di carattere in una sala calda.",zh:"丰盛的里昂与德龙传统料理——鱼丸、炖肉与个性奶酪，在温馨餐厅里感受地道法国味道。",ja:"リヨンとドローム県の豊かな伝統料理——クネル、ドーブ、個性的チーズを温かい雰囲気で楽しめます。",ja:"リヨンとドローム県の豊かな伝統料理—クネル・ドーブ・個性豊かなチーズを温かみのある食堂でお楽しみください。"},tags:['Lyonnais','Traditionnel'],map:'https://maps.google.com/?q=Le+Saint+Ruf+Valence',wiki:'Valence,_Drôme'},
+  {cat:1,name:'Brasserie Victor Hugo',cuisine:{fr:'Brasserie alsacienne',en:'Alsatian brasserie',es:'Brasserie alsaciana',de:'Elsässische Brasserie',it:'Brasserie alsaziana',zh:'阿尔萨斯啤酒餐厅',ja:'アルザス風ブラッスリー'}},e:'🍺',price:'$$',michelin:'',hood:'Place Victor Hugo',descs:{fr:"Brasserie animée place Victor Hugo. Choucroute, côte de bœuf et terrasse incontournable en été.",en:"Lively brasserie on Place Victor Hugo. Choucroute, côte de bœuf and an unmissable summer terrace.",es:"Animada brasserie en la plaza Victor Hugo. Choucroute, costilla de buey y terraza imprescindible en verano.",de:"Belebte Brasserie am Place Victor Hugo. Sauerkraut, Rippensteak und unverzichtbare Sommerterrasse.",it:"Brasserie animata in Place Victor Hugo. Choucroute, côte de bœuf e terrazza imperdibile in estate.",zh:"维克多·雨果广场上热闹的啤酒餐厅，提供酸菜猪肉、牛排，夏日露台不容错过。",ja:"ヴィクトル・ユーゴー広場の活気あるブラッスリー。シュークルート、コート・ド・ブッフ、夏のテラスは必見。",ja:"ヴィクトル・ユゴー広場の活気あるブラッスリー。シュークルート・コート・ド・ブッフが自慢で、夏のテラスは必見です。"},tags:['Brasserie','Terrasse'],map:'https://maps.google.com/?q=Brasserie+Victor+Hugo+Valence',wiki:'Valence,_Drôme'},
+  {cat:2,name:'Chabert & Guillot',cuisine:{fr:'Pâtisserie & confiserie',en:'Pastry & confectionery',es:'Pastelería & confitería',de:'Konditorei & Confiserie',it:'Pasticceria & confetteria',zh:'糕点与甜品店',ja:'ケーキ店＆菓子店'}},e:'🍰',price:'$$',michelin:'',hood:'Centre-ville',descs:{fr:"La pâtisserie de référence à Valence. La Pogne de Romans, la Suisse au chocolat et les pralines — spécialités à rapporter.",en:"Valence's reference pastry shop. Pogne de Romans, Swiss chocolate cake and pralines — specialities to take home.",es:"La pastelería de referencia en Valence. La Pogne de Romans, el pastel de chocolate suizo y los pralinés — especialidades para llevar.",de:"Valences Referenzkonditorei. Pogne de Romans, Schokoladenkuchen und Pralines — Spezialitäten zum Mitnehmen.",it:"La pasticceria di riferimento a Valence. La Pogne de Romans, la torta al cioccolato svizzero e i pralinati — specialità da portare a casa.",zh:"瓦朗斯标志性糕点店，罗曼布里欧修、瑞士巧克力蛋糕与果仁糖是必买的地方特产。",ja:"ヴァランスの名門パティスリー。ポーニュ・ド・ロマン、スイスチョコケーキ、プラリネはお土産の定番。",ja:"ヴァランスを代表するパティスリー。ポーニュ・ド・ロマン・スイスチョコレートケーキ・プラリネはぜひ持ち帰りたい地元名物です。"},tags:['Pogne','Suisse choco','Tradition'],map:'https://maps.google.com/?q=Chabert+Guillot+Valence',wiki:'Pogne_de_Romans'},
+  {cat:2,name:'Café Chez Céleste',cuisine:{fr:'Café de spécialité',en:'Specialty coffee',es:'Café de especialidad',de:'Specialty-Kaffee',it:'Caffè di specialità',zh:'精品咖啡',ja:'スペシャルティコーヒー'}},e:'☕',price:'$',michelin:'',hood:'Vieux Valence',descs:{fr:"Torréfaction sélective, latte art soigné et ambiance cosy dans une bâtisse restaurée. Brunch le week-end.",en:"Selective roasting, careful latte art and a cosy atmosphere in a restored building. Weekend brunch.",es:"Tueste selectivo, latte art cuidado y ambiente acogedor en un edificio restaurado. Brunch los fines de semana.",de:"Selektive Röstung, sorgfältige Latte-Art und gemütliche Atmosphäre in einem restaurierten Gebäude. Wochenend-Brunch.",it:"Tostatura selettiva, latte art curata e atmosfera accogliente in un edificio restaurato. Brunch nel weekend.",zh:"精选烘焙、精致拉花艺术，在修缮后的古建筑中营造舒适氛围，周末提供早午餐。",ja:"厳選ロースト、丁寧なラテアート、改装された古建築の居心地よい空間。週末はブランチあり。",ja:"厳選豆の焙煎と丁寧なラテアートが光るスペシャルティコーヒー店。修復された古建築の居心地よい空間で、週末はブランチも提供しています。"},tags:['Café spécialité','Brunch','Cosy'],map:'https://maps.google.com/?q=Café+Valence+Drôme',wiki:'Valence,_Drôme'},
+  {cat:3,name:'Les Halles de Valence',cuisine:{fr:'Marché couvert',en:'Covered market',es:'Mercado cubierto',de:'Markthalle',it:'Mercato coperto',zh:'室内市场',ja:'屋根付き市場'}},e:'🧺',price:'$',michelin:'',hood:'Centre-ville',descs:{fr:"Le cœur du terroir drômois. Abricots Bergeron AOC, olives, fromages de chèvre, truffes et vins de Crozes-Hermitage.",en:"The heart of Drôme terroir. Bergeron AOC apricots, olives, goat's cheese, truffles and Crozes-Hermitage wines.",es:"El corazón del terruño del Drôme. Albaricoques Bergeron AOC, aceitunas, queso de cabra, trufas y vinos de Crozes-Hermitage.",de:"Das Herz des Drôme-Terroirs. Bergeron-AOC-Aprikosen, Oliven, Ziegenkäse, Trüffel und Crozes-Hermitage-Weine.",it:"Il cuore del terroir della Drôme. Albicocche Bergeron AOC, olive, formaggio di capra, tartufi e vini di Crozes-Hermitage.",zh:"德龙省风土精华所在——AOC贝尔热隆杏、橄榄、山羊奶酪、黑松露与克罗泽-埃米塔日葡萄酒。",ja:"ドローム県テロワールの中心地。AOCベルジュロン杏、オリーブ、シェーブルチーズ、トリュフ、クロゼ・エルミタージュワイン。",ja:"ドローム県の風土の精髄—AOC認定ベルジュロン杏・オリーブ・山羊チーズ・黒トリュフ・クローズ・エルミタージュのワインが揃います。"},tags:['Marché','Terroir drômois','AOC'],map:'https://maps.google.com/?q=Halles+de+Valence',wiki:'Valence,_Drôme'},
+  {cat:3,name:"Cave de Tain l'Hermitage",cuisine:{fr:'Cave de vignerons',en:'Wine cooperative',es:'Cooperativa vinícola',de:'Weinkeller',it:'Cantina cooperativa',zh:'酿酒合作社',ja:'ワイン協同組合'}},e:'🍾',price:'$',michelin:'',hood:"Tain-l'Hermitage (15 min)",descs:{fr:"La cave coopérative produit une large gamme de Crozes-Hermitage. Dégustation libre et vente directe.",en:"The cooperative winery produces a wide range of Crozes-Hermitage wines. Free tastings and direct sales.",es:"La bodega cooperativa produce una amplia gama de Crozes-Hermitage. Degustación libre y venta directa.",de:"Die Genossenschaftskellerei produziert ein breites Sortiment an Crozes-Hermitage. Freie Verkostung und Direktverkauf.",it:"La cantina cooperativa produce un'ampia gamma di Crozes-Hermitage. Degustazione libera e vendita diretta.",zh:"合作酿酒社生产多种克罗泽-埃米塔日葡萄酒，提供免费品鉴与直购服务，罗纳河谷美酒的绝佳入门之地。",ja:"幅広いクロゼ・エルミタージュワインを生産する協同組合。無料テイスティングと直接販売あり。ローヌバレーワイン入門に最適。",ja:"協同組合ワイナリーが幅広いクローズ・エルミタージュを生産。無料テイスティングと直売で、ローヌ・ワインの素晴らしい入門地です。"},tags:['Crozes-Hermitage','Cave','Dégustation'],map:"https://maps.google.com/?q=Cave+Tain+Hermitage",wiki:'Hermitage_AOC'},
+  {cat:4,name:'La Soupière',cuisine:{fr:'Cuisine familiale',en:'Home cooking',es:'Cocina casera',de:'Hausmannskost',it:'Cucina familiare',zh:'家常料理',ja:'家庭料理'}},e:'🍲',price:'$',michelin:'',hood:'Centre-ville',descs:{fr:"Le rendez-vous des valentinois pour une cuisine familiale généreuse. Soupes, plats mijotés et desserts maison à prix doux.",en:"Valence locals' go-to for generous home cooking. Soups, slow-cooked dishes and homemade desserts at affordable prices.",es:"El punto de encuentro de los valencianos para una cocina familiar generosa. Sopas, guisos y postres caseros a precios asequibles.",de:"Valences Treffpunkt für großzügige Hausmannskost. Suppen, Schmorgerichte und hausgemachte Desserts zu günstigen Preisen.",it:"Il ritrovo dei valentinesi per una cucina familiare generosa. Zuppe, piatti in umido e dolci fatti in casa a prezzi accessibili.",zh:"瓦朗斯市民最爱的家常料理聚集地，汤品、炖菜与自制甜点，价格亲民，氛围温馨。",ja:"ヴァランス市民に愛される家庭料理の場所。スープ、煮込み料理、手作りデザートをリーズナブルな価格で。",ja:"ヴァランス市民が集う家庭料理の店。スープ・煮込み料理・手作りデザートをリーズナブルな価格で楽しめます。"},tags:['Familial','Économique'],map:'https://maps.google.com/?q=La+Soupière+Valence',wiki:'Valence,_Drôme'},
+  {cat:4,name:'Les Péniches du Rhône',cuisine:{fr:'Guinguette fluviale',en:'River guinguette',es:'Guinguette fluvial',de:'Fluss-Guinguette',it:'Guinguette fluviale',zh:'河上露天小酒馆',ja:'川沿いのギャンゲット'}},e:'⛵',price:'$$',michelin:'',hood:'Bords du Rhône',descs:{fr:"Les péniches amarrées sur le Rhône proposent en été moules-frites, planches apéro et concerts. Une institution.",en:"Barges moored on the Rhône offer mussels and fries, sharing boards and concerts in summer. A true institution.",es:"Las gabarras amarradas en el Ródano ofrecen en verano mejillones con patatas, tablas de aperitivo y conciertos.",de:"Am Rhône festgemachte Kähne bieten im Sommer Muscheln mit Pommes, Aperitifbretter und Konzerte.",it:"Le chiatte ormeggiate sul Rodano offrono in estate cozze e patatine, taglieri aperitivo e concerti.",zh:"夏日停泊于罗纳河上的驳船提供淡菜薯条、开胃拼盘与露天音乐会，是瓦朗斯独特的夏日传统。",ja:"夏、ローヌ川のはしけでムール貝フリット、アペリティフボード、コンサートを楽しめます。夏のヴァランスの風物詩。",ja:"夏のローヌ川に係留された艀でムール貝フライ・アペリティフの盛り合わせ・コンサートを楽しめる、ヴァランス夏の風物詩です。"},tags:['Guinguette','Rhône','Été'],map:'https://maps.google.com/?q=Péniches+Rhône+Valence',wiki:'Rhône'},
+  {cat:5,name:'Cité du Chocolat Valrhona',cuisine:{fr:'Musée & ateliers chocolat',en:'Chocolate museum & workshops',es:'Museo y talleres de chocolate',de:'Schokoladenmuseum & Workshops',it:'Museo e laboratori del cioccolato',zh:'巧克力博物馆与工作坊',ja:'チョコレート博物館＆ワークショップ'}},e:'🍫',price:'$$',michelin:'',hood:"Tain-l'Hermitage · 15 min",descs:{fr:"Le musée Valrhona avec ateliers de dégustation. Guanaja, Manjari, Dulcey — tous les grands crus à portée de main.",en:"The Valrhona museum with tasting workshops. Guanaja, Manjari and Dulcey — all the great chocolates within reach.",es:"El museo Valrhona con talleres de degustación. Guanaja, Manjari, Dulcey — todos los grandes cacaos al alcance de la mano.",de:"Das Valrhona-Museum mit Verkostungsworkshops. Guanaja, Manjari und Dulcey — alle großen Schokoladensorten zum Probieren.",it:"Il museo Valrhona con laboratori di degustazione. Guanaja, Manjari e Dulcey — tutti i grandi cioccolati a portata di mano.",zh:"法芙娜巧克力博物馆，提供品鉴工作坊，瓜纳哈、曼加里、杜尔塞等经典产品触手可得。",ja:"ヴァローナのチョコレート博物館とテイスティングワークショップ。グアナハ、マンジャリ、デュルセなど全銘品が手の届くところに。"},tags:['Valrhona','Ateliers','Incontournable'],map:"https://maps.google.com/?q=Cité+du+Chocolat+Valrhona+Tain+Hermitage",wiki:'Valrhona'},
+  {cat:5,name:'Maison Chapoutier',cuisine:{fr:'Cave & dégustation de vins',en:'Wine cellar & tasting',es:'Bodega y degustación de vinos',de:'Weinkeller & Weinverkostung',it:'Cantina e degustazione di vini',zh:'酒窖与品鉴',ja:'ワインセラー＆テイスティング'}},e:'🍷',price:'$$',michelin:'',hood:"Tain-l'Hermitage · 15 min",descs:{fr:"Fondée en 1808, Chapoutier produit les grands crus de l'Hermitage en biodynamie. Visite du chai et vente directe.",en:"Founded in 1808, Chapoutier produces Hermitage grands crus using biodynamics. Cellar tours and direct sales.",es:"Fundada en 1808, Chapoutier produce los grandes vinos del Hermitage en biodinámica. Visita del chai y venta directa.",de:"1808 gegründet, produziert Chapoutier biodynamisch Hermitage Grands Crus. Kellerführungen und Direktverkauf.",it:"Fondata nel 1808, Chapoutier produce i grandi vini dell'Hermitage in biodinamica. Visita in cantina e vendita diretta."},tags:['Hermitage AOC','Biodynamie','1808'],map:"https://maps.google.com/?q=Maison+Chapoutier+Tain+Hermitage",wiki:'Chapoutier'},
+  {cat:5,name:'Château de Crussol',cuisine:{fr:'Site médiéval & panorama',en:'Medieval site & panorama',es:'Sitio medieval y panorama',de:'Mittelalterliche Stätte & Panorama',it:'Sito medievale e panorama',zh:'中世纪遗址与全景',ja:'中世の遺跡とパノラマ'}},e:'🏰',price:'$',michelin:'',hood:'Saint-Péray · 7 min',descs:{fr:"Ruines du XIIe siècle sur piton rocheux à 300 m. Vue à 360° sur Valence et les Alpes. Randonnée 45 min.",en:"12th-century ruins on a rocky peak at 300 m. 360° views over Valence and the Alps. 45-minute hike.",es:"Ruinas del siglo XII sobre un pico rocoso a 300 m. Vistas de 360° sobre Valence y los Alpes. Senderismo 45 min.",de:"Ruinen aus dem 12. Jahrhundert auf einem Felsen auf 300 m. 360°-Panorama über Valence und die Alpen. 45 Min. Wanderung.",it:"Rovine del XII secolo su uno sperone a 300 m. Vista a 360° su Valence e le Alpi. Escursione 45 min.",zh:"300米岩石峭壁上的12世纪遗址，可360度俯瞰瓦朗斯与阿尔卑斯山，徒步约45分钟。",ja:"標高300mの岩山の12世紀廃墟。ヴァランスとアルプスを360度一望。ハイキング所要時間45分。",ja:"標高300mの岩山にそびえる12世紀の遺跡。ヴァランスとアルプスを360度見渡せ、ハイキング所要時間は約45分です。"},tags:['Médiéval','Panorama','Randonnée'],map:'https://maps.google.com/?q=Château+de+Crussol+Saint-Péray',wiki:'Château_de_Crussol'},
 ];
 
-// ═══════════════════════════════════════
+// Itinerary 2 days curated (static)
+const ITIN_2J = [
+  {label:{fr:'Jour 1',en:'Day 1',es:'Día 1',de:'Tag 1',it:'Giorno 1',zh:'第一天',ja:'1日目'}, theme:'day1Theme',
+   stops:[
+    {id:'cathedrale',   t:'09:00',dur:45,  tips:{fr:"Arrivez tôt — la nef romane dans le silence du matin est magique.",en:"Arrive early — the Romanesque nave in morning silence is magical.",es:"Llegue temprano — la nave románica en el silencio matutino es mágica.",de:"Früh ankommen — das romanische Schiff in der Morgenstille ist magisch.",it:"Arrivate presto — la navata romanica nel silenzio mattutino è magica.",zh:"请早些抵达——清晨寂静中的罗曼式中殿令人心旷神怡。",ja:"早めに到着を——朝の静寂の中のロマネスク身廊は魔法のようです。",ja:"早めに到着しましょう—朝の静寂に包まれたロマネスク様式の身廊は格別の美しさです。"}},
+    {id:'pendentif',    t:'10:00',dur:20,  tips:{fr:"Juste en face de la cathédrale — un joyau Renaissance souvent ignoré.",en:"Right opposite the cathedral — a Renaissance gem often overlooked.",es:"Justo frente a la catedral — una joya renacentista a menudo ignorada.",de:"Direkt gegenüber der Kathedrale — ein oft übersehenes Renaissancejuwel.",it:"Proprio di fronte alla cattedrale — un gioiello rinascimentale spesso ignorato.",zh:"就在大教堂正对面——这颗常被忽视的文艺复兴珍宝值得细细品味。",ja:"大聖堂の真向かい——見落とされがちなルネサンスの宝石です。",ja:"大聖堂の真向かい—しばしば見過ごされるルネサンスの宝石を丁寧に鑑賞してください。"}},
+    {id:'maisonsdtetes',t:'10:30',dur:30,  tips:{fr:"Repérez les 71 têtes sculptées — chacune est différente !",en:"Spot the 71 sculpted heads — each one is unique!",es:"Busque las 71 cabezas esculpidas — ¡cada una es diferente!",de:"Suchen Sie die 71 gemeißelten Köpfe — jeder ist einzigartig!",it:"Cercate le 71 teste scolpite — ognuna è diversa!",zh:"寻找外墙上的71个雕刻头像——每一个都独一无二！",ja:"71の彫刻された頭部を探してみましょう——それぞれがユニークです！",ja:"外壁の71体の彫刻された頭部を探してみましょう—どれもひとつとして同じものはありません！"}},
+    {id:'napoleon',     t:'11:15',dur:20,  tips:{fr:"Le futur Empereur vécut ici à 16 ans. Étape historique insolite.",en:"The future Emperor lived here at 16. An unusual historic stop.",es:"El futuro Emperador vivió aquí a los 16 años. Una parada histórica insólita.",de:"Der spätere Kaiser lebte hier mit 16. Ein ungewöhnlicher historischer Halt.",it:"Il futuro Imperatore visse qui a 16 anni. Una tappa storica insolita.",zh:"未来的皇帝16岁时曾在此居住，是一处不同寻常的历史打卡地。",ja:"未来の皇帝は16歳のときにここに住んでいました。珍しい歴史スポットです。",ja:"後の皇帝が16歳の時に過ごした場所。珍しい歴史的スポットです。"}},
+    {id:'vieuxvalence', t:'11:45',dur:60,  tips:{fr:"Flânez dans la Grande Rue et les ruelles médiévales sans destination fixe.",en:"Wander the Grande Rue and medieval alleys with no fixed plan.",es:"Deambule por la Grande Rue y las callejuelas medievales sin destino fijo.",de:"Schlendern Sie die Grande Rue und mittelalterliche Gassen entlang ohne festes Ziel.",it:"Passeggiate per la Grande Rue e i vicoli medievali senza una meta precisa.",zh:"在大街和中世纪小巷中漫无目的地闲逛，这才是老城的真正魅力。",ja:"グランド・リューと中世の路地を目的もなく散策しましょう——旧市街の本当の魅力です。",ja:"グランド・リューと中世の路地をあてもなく散策しましょう—それこそが旧市街の真の魅力です。"}},
+    {id:'musee',        t:'14:00',dur:90,  tips:{fr:"Les dessins de Hubert Robert et les collections drômoises valent le détour.",en:"The Hubert Robert drawings and Drôme collections are well worth a visit.",es:"Los dibujos de Hubert Robert y las colecciones drômoise merecen la visita.",de:"Die Zeichnungen von Hubert Robert und die Drôme-Sammlungen sind sehenswert.",it:"I disegni di Hubert Robert e le collezioni drômoise valgono la visita.",zh:"胡贝尔·罗贝尔的素描与德龙省藏品绝对值得一看。",ja:"ユベール・ロベールのデッサンとドローム県のコレクションは必見です。",ja:"ユベール・ロベールのデッサンとドローム県のコレクションは必見です。"}},
+    {id:'champdemars',  t:'16:00',dur:45,  tips:{fr:"Vue sur le Vercors au coucher du soleil — imprenable.",en:"Sunset view over the Vercors — breathtaking.",es:"Vista del Vercors al atardecer — impresionante.",de:"Blick auf das Vercors bei Sonnenuntergang — atemberaubend.",it:"Vista sul Vercors al tramonto — mozzafiato.",zh:"日落时分眺望韦科尔山脉——景色令人叹为观止。",ja:"夕暮れ時のヴェルコール山地の眺め——息を呑む美しさです。",ja:"夕暮れ時のヴェルコール山地への眺め—息をのむ絶景です。"}},
+  ]},
+  {label:{fr:'Jour 2',en:'Day 2',es:'Día 2',de:'Tag 2',it:'Giorno 2',zh:'第二天',ja:'2日目'}, theme:'day2Theme',
+   stops:[
+    {id:'crussol',      t:'09:00',dur:90,  tips:{fr:"Chaussures de marche recommandées — 45 min depuis le parking de Saint-Péray.",en:"Walking shoes recommended — 45 min from Saint-Péray car park.",es:"Se recomiendan zapatos de senderismo — 45 min desde el aparcamiento de Saint-Péray.",de:"Wanderschuhe empfohlen — 45 Min. vom Parkplatz Saint-Péray.",it:"Scarpe da trekking consigliate — 45 min dal parcheggio di Saint-Péray.",zh:"建议穿徒步鞋——从圣佩雷停车场步行约45分钟可抵达。",ja:"歩きやすい靴を推奨——サン=ペレの駐車場から徒歩45分です。",ja:"ハイキングシューズ推奨—サン＝ペレの駐車場から徒歩約45分です。"}},
+    {id:'parcjouvet',   t:'11:30',dur:45,  tips:{fr:"Retour sur les bords du Rhône — la roseraie est belle en toute saison.",en:"Back to the Rhône riverside — the rose garden is lovely in any season.",es:"De vuelta a las orillas del Ródano — el rosedal es hermoso en cualquier época.",de:"Zurück ans Rhôneufer — der Rosengarten ist in jeder Jahreszeit schön.",it:"Ritorno sulle rive del Rodano — il giardino di rose è bello in ogni stagione.",zh:"回到罗纳河畔——玫瑰园四季皆美。",ja:"ローヌ川沿いに戻りましょう——バラ園はどの季節も美しいです。",ja:"ローヌ川沿いに戻りましょう—バラ園はどの季節も美しいです。"}},
+    {id:'rhone',        t:'12:30',dur:45,  tips:{fr:"Louez un vélo pour longer le Rhône jusqu'au port de l'Épervière.",en:"Hire a bike to ride along the Rhône to Épervière marina.",es:"Alquile una bicicleta para ir por el Ródano hasta el puerto Épervière.",de:"Fahrrad mieten und am Rhône entlang zum Yachthafen Épervière fahren.",it:"Noleggiate una bici per percorrere il Rodano fino al porto dell'Épervière.",zh:"租辆自行车沿罗纳河骑行至埃佩维埃尔港，惬意自在。",ja:"自転車を借りてローヌ川沿いにエペルヴィエール港までサイクリングしましょう。",ja:"自転車を借りてローヌ川沿いをエペルヴィエール港まで走りましょう。"}},
+    {id:'citechocolat', t:'14:30',dur:90,  tips:{fr:"Réservez un atelier en ligne — complet rapidement le week-end !",en:"Book a workshop online — they fill up fast at weekends!",es:"Reserve un taller online — ¡se llenan rápido los fines de semana!",de:"Workshop online buchen — an Wochenenden schnell ausgebucht!",it:"Prenotate un laboratorio online — si esaurisce rapidamente nel weekend!",zh:"请提前在线预订工作坊——周末名额很快售罄！",ja:"オンラインでワークショップを予約——週末はすぐ満席になります！",ja:"ワークショップはオンラインで事前予約を—週末はすぐ満員になります！"}},
+    {id:'chapoutier',   t:'16:30',dur:60,  tips:{fr:"Demandez à visiter le chai de vinification — spectaculaire.",en:"Ask to visit the winemaking cellar — spectacular.",es:"Pida visitar la sala de vinificación — espectacular.",de:"Bitten Sie um eine Führung im Weinkeller — spektakulär.",it:"Chiedete di visitare la sala di vinificazione — spettacolare.",zh:"请要求参观酿酒车间——景象令人叹为观止。",ja:"醸造セラーの見学をリクエストしてみましょう——壮観です。",ja:"醸造庫の見学をリクエストしましょう—圧倒的な光景です。"}},
+  ]},
+];
+
+// ═══════════════════════════════════════════════════════════
+//  STATE
+// ═══════════════════════════════════════════════════════════
+let LANG = 'fr';
+let activeLM = null;
+let selDaysN = 2, selInts = new Set(['all']), selTrns = 'walking', itinData = null;
+let activeSportTab = 0, activeFoodCat = 0;
+
+// ═══════════════════════════════════════════════════════════
+//  LANGUAGE SELECT
+// ═══════════════════════════════════════════════════════════
+function selectLang(lang, btn) {
+  LANG = lang;
+  document.querySelectorAll('.ls-btn').forEach(b => b.classList.remove('selected'));
+  btn.classList.add('selected');
+  document.getElementById('ls-title').textContent = T[lang].langSelect;
+  document.getElementById('ls-confirm').textContent = T[lang].confirm;
+}
+
+function launchApp() {
+  document.getElementById('lang-screen').classList.add('hidden');
+  const loading = document.getElementById('loading');
+  loading.style.display = 'flex';
+  document.getElementById('ld-sub').textContent = T[LANG].region;
+  document.getElementById('lang-flag-btn').textContent = FLAGS[LANG];
+  applyTranslations();
+  setTimeout(() => {
+    loading.classList.add('done');
+    document.getElementById('app').style.display = 'flex';
+    LANDMARKS.forEach(lm => { if(lm.wiki) fetchWikiPhoto(lm.wiki); });
+    FOOD_RESTAURANTS.forEach(r => { if(r.wiki) fetchWikiPhoto(r.wiki); });
+    fetchWeather();
+    renderMonuments('');
+    buildInterestPills();
+    buildSports();
+    buildFood();
+  }, 800);
+}
+
+function showLangSwitch() {
+  document.getElementById('app').style.display = 'none';
+  const ls = document.getElementById('lang-screen');
+  ls.classList.remove('hidden');
+  // Update confirm text
+  document.getElementById('ls-title').textContent = T[LANG].changeLanguage;
+  document.getElementById('ls-confirm').textContent = T[LANG].confirm;
+  // Pre-select current lang
+  document.querySelectorAll('.ls-btn').forEach(b => {
+    b.classList.toggle('selected', b.dataset.lang === LANG);
+  });
+}
+
+function applyTranslations() {
+  const t = T[LANG];
+  document.getElementById('top-region').textContent = t.region;
+  document.getElementById('search-input').placeholder = t.searchPlaceholder;
+  document.getElementById('nav-lbl-monuments').textContent = t.nav[0];
+  document.getElementById('nav-lbl-itin').textContent = t.nav[1];
+  document.getElementById('nav-lbl-sports').textContent = t.nav[2];
+  document.getElementById('nav-lbl-food').textContent = t.nav[3];
+  document.getElementById('itin-title-hdr').innerHTML = `${t.itinTitle} <span>Valence</span>`;
+  document.getElementById('itin-sub-hdr').textContent = t.itinSub;
+  document.getElementById('cfg-days-lbl').textContent = t.cfgDays;
+  document.getElementById('cfg-int-lbl').textContent = t.cfgInt;
+  document.getElementById('cfg-trans-lbl').textContent = t.cfgTrans;
+  document.getElementById('dp1').textContent = t.dayLabels[0];
+  document.getElementById('dp2').textContent = t.dayLabels[1];
+  document.getElementById('dp3').textContent = t.dayLabels[2];
+  document.getElementById('trans-walk').textContent = t.transLabels[0];
+  document.getElementById('trans-bike').textContent = t.transLabels[1];
+  document.getElementById('trans-car').textContent = t.transLabels[2];
+  document.getElementById('gen-btn').textContent = t.generateBtn;
+  document.getElementById('back-btn').textContent = t.backBtn;
+  document.getElementById('gmaps-full-btn').textContent = t.openMapsAll;
+  document.getElementById('gmaps-btn').textContent = t.openMaps;
+  document.getElementById('sports-title-hdr').innerHTML = `${t.sportsTitle} <span>Valence</span>`;
+  document.getElementById('sports-sub-hdr').textContent = t.sportsSub;
+  document.getElementById('food-title-hdr').innerHTML = `${t.foodTitle} <span>Valence</span>`;
+  document.getElementById('food-sub').textContent = t.foodSub;
+  document.getElementById('p-lbl-h').textContent = t.statEpoque;
+  document.getElementById('p-lbl-yr').textContent = t.statSiecle;
+  document.getElementById('p-lbl-cat').textContent = t.statCat;
+  document.getElementById('wx-lbl-feels').textContent = t.wxFeels;
+  document.getElementById('wx-lbl-hum').textContent = t.wxHum;
+  document.getElementById('wx-lbl-wind').textContent = t.wxWind;
+  document.getElementById('wx-sec-forecast').textContent = t.wxForecast;
+  document.getElementById('wx-sec-hourly').textContent = t.wxHourly;
+  document.getElementById('wx-credits').textContent = t.wxCredits;
+}
+
+// ═══════════════════════════════════════════════════════════
 //  PHOTO HELPER
-// ═══════════════════════════════════════
+// ═══════════════════════════════════════════════════════════
 const PC = {};
 async function fetchWikiPhoto(title) {
   if (PC[title] !== undefined) return PC[title];
@@ -543,26 +910,23 @@ async function fetchWikiPhoto(title) {
   }
   PC[title] = null; return null;
 }
-
 function loadPhoto(wrap, wiki, emoji) {
   const img=wrap.querySelector('img'), sh=wrap.querySelector('.shimmer'), ef=wrap.querySelector('.ef');
   if (!wiki) { sh&&(sh.style.display='none'); if(ef){ef.textContent=emoji;ef.style.display='flex';} return; }
   fetchWikiPhoto(wiki).then(src => {
     sh&&(sh.style.display='none');
-    if (src) {
-      img.onload  = () => { img.classList.add('ok'); if(ef)ef.style.display='none'; };
-      img.onerror = () => { if(ef){ef.textContent=emoji;ef.style.display='flex';} };
-      img.src = src;
-    } else { if(ef){ef.textContent=emoji;ef.style.display='flex';} }
+    if (src) { img.onload=()=>{img.classList.add('ok');if(ef)ef.style.display='none';}; img.onerror=()=>{if(ef){ef.textContent=emoji;ef.style.display='flex';}}; img.src=src; }
+    else { if(ef){ef.textContent=emoji;ef.style.display='flex';} }
   });
 }
 
-// ═══════════════════════════════════════
+// ═══════════════════════════════════════════════════════════
 //  WEATHER
-// ═══════════════════════════════════════
-const WX_CODE={0:'☀️ Ciel dégagé',1:'🌤 Peu nuageux',2:'⛅ Partiellement nuageux',3:'☁️ Couvert',45:'🌫 Brouillard',48:'🌫 Brouillard givrant',51:'🌦 Bruine légère',53:'🌦 Bruine',55:'🌧 Bruine dense',61:'🌧 Pluie légère',63:'🌧 Pluie',65:'🌧 Pluie forte',71:'🌨 Neige légère',73:'🌨 Neige',75:'❄️ Neige forte',80:'🌦 Averses',81:'🌧 Averses modérées',82:'⛈ Averses fortes',95:'⛈ Orage',96:'⛈ Orage + grêle',99:'⛈ Orage violent'};
+// ═══════════════════════════════════════════════════════════
+const WX_CODE={fr:{0:'☀️ Ciel dégagé',1:'🌤 Peu nuageux',2:'⛅ Partiellement nuageux',3:'☁️ Couvert',45:'🌫 Brouillard',61:'🌧 Pluie légère',63:'🌧 Pluie',65:'🌧 Pluie forte',80:'🌦 Averses',95:'⛈ Orage'},en:{0:'☀️ Clear sky',1:'🌤 Mainly clear',2:'⛅ Partly cloudy',3:'☁️ Overcast',45:'🌫 Fog',61:'🌧 Light rain',63:'🌧 Rain',65:'🌧 Heavy rain',80:'🌦 Showers',95:'⛈ Thunderstorm'},es:{0:'☀️ Despejado',1:'🌤 Poco nublado',2:'⛅ Parcialmente nublado',3:'☁️ Cubierto',45:'🌫 Niebla',61:'🌧 Lluvia ligera',63:'🌧 Lluvia',65:'🌧 Lluvia intensa',80:'🌦 Chubascos',95:'⛈ Tormenta'},de:{0:'☀️ Klarer Himmel',1:'🌤 Überwiegend klar',2:'⛅ Teils bewölkt',3:'☁️ Bedeckt',45:'🌫 Nebel',61:'🌧 Leichter Regen',63:'🌧 Regen',65:'🌧 Starker Regen',80:'🌦 Schauer',95:'⛈ Gewitter'},it:{0:'☀️ Cielo sereno',1:'🌤 Poco nuvoloso',2:'⛅ Parzialmente nuvoloso',3:'☁️ Coperto',45:'🌫 Nebbia',61:'🌧 Pioggia leggera',63:'🌧 Pioggia',65:'🌧 Pioggia intensa',80:'🌦 Rovesci',95:'⛈ Temporale'},zh:{0:'☀️ 晴空',1:'🌤 晴间少云',2:'⛅ 局部多云',3:'☁️ 阴天',45:'🌫 雾',61:'🌧 小雨',63:'🌧 中雨',65:'🌧 大雨',80:'🌦 阵雨',95:'⛈ 雷阵雨'},ja:{0:'☀️ 快晴',1:'🌤 ほぼ晴れ',2:'⛅ 一部曇り',3:'☁️ 曇り',45:'🌫 霧',61:'🌧 小雨',63:'🌧 雨',65:'🌧 大雨',80:'🌦 にわか雨',95:'⛈ 雷雨'}};
 const WX_ICON={0:'☀️',1:'🌤',2:'⛅',3:'☁️',45:'🌫',48:'🌫',51:'🌦',53:'🌦',55:'🌧',61:'🌧',63:'🌧',65:'🌧',71:'🌨',73:'🌨',75:'❄️',80:'🌦',81:'🌧',82:'⛈',95:'⛈',96:'⛈',99:'⛈'};
-const DAYS_FR=['Dim','Lun','Mar','Mer','Jeu','Ven','Sam'];
+const DAYS={fr:['Dim','Lun','Mar','Mer','Jeu','Ven','Sam'],en:['Sun','Mon','Tue','Wed','Thu','Fri','Sat'],es:['Dom','Lun','Mar','Mié','Jue','Vie','Sáb'],de:['So','Mo','Di','Mi','Do','Fr','Sa'],it:['Dom','Lun','Mar','Mer','Gio','Ven','Sab'],zh:['日','一','二','三','四','五','六'],ja:['日','月','火','水','木','金','土']};
+const TODAY_LBL={fr:'Auj.',en:'Today',es:'Hoy',de:'Heute',it:'Oggi',zh:'今天',ja:'今日'};
 let wxData=null;
 
 async function fetchWeather(){
@@ -570,41 +934,45 @@ async function fetchWeather(){
     const r=await fetch('https://api.open-meteo.com/v1/forecast?latitude=44.9334&longitude=4.8924&current=temperature_2m,apparent_temperature,relative_humidity_2m,wind_speed_10m,weathercode,uv_index,precipitation&hourly=temperature_2m,weathercode,precipitation_probability&daily=weathercode,temperature_2m_max,temperature_2m_min,precipitation_sum&timezone=auto&forecast_days=7');
     if(!r.ok)throw new Error();
     wxData=await r.json();
-    const c=wxData.current,code=c.weathercode;
-    document.getElementById('wx-icon').textContent=WX_ICON[code]||'🌡️';
-    document.getElementById('wx-temp').textContent=Math.round(c.temperature_2m)+'°';
-    document.getElementById('wx-desc').textContent=(WX_CODE[code]||'').replace(/^.+?\s/,'');
-    document.getElementById('wx-feels').textContent='Ressenti '+Math.round(c.apparent_temperature)+'°';
-    document.getElementById('wx-wind').textContent='💨 '+Math.round(c.wind_speed_10m)+' km/h';
-    document.getElementById('wx-rain').textContent='🌧 '+c.precipitation+' mm';
-    document.getElementById('weather-loading').style.display='none';
-    document.getElementById('weather-data').style.display='block';
+    renderWeatherWidget();
   }catch(e){document.getElementById('weather-loading').style.display='none';}
 }
-
+function renderWeatherWidget(){
+  if(!wxData)return;
+  const c=wxData.current,code=c.weathercode,wxt=WX_CODE[LANG]||WX_CODE.fr;
+  document.getElementById('wx-icon').textContent=WX_ICON[code]||'🌡️';
+  document.getElementById('wx-temp').textContent=Math.round(c.temperature_2m)+'°';
+  document.getElementById('wx-desc').textContent=(wxt[code]||'').replace(/^.+?\s/,'');
+  document.getElementById('wx-feels').textContent=T[LANG].wxFeels+' '+Math.round(c.apparent_temperature)+'°';
+  document.getElementById('wx-wind').textContent='💨 '+Math.round(c.wind_speed_10m)+' km/h';
+  document.getElementById('wx-rain').textContent='🌧 '+c.precipitation+' mm';
+  document.getElementById('weather-loading').style.display='none';
+  document.getElementById('weather-data').style.display='block';
+}
 function openWeather(){
   if(!wxData)return;
-  const c=wxData.current,code=c.weathercode;
+  renderWeatherWidget();
+  const c=wxData.current,code=c.weathercode,wxt=WX_CODE[LANG]||WX_CODE.fr,days=DAYS[LANG]||DAYS.fr;
   document.getElementById('wx-panel-icon').textContent=WX_ICON[code]||'🌡️';
   document.getElementById('wx-panel-temp').textContent=Math.round(c.temperature_2m)+'°C';
-  document.getElementById('wx-panel-desc').textContent=WX_CODE[code]||'—';
+  document.getElementById('wx-panel-desc').textContent=wxt[code]||'—';
   document.getElementById('wxp-feels').textContent=Math.round(c.apparent_temperature)+'°C';
   document.getElementById('wxp-hum').textContent=c.relative_humidity_2m+'%';
   document.getElementById('wxp-wind').textContent=Math.round(c.wind_speed_10m)+' km/h';
   document.getElementById('wxp-uv').textContent=Math.round(c.uv_index??0);
   const fc=document.getElementById('wx-forecast');fc.innerHTML='';
-  wxData.daily.time.forEach((t,i)=>{const d=new Date(t),div=document.createElement('div');div.className='wx-day';div.innerHTML=`<div class="wx-day-name">${i===0?'Auj.':DAYS_FR[d.getDay()]}</div><div class="wx-day-icon">${WX_ICON[wxData.daily.weathercode[i]]||'🌡️'}</div><div class="wx-day-max">${Math.round(wxData.daily.temperature_2m_max[i])}°</div><div class="wx-day-min">${Math.round(wxData.daily.temperature_2m_min[i])}°</div><div class="wx-day-rain">${(wxData.daily.precipitation_sum[i]||0).toFixed(1)}mm</div>`;fc.appendChild(div);});
-  const hourly=document.getElementById('wx-hourly');hourly.innerHTML='';
-  const now=new Date();let count=0;
-  wxData.hourly.time.forEach((t,i)=>{if(count>=24)return;const dt=new Date(t);if(dt<now)return;count++;const div=document.createElement('div');div.className='wx-hour';div.innerHTML=`<div class="wx-hour-time">${String(dt.getHours()).padStart(2,'0')}h</div><div class="wx-hour-icon">${WX_ICON[wxData.hourly.weathercode[i]]||'🌡️'}</div><div class="wx-hour-temp">${Math.round(wxData.hourly.temperature_2m[i])}°</div><div class="wx-hour-rain">${wxData.hourly.precipitation_probability[i]||0}%</div>`;hourly.appendChild(div);});
+  wxData.daily.time.forEach((t,i)=>{const d=new Date(t),div=document.createElement('div');div.className='wx-day';div.innerHTML=`<div class="wx-day-name">${i===0?(TODAY_LBL[LANG]||'Auj.'):days[d.getDay()]}</div><div class="wx-day-icon">${WX_ICON[wxData.daily.weathercode[i]]||'🌡️'}</div><div class="wx-day-max">${Math.round(wxData.daily.temperature_2m_max[i])}°</div><div class="wx-day-min">${Math.round(wxData.daily.temperature_2m_min[i])}°</div><div class="wx-day-rain">${(wxData.daily.precipitation_sum[i]||0).toFixed(1)}mm</div>`;fc.appendChild(div);});
+  const hr=document.getElementById('wx-hourly');hr.innerHTML='';
+  const now=new Date();let cnt=0;
+  wxData.hourly.time.forEach((t,i)=>{if(cnt>=24)return;const dt=new Date(t);if(dt<now)return;cnt++;const div=document.createElement('div');div.className='wx-hour';div.innerHTML=`<div class="wx-hour-time">${String(dt.getHours()).padStart(2,'0')}h</div><div class="wx-hour-icon">${WX_ICON[wxData.hourly.weathercode[i]]||'🌡️'}</div><div class="wx-hour-temp">${Math.round(wxData.hourly.temperature_2m[i])}°</div><div class="wx-hour-rain">${wxData.hourly.precipitation_probability[i]||0}%</div>`;hr.appendChild(div);});
   document.getElementById('weather-panel').classList.add('open');
   document.getElementById('weather-overlay').classList.add('show');
 }
 function closeWeather(){document.getElementById('weather-panel').classList.remove('open');document.getElementById('weather-overlay').classList.remove('show');}
 
-// ═══════════════════════════════════════
+// ═══════════════════════════════════════════════════════════
 //  TABS
-// ═══════════════════════════════════════
+// ═══════════════════════════════════════════════════════════
 function switchTab(tab){
   ['monuments','itin','sports','food'].forEach(t=>{
     document.getElementById('nav-'+t).classList.toggle('active',t===tab);
@@ -612,51 +980,49 @@ function switchTab(tab){
   });
 }
 
-// ═══════════════════════════════════════
+// ═══════════════════════════════════════════════════════════
 //  MONUMENTS
-// ═══════════════════════════════════════
+// ═══════════════════════════════════════════════════════════
+function lmName(lm){return lm.names[LANG]||lm.names.fr;}
+function lmHood(lm){return lm.hoods[LANG]||lm.hoods.fr;}
+function lmDesc(lm){return lm.descs[LANG]||lm.descs.fr;}
+
 function renderMonuments(query){
   const q=query.toLowerCase().trim();
-  const lms=LANDMARKS.filter(lm=>!q||lm.n.toLowerCase().includes(q)||lm.hood.toLowerCase().includes(q)||lm.tags.some(t=>t.toLowerCase().includes(q)));
+  const lms=LANDMARKS.filter(lm=>!q||lmName(lm).toLowerCase().includes(q)||lmHood(lm).toLowerCase().includes(q)||lm.tags.some(t=>t.toLowerCase().includes(q)));
   const body=document.getElementById('monuments-body');body.innerHTML='';
-  if(!lms.length){body.innerHTML='<div style="padding:3rem;text-align:center;color:var(--text-soft);font-size:.85rem">Aucun lieu trouvé</div>';return;}
+  if(!lms.length){body.innerHTML=`<div style="padding:3rem;text-align:center;color:var(--text-soft);font-size:.85rem">${T[LANG].noResult}</div>`;return;}
   const grid=document.createElement('div');grid.className='monument-grid';
   lms.forEach((lm,i)=>grid.appendChild(i===0?mkFeatured(lm):mkCard(lm)));
   body.appendChild(grid);
 }
 function mkFeatured(lm){
   const card=document.createElement('div');card.className='mc-featured';card.onclick=()=>showDetail(lm);
-  card.innerHTML=`<div class="mc-feat-photo"><div class="shimmer"></div><img alt="${lm.n}"><div class="ef">${lm.e}</div></div><div class="mc-feat-badge">${lm.tags[0]}</div><div class="mc-feat-gmap" onclick="event.stopPropagation();window.open('${lm.g}','_blank')">📍</div><div class="mc-feat-body"><div class="mc-feat-name">${lm.n}</div><div class="mc-feat-hood">${lm.hood}</div><div class="mc-feat-tags">${lm.tags.map(t=>`<span class="mc-tag">${t}</span>`).join('')}</div></div>`;
+  card.innerHTML=`<div class="mc-feat-photo"><div class="shimmer"></div><img alt="${lmName(lm)}"><div class="ef">${lm.e}</div></div><div class="mc-feat-badge">${lm.tags[0]}</div><div class="mc-feat-gmap" onclick="event.stopPropagation();window.open('${lm.g}','_blank')">📍</div><div class="mc-feat-body"><div class="mc-feat-name">${lmName(lm)}</div><div class="mc-feat-hood">${lmHood(lm)}</div><div class="mc-feat-tags">${lm.tags.map(t=>`<span class="mc-tag">${t}</span>`).join('')}</div></div>`;
   loadPhoto(card.querySelector('.mc-feat-photo'),lm.wiki,lm.e);
   return card;
 }
 function mkCard(lm){
   const card=document.createElement('div');card.className='mc-card';card.onclick=()=>showDetail(lm);
-  card.innerHTML=`<div class="mc-card-photo"><div class="shimmer"></div><img alt="${lm.n}"><div class="ef">${lm.e}</div></div><div class="mc-card-body"><div class="mc-card-name">${lm.n}</div><div class="mc-card-hood">${lm.hood}</div><div class="mc-card-tags">${lm.tags.map(t=>`<span class="mc-tag">${t}</span>`).join('')}</div></div><div class="mc-card-gmap" onclick="event.stopPropagation();window.open('${lm.g}','_blank')">📍</div>`;
+  card.innerHTML=`<div class="mc-card-photo"><div class="shimmer"></div><img alt="${lmName(lm)}"><div class="ef">${lm.e}</div></div><div class="mc-card-body"><div class="mc-card-name">${lmName(lm)}</div><div class="mc-card-hood">${lmHood(lm)}</div><div class="mc-card-tags">${lm.tags.map(t=>`<span class="mc-tag">${t}</span>`).join('')}</div></div><div class="mc-card-gmap" onclick="event.stopPropagation();window.open('${lm.g}','_blank')">📍</div>`;
   loadPhoto(card.querySelector('.mc-card-photo'),lm.wiki,lm.e);
   return card;
 }
 function filterMonuments(val){renderMonuments(val);}
 
-// ═══════════════════════════════════════
+// ═══════════════════════════════════════════════════════════
 //  DETAIL PANEL
-// ═══════════════════════════════════════
-let activeLM=null;
+// ═══════════════════════════════════════════════════════════
 function showDetail(lm){
   activeLM=lm;
   const img=document.getElementById('dp-img'),sh=document.getElementById('dp-shimmer'),ef=document.getElementById('dp-ef');
   img.classList.remove('ok');img.src='';img.style.display='block';sh.style.display='block';ef.style.display='none';
   document.getElementById('dp-emoji').textContent=lm.e;
-  if(lm.wiki){
-    fetchWikiPhoto(lm.wiki).then(src=>{
-      sh.style.display='none';
-      if(src){img.onload=()=>img.classList.add('ok');img.onerror=()=>{img.style.display='none';ef.textContent=lm.e;ef.style.display='flex';};img.src=src;}
-      else{img.style.display='none';ef.textContent=lm.e;ef.style.display='flex';}
-    });
-  }else{sh.style.display='none';img.style.display='none';ef.textContent=lm.e;ef.style.display='flex';}
-  document.getElementById('p-name').textContent=lm.n;
-  document.getElementById('p-hood').textContent=lm.hood;
-  document.getElementById('p-desc').textContent=lm.desc;
+  if(lm.wiki){fetchWikiPhoto(lm.wiki).then(src=>{sh.style.display='none';if(src){img.onload=()=>img.classList.add('ok');img.onerror=()=>{img.style.display='none';ef.textContent=lm.e;ef.style.display='flex';};img.src=src;}else{img.style.display='none';ef.textContent=lm.e;ef.style.display='flex';}});}
+  else{sh.style.display='none';img.style.display='none';ef.textContent=lm.e;ef.style.display='flex';}
+  document.getElementById('p-name').textContent=lmName(lm);
+  document.getElementById('p-hood').textContent=lmHood(lm);
+  document.getElementById('p-desc').textContent=lmDesc(lm);
   document.getElementById('p-tags').innerHTML=lm.tags.map((t,i)=>`<span class="tag${i===0?' hl':''}">${t}</span>`).join('');
   document.getElementById('p-h').textContent=lm.h;
   document.getElementById('p-yr').textContent=lm.yr;
@@ -666,16 +1032,17 @@ function showDetail(lm){
 function closePanel(){document.getElementById('detail-panel').classList.remove('open');activeLM=null;}
 function openMaps(){if(activeLM)window.open(activeLM.g,'_blank');}
 
-// ═══════════════════════════════════════
+// ═══════════════════════════════════════════════════════════
 //  ITINERARY
-// ═══════════════════════════════════════
-let selDaysN=2,selInts=new Set(['all']),selTrns='walking',itinData=null;
+// ═══════════════════════════════════════════════════════════
+const CITY_TAGS={fr:['Patrimoine','Nature','Gastronomie','Art','Histoire','Rhône','Plein air'],en:['Heritage','Nature','Gastronomy','Art','History','Rhône','Outdoors'],es:['Patrimonio','Naturaleza','Gastronomía','Arte','Historia','Ródano','Aire libre'],de:['Kulturerbe','Natur','Gastronomie','Kunst','Geschichte','Rhône','Outdoor'],it:['Patrimonio','Natura','Gastronomia','Arte','Storia','Rodano','Aria aperta'],zh:['遗产','自然','美食','艺术','历史','罗纳河','户外'],ja:['遺産','自然','グルメ','芸術','歴史','ローヌ川','アウトドア']};
 
-const CITY_TAGS=['Patrimoine','Nature','Gastronomie','Art','Histoire','Rhône','Plein air'];
 function buildInterestPills(){
   const c=document.getElementById('interest-pills');c.innerHTML='';
-  const ab=document.createElement('button');ab.className='pill active';ab.dataset.t='all';ab.textContent='🌹 Tout';ab.onclick=()=>togInt(ab);c.appendChild(ab);
-  CITY_TAGS.forEach(tag=>{const btn=document.createElement('button');btn.className='pill';btn.dataset.t=tag;btn.textContent=tag;btn.onclick=()=>togInt(btn);c.appendChild(btn);});
+  const ab=document.createElement('button');ab.className='pill active';ab.dataset.t='all';ab.textContent=T[LANG].allInterest;ab.onclick=()=>togInt(ab);c.appendChild(ab);
+  (CITY_TAGS[LANG]||CITY_TAGS.fr).forEach((tag,i)=>{
+    const btn=document.createElement('button');btn.className='pill';btn.dataset.t=CITY_TAGS.fr[i];btn.textContent=tag;btn.onclick=()=>togInt(btn);c.appendChild(btn);
+  });
 }
 function selDays(n){selDaysN=n;document.querySelectorAll('.day-pill').forEach(b=>b.classList.toggle('active',+b.dataset.d===n));}
 function togInt(btn){
@@ -686,59 +1053,58 @@ function togInt(btn){
   if(!selInts.size){selInts.add('all');document.querySelector('#interest-pills .pill[data-t="all"]').classList.add('active');}
 }
 function selTrans(btn){selTrns=btn.dataset.m;document.querySelectorAll('.pill[data-m]').forEach(b=>b.classList.remove('active'));btn.classList.add('active');}
-
 function fmtT(m){return`${Math.floor(m/60)}h${String(m%60).padStart(2,'0')}`;}
 
 function generateItin(){
-  // Si 2 jours et "tout" → utilise le plan curated
-  if(selDaysN===2&&selInts.has('all')){
-    renderCuratedItin(ITIN_2J);
-    return;
-  }
-  // Sinon algorithme
-  const VD={cathedrale:45,pendentif:20,champdemars:30,musee:90,napoleon:20,maisonsdtetes:30,parcjouvet:60,vieuxvalence:60,rhone:60,chabeuil:60};
+  if(selDaysN===2&&selInts.has('all')){renderCuratedItin();return;}
+  const VD={cathedrale:45,pendentif:20,champdemars:30,musee:90,napoleon:20,maisonsdtetes:30,parcjouvet:60,vieuxvalence:60,rhone:60,chabeuil:60,crussol:90,citechocolat:90,chapoutier:60};
   function getDur(id){return VD[id]||45;}
-  function tvt(a,b){const R=6371000,p1=a.lat*Math.PI/180,p2=b.lat*Math.PI/180,dp=(b.lat-a.lat)*Math.PI/180,dl=(b.lng-a.lng)*Math.PI/180,x=Math.sin(dp/2)**2+Math.cos(p1)*Math.cos(p2)*Math.sin(dl/2)**2;const d=R*2*Math.atan2(Math.sqrt(x),Math.sqrt(1-x));return Math.round(d/({walking:70,transit:200,driving:500}[selTrns]))+2;}
+  function tvt(a,b){const R=6371000,p1=a.lat*Math.PI/180,p2=b.lat*Math.PI/180,dp=(b.lat-a.lat)*Math.PI/180,dl=(b.lng-a.lng)*Math.PI/180,x=Math.sin(dp/2)**2+Math.cos(p1)*Math.cos(p2)*Math.sin(dl/2)**2;return Math.round(R*2*Math.atan2(Math.sqrt(x),Math.sqrt(1-x))/({walking:70,transit:200,driving:500}[selTrns]))+2;}
   function nnRoute(pool,start){const rem=[...pool],route=[];let cur=start;while(rem.length){let mi=Infinity,ni=null,ni2=-1;rem.forEach((lm,i)=>{const d2=tvt(cur,lm);if(d2<mi){mi=d2;ni=lm;ni2=i;}});route.push(ni);rem.splice(ni2,1);cur=ni;}return route;}
   const center={lat:44.9334,lng:4.8924};
   let pool=selInts.has('all')?[...LANDMARKS]:LANDMARKS.filter(lm=>lm.tags.some(t=>selInts.has(t)));
-  pool=pool.slice(0,selDaysN*({walking:5,transit:7,driving:7}[selTrns]));
+  pool=pool.slice(0,selDaysN*5);
   const route=nnRoute(pool,center);
   const days=[];let cur=[];let m=540;let prev=center;
   for(const lm of route){const tr=tvt(prev,lm),vi=getDur(lm.id);if(m+tr+vi>1200&&cur.length){days.push(cur);cur=[];m=540;prev=center;}cur.push({lm,arrival:m+tr,dur:vi,tr});m+=tr+vi;prev=lm;}
   if(cur.length)days.push(cur);
   itinData=days;
-  const themes=['Patrimoine & Histoire','Nature & Rhône','Gastronomie & Culture'];
-  const dayObjs=days.map((stops,di)=>({label:`Jour ${di+1}`,theme:themes[di%themes.length],stops:stops.map(s=>({lm:s.lm,t:fmtT(s.arrival),dur:s.dur,tr:s.tr,tip:null}))}));
+  const t=T[LANG];
+  const themes=[t.day1Theme,t.day2Theme,'Nature & Rhône'];
+  const dayObjs=days.map((stops,di)=>({label:`${t.dayLabel} ${di+1}`,theme:themes[di]||`${t.dayLabel} ${di+1}`,stops:stops.map(s=>({lm:s.lm,t:fmtT(s.arrival),dur:s.dur,tr:s.tr,tip:null}))}));
   renderDaysUI(dayObjs,days.length);
 }
 
-function renderCuratedItin(plan){
-  itinData=plan.map(d=>d.stops.map(s=>{const[h,min]=s.t.split(':');return{lm:LANDMARKS.find(l=>l.id===s.id),arrival:+h*60+ +min,dur:s.dur,tr:0};}));
-  const dayObjs=plan.map(d=>({label:d.label,theme:d.theme,stops:d.stops.map(s=>({lm:LANDMARKS.find(l=>l.id===s.id),t:s.t,dur:s.dur,tr:0,tip:s.tip}))}));
-  renderDaysUI(dayObjs,plan.length);
+function renderCuratedItin(){
+  const t=T[LANG];
+  itinData=ITIN_2J.map(d=>d.stops.map(s=>{const[h,min]=s.t.split(':');return{lm:LANDMARKS.find(l=>l.id===s.id),arrival:+h*60+ +min,dur:s.dur,tr:0};}));
+  const dayObjs=ITIN_2J.map(d=>({
+    label:d.label[LANG]||d.label.fr,
+    theme:t[d.theme]||d.theme,
+    stops:d.stops.map(s=>({lm:LANDMARKS.find(l=>l.id===s.id),t:s.t,dur:s.dur,tr:0,tip:s.tips[LANG]||s.tips.fr}))
+  }));
+  renderDaysUI(dayObjs,2);
 }
 
 function renderDaysUI(dayObjs,nDays){
   document.getElementById('itin-cfg').style.display='none';
   const res=document.getElementById('itin-res');res.style.display='flex';res.style.flexDirection='column';
-  const total=dayObjs.reduce((s,d)=>s+d.stops.length,0);
-  const tl={walking:'🚶 Marche',transit:'🚲 Vélo',driving:'🚗 Voiture'}[selTrns];
-  document.getElementById('res-chips').innerHTML=`<div class="chip"><span>${nDays}</span> jour${nDays>1?'s':''}</div><div class="chip"><span>${total}</span> lieux</div><div class="chip">${tl}</div>`;
-  document.getElementById('res-title').textContent=`Valence · ${nDays}j`;
+  const t=T[LANG],total=dayObjs.reduce((s,d)=>s+d.stops.length,0);
+  const tl={walking:t.travelWalk,transit:t.travelBike,driving:t.travelCar}[selTrns];
+  document.getElementById('res-chips').innerHTML=`<div class="chip"><span>${nDays}</span> ${nDays>1?t.daysLabel:t.dayLabelSingular}</div><div class="chip"><span>${total}</span> ${t.sitesLabel}</div><div class="chip">${tl}</div>`;
+  document.getElementById('res-title').textContent=`Valence · ${nDays}${nDays>1?t.daysLabel[0]:t.dayLabelSingular[0]}`;
   const container=document.getElementById('res-days');container.innerHTML='';
-  dayObjs.forEach((day,di)=>{
+  dayObjs.forEach((day)=>{
     const blk=document.createElement('div');blk.className='day-block';
     blk.innerHTML=`<div class="day-block-hdr"><div class="day-num-badge">${day.label}</div><div class="day-theme-lbl">${day.theme}</div></div>`;
     day.stops.forEach((s,si)=>{if(s.lm)blk.appendChild(mkStop(s.lm,s.t||fmtT(s.arrival||540),s.dur,s.tr||0,si===day.stops.length-1,s.tip));});
     container.appendChild(blk);
-    // Maps button per day
     const ids=day.stops.map(s=>s.lm).filter(Boolean);
     if(ids.length>1){
       const wp=ids.slice(1,-1).map(l=>`${l.lat},${l.lng}`).join('|');
       const url=`https://www.google.com/maps/dir/?api=1&origin=${ids[0].lat},${ids[0].lng}&destination=${ids[ids.length-1].lat},${ids[ids.length-1].lng}&waypoints=${wp}&travelmode=${selTrns}`;
       const gb=document.createElement('div');gb.style.padding='0 0 .5rem';
-      gb.innerHTML=`<button class="btn-gfull" onclick="window.open('${url}','_blank')">📍 ${day.label} dans Google Maps</button>`;
+      gb.innerHTML=`<button class="btn-gfull" onclick="window.open('${url}','_blank')">📍 ${day.label} · Google Maps</button>`;
       container.appendChild(gb);
     }
   });
@@ -748,27 +1114,10 @@ function mkStop(lm,tStr,durMin,trMin,isLast,tip){
   const card=document.createElement('div');card.className='stop-card';
   card.onclick=()=>{switchTab('monuments');setTimeout(()=>showDetail(lm),200);};
   const tipB=tip?`<div class="stop-tip">💡 ${tip}</div>`:'';
-  card.innerHTML=`
-    <div class="stop-tl">
-      <div class="stop-time">${tStr}</div>
-      <div class="stop-dot"></div>
-      ${!isLast?'<div class="stop-line"></div>':''}
-    </div>
-    <div class="stop-thumb"><img alt="${lm.n}"><div class="ef">${lm.e}</div></div>
-    <div class="stop-info">
-      <div class="stop-name">${lm.n}</div>
-      <div class="stop-hood">${lm.hood}</div>
-      <div class="stop-meta">
-        <span class="sb">⏱ ${durMin}min</span>
-        ${lm.tags[0]?`<span class="sb">${lm.tags[0]}</span>`:''}
-        ${trMin>0?`<span class="sb g">🚶 ${trMin}min</span>`:''}
-      </div>
-      ${tipB}
-    </div>
-    <div class="stop-gmap" onclick="event.stopPropagation();window.open('${lm.g}','_blank')">📍</div>`;
+  card.innerHTML=`<div class="stop-tl"><div class="stop-time">${tStr}</div><div class="stop-dot"></div>${!isLast?'<div class="stop-line"></div>':''}</div><div class="stop-thumb"><img alt="${lmName(lm)}"><div class="ef">${lm.e}</div></div><div class="stop-info"><div class="stop-name">${lmName(lm)}</div><div class="stop-hood">${lmHood(lm)}</div><div class="stop-meta"><span class="sb">⏱ ${durMin}min</span>${lm.tags[0]?`<span class="sb">${lm.tags[0]}</span>`:''}${trMin>0?`<span class="sb g">🚶 ${trMin}min</span>`:''}</div>${tipB}</div><div class="stop-gmap" onclick="event.stopPropagation();window.open('${lm.g}','_blank')">📍</div>`;
   const wrap=card.querySelector('.stop-thumb'),img=wrap.querySelector('img'),ef2=wrap.querySelector('.ef');
-  if(lm.wiki){fetchWikiPhoto(lm.wiki).then(src=>{if(src){img.onload=()=>{img.classList.add('ok');ef2.style.display='none';};img.onerror=()=>{ef2.style.display='flex';};img.src=src;}else{ef2.style.display='flex';}});}
-  else{ef2.style.display='flex';}
+  if(lm.wiki){fetchWikiPhoto(lm.wiki).then(src=>{if(src){img.onload=()=>{img.classList.add('ok');ef2.style.display='none';};img.onerror=()=>{ef2.style.display='flex';};img.src=src;}else ef2.style.display='flex';});}
+  else ef2.style.display='flex';
   return card;
 }
 function showCfg(){document.getElementById('itin-cfg').style.display='block';document.getElementById('itin-res').style.display='none';}
@@ -779,15 +1128,14 @@ function openFullRoute(){
   window.open(`https://www.google.com/maps/dir/?api=1&origin=${all[0].lat},${all[0].lng}&destination=${all[all.length-1].lat},${all[all.length-1].lng}&waypoints=${wp}&travelmode=${selTrns}`,'_blank');
 }
 function exportItin(){
-  let txt='🌹 Itinéraire Valence\n'+'-'.repeat(26)+'\n';
-  if(itinData){itinData.forEach((stops,di)=>{txt+=`\n📅 JOUR ${di+1}\n`;stops.forEach(s=>{const lm=s.lm||s;txt+=`  — ${lm.n||lm.n}\n`;});});}
-  navigator.share?navigator.share({title:'Itinéraire Valence',text:txt}):navigator.clipboard?.writeText(txt).then(()=>alert('Copié !'));
+  const t=T[LANG];let txt=`🌹 ${t.itinTitle} Valence\n${'-'.repeat(26)}\n`;
+  if(itinData){itinData.forEach((stops,di)=>{txt+=`\n📅 ${t.dayLabel} ${di+1}\n`;stops.forEach(s=>{const lm=s.lm||s;txt+=`  — ${lmName(lm)}\n`;});});}
+  navigator.share?navigator.share({title:`${t.itinTitle} Valence`,text:txt}):navigator.clipboard?.writeText(txt).then(()=>alert('Copié !'));
 }
 
-// ═══════════════════════════════════════
+// ═══════════════════════════════════════════════════════════
 //  SPORTS
-// ═══════════════════════════════════════
-let activeSportTab=0;
+// ═══════════════════════════════════════════════════════════
 function buildSports(){
   const tabs=document.getElementById('sport-tabs');tabs.innerHTML='';
   SPORTS_DATA.sports.forEach((s,i)=>{const btn=document.createElement('button');btn.className='sport-tab'+(i===0?' active':'');btn.textContent=s.sport;btn.onclick=()=>selSportTab(i);tabs.appendChild(btn);});
@@ -797,64 +1145,58 @@ function selSportTab(i){activeSportTab=i;document.querySelectorAll('.sport-tab')
 function renderSport(i){
   const section=SPORTS_DATA.sports[i],body=document.getElementById('sports-body');body.innerHTML='';
   section.teams.forEach(team=>{
+    const desc=team.descs[LANG]||team.descs.fr;
     const card=document.createElement('div');card.className='team-card';
-    card.innerHTML=`<div class="team-color-bar" style="background:${team.color}"></div><div class="team-card-photo"><div class="shimmer"></div><img alt="${team.name}"><div class="ef">${team.e}</div></div><div class="team-card-body"><div class="team-name">${team.name}</div><div class="team-league">🏟️ ${team.stadium} · ${team.league}</div><div class="team-desc">${team.desc}</div><div class="team-tags">${team.tags.map(t=>`<span class="team-tag">${t}</span>`).join('')}</div></div>`;
+    card.innerHTML=`<div class="team-color-bar" style="background:${team.color}"></div><div class="team-card-photo"><div class="shimmer"></div><img alt="${team.name}"><div class="ef">${team.e}</div></div><div class="team-card-body"><div class="team-name">${team.name}</div><div class="team-league">🏟️ ${team.stadium} · ${team.league}</div><div class="team-desc">${desc}</div><div class="team-tags">${team.tags.map(t=>`<span class="team-tag">${t}</span>`).join('')}</div></div>`;
     const wrap=card.querySelector('.team-card-photo');
-    if(team.wiki){fetchWikiPhoto(team.wiki).then(src=>{wrap.querySelector('.shimmer').style.display='none';if(src){const img=wrap.querySelector('img');img.onload=()=>img.classList.add('ok');img.src=src;}else{wrap.querySelector('.ef').style.display='flex';}});}
+    if(team.wiki){fetchWikiPhoto(team.wiki).then(src=>{wrap.querySelector('.shimmer').style.display='none';if(src){const img=wrap.querySelector('img');img.onload=()=>img.classList.add('ok');img.src=src;}else wrap.querySelector('.ef').style.display='flex';});}
     else{wrap.querySelector('.shimmer').style.display='none';wrap.querySelector('.ef').style.display='flex';}
     body.appendChild(card);
   });
 }
 
-// ═══════════════════════════════════════
+// ═══════════════════════════════════════════════════════════
 //  FOOD
-// ═══════════════════════════════════════
-let activeFoodCat=0;
+// ═══════════════════════════════════════════════════════════
 function buildFood(){
-  document.getElementById('food-sub').textContent=`${FOOD_DATA.restaurants.length} restaurants · ${FOOD_DATA.cats.length} catégories`;
-  const cats=document.getElementById('food-cats');cats.innerHTML='';
-  FOOD_DATA.cats.forEach((c,i)=>{const btn=document.createElement('button');btn.className='food-cat'+(i===0?' active':'');btn.textContent=c;btn.onclick=()=>selFoodCat(i);cats.appendChild(btn);});
-  FOOD_DATA.restaurants.forEach(r=>{if(r.wiki)fetchWikiPhoto(r.wiki);});
+  const t=T[LANG],cats=t.foodCats;
+  document.getElementById('food-sub').textContent=t.foodSub;
+  const catsEl=document.getElementById('food-cats');catsEl.innerHTML='';
+  cats.forEach((c,i)=>{const btn=document.createElement('button');btn.className='food-cat'+(i===0?' active':'');btn.textContent=c;btn.onclick=()=>selFoodCat(i);catsEl.appendChild(btn);});
   renderFood(0);
 }
 function selFoodCat(i){activeFoodCat=i;document.querySelectorAll('.food-cat').forEach((b,j)=>b.classList.toggle('active',j===i));renderFood(i);}
 function renderFood(catIdx){
-  const restos=FOOD_DATA.restaurants.filter(r=>r.cat===catIdx),body=document.getElementById('food-body');body.innerHTML='';
-  if(!restos.length){body.innerHTML='<div style="padding:3rem;text-align:center;color:var(--text-soft)">Aucun restaurant</div>';return;}
+  const restos=FOOD_RESTAURANTS.filter(r=>r.cat===catIdx),body=document.getElementById('food-body');body.innerHTML='';
+  if(!restos.length){body.innerHTML=`<div style="padding:3rem;text-align:center;color:var(--text-soft)">${T[LANG].noResult}</div>`;return;}
   restos.forEach((r,i)=>body.appendChild(i===0?mkRestoFeatured(r):mkRestoCard(r)));
 }
+function rDesc(r){return r.descs[LANG]||r.descs.fr;}
+function rCuisine(r){return r.cuisine[LANG]||r.cuisine.fr;}
 function loadRestoPhoto(wrap,wiki,emoji){
   const img=wrap.querySelector('img'),sh=wrap.querySelector('.shimmer'),ef2=wrap.querySelector('.ef');
-  if(wiki){fetchWikiPhoto(wiki).then(src=>{sh.style.display='none';if(src){img.onload=()=>{img.classList.add('ok');ef2.style.display='none';};img.onerror=()=>{ef2.style.display='flex';};img.src=src;}else{ef2.style.display='flex';}});}
+  if(wiki){fetchWikiPhoto(wiki).then(src=>{sh.style.display='none';if(src){img.onload=()=>{img.classList.add('ok');ef2.style.display='none';};img.onerror=()=>{ef2.style.display='flex';};img.src=src;}else ef2.style.display='flex';});}
   else{sh.style.display='none';ef2.style.display='flex';}
 }
 function mkRestoFeatured(r){
   const card=document.createElement('div');card.className='resto-featured';
   const stars=r.michelin?`<div class="michelin-badge">${r.michelin}</div>`:'';
-  card.innerHTML=`<div class="resto-feat-photo"><div class="shimmer"></div><img alt="${r.name}"><div class="ef">${r.e}</div>${stars}<div class="feat-price-badge">${r.price}</div></div><div class="resto-feat-body"><div class="resto-feat-name">${r.name}</div><div class="resto-feat-cuisine">${r.cuisine}</div><div class="resto-feat-desc">${r.desc}</div><div class="resto-feat-meta"><span class="resto-meta-item">📍 ${r.hood}</span></div><div class="resto-tags">${r.tags.map(t=>`<span class="resto-tag">${t}</span>`).join('')}</div></div><div class="resto-gmap" onclick="window.open('${r.map}','_blank')">📍 Maps</div>`;
+  card.innerHTML=`<div class="resto-feat-photo"><div class="shimmer"></div><img alt="${r.name}"><div class="ef">${r.e}</div>${stars}<div class="feat-price-badge">${r.price}</div></div><div class="resto-feat-body"><div class="resto-feat-name">${r.name}</div><div class="resto-feat-cuisine">${rCuisine(r)}</div><div class="resto-feat-desc">${rDesc(r)}</div><div class="resto-feat-meta"><span class="resto-meta-item">📍 ${r.hood}</span></div><div class="resto-tags">${r.tags.map(t=>`<span class="resto-tag">${t}</span>`).join('')}</div></div><div class="resto-gmap" onclick="window.open('${r.map}','_blank')">📍 Maps</div>`;
   loadRestoPhoto(card.querySelector('.resto-feat-photo'),r.wiki,r.e);
   return card;
 }
 function mkRestoCard(r){
   const card=document.createElement('div');card.className='resto-card';
   const stars=r.michelin?`<span class="sb">${r.michelin}</span>`:'';
-  card.innerHTML=`<div class="resto-card-photo"><div class="shimmer"></div><img alt="${r.name}"><div class="ef">${r.e}</div></div><div class="resto-card-body"><div class="resto-card-name">${r.name}</div><div class="resto-card-cuisine">${r.cuisine}</div><div class="resto-card-desc">${r.desc}</div><div class="resto-card-meta">${stars}<span class="price-tag">${r.price}</span><span class="resto-meta-item" style="font-size:.6rem">📍 ${r.hood}</span></div></div><div class="resto-card-gmap" onclick="event.stopPropagation();window.open('${r.map}','_blank')">📍</div>`;
+  card.innerHTML=`<div class="resto-card-photo"><div class="shimmer"></div><img alt="${r.name}"><div class="ef">${r.e}</div></div><div class="resto-card-body"><div class="resto-card-name">${r.name}</div><div class="resto-card-cuisine">${rCuisine(r)}</div><div class="resto-card-desc">${rDesc(r)}</div><div class="resto-card-meta">${stars}<span class="price-tag">${r.price}</span><span class="resto-meta-item" style="font-size:.6rem">📍 ${r.hood}</span></div></div><div class="resto-card-gmap" onclick="event.stopPropagation();window.open('${r.map}','_blank')">📍</div>`;
   loadRestoPhoto(card.querySelector('.resto-card-photo'),r.wiki,r.e);
   return card;
 }
 
-// ═══════════════════════════════════════
-//  BOOT
-// ═══════════════════════════════════════
-window.addEventListener('DOMContentLoaded',()=>{
-  LANDMARKS.forEach(lm=>{if(lm.wiki)fetchWikiPhoto(lm.wiki);});
-  fetchWeather();
-  renderMonuments('');
-  buildInterestPills();
-  buildSports();
-  buildFood();
-  setTimeout(()=>document.getElementById('loading').classList.add('done'),900);
-});
+// ═══════════════════════════════════════════════════════════
+//  UTILS
+// ═══════════════════════════════════════════════════════════
+function dist(a,b){const R=6371000,p1=a.lat*Math.PI/180,p2=b.lat*Math.PI/180,dp=(b.lat-a.lat)*Math.PI/180,dl=(b.lng-a.lng)*Math.PI/180,x=Math.sin(dp/2)**2+Math.cos(p1)*Math.cos(p2)*Math.sin(dl/2)**2;return R*2*Math.atan2(Math.sqrt(x),Math.sqrt(1-x));}
 </script>
 </body>
 </html>
