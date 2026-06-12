@@ -11,22 +11,22 @@
 body{background:var(--cream);color:var(--text);font-family:'DM Sans',sans-serif;overflow:hidden;height:100dvh;width:100vw;user-select:none;-webkit-user-select:none}
 
 /* ══ LANGUAGE SELECT SCREEN ══ */
-#lang-screen{position:fixed;inset:0;background:var(--cream);z-index:500;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:2rem}
+#lang-screen{position:fixed;inset:0;background:var(--cream);z-index:500;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:2rem;overflow-y:auto;-webkit-overflow-scrolling:touch}
 #lang-screen.hidden{display:none}
-.ls-logo{font-family:'Playfair Display',serif;font-size:2.5rem;color:var(--red);letter-spacing:.05em;text-align:center;line-height:1}
+.ls-logo{font-family:'Playfair Display',serif;font-size:2rem;color:var(--red);letter-spacing:.05em;text-align:center;line-height:1}
 .ls-city{font-size:.75rem;letter-spacing:.3em;text-transform:uppercase;color:var(--text-soft);margin-top:.5rem;text-align:center}
-.ls-divider{width:48px;height:2px;background:var(--red);border-radius:1px;margin:2rem auto}
-.ls-title{font-family:'Playfair Display',serif;font-size:1.2rem;color:var(--text);text-align:center;margin-bottom:1.5rem}
-.ls-grid{display:grid;grid-template-columns:1fr 1fr;gap:.85rem;width:100%;max-width:320px}
-.ls-btn{display:flex;align-items:center;gap:.85rem;background:var(--white);border:1.5px solid var(--border-mid);border-radius:14px;padding:.9rem 1.1rem;cursor:pointer;transition:all .2s;box-shadow:var(--shadow)}
+.ls-divider{width:48px;height:2px;background:var(--red);border-radius:1px;margin:1.2rem auto}
+.ls-title{font-family:'Playfair Display',serif;font-size:1.1rem;color:var(--text);text-align:center;margin-bottom:1rem}
+.ls-grid{display:grid;grid-template-columns:1fr 1fr;gap:.75rem;width:100%;max-width:340px}
+.ls-btn{display:flex;align-items:center;gap:.85rem;background:var(--white);border:1.5px solid var(--border-mid);border-radius:14px;padding:1rem 1.1rem;cursor:pointer;transition:all .2s;box-shadow:var(--shadow);touch-action:manipulation;-webkit-tap-highlight-color:transparent;min-height:64px;width:100%}
 .ls-btn:active{border-color:var(--red);background:var(--red-light);transform:scale(.97)}
 .ls-btn.selected{border-color:var(--red);background:var(--red-light)}
 .ls-flag{font-size:2rem;line-height:1}
 .ls-lang-name{font-family:'Playfair Display',serif;font-size:1rem;color:var(--text)}
 .ls-lang-sub{font-size:.65rem;color:var(--text-soft);margin-top:.05rem}
-.ls-confirm{margin-top:2rem;width:100%;max-width:320px;padding:.95rem;background:var(--red);border:none;border-radius:12px;color:#fff;font-family:'Playfair Display',serif;font-size:1.1rem;cursor:pointer;box-shadow:0 4px 16px rgba(230,57,70,.3);transition:opacity .15s,transform .15s}
+.ls-confirm{margin-top:1.5rem;width:100%;max-width:340px;padding:1rem;background:var(--red);border:none;border-radius:12px;color:#fff;font-family:'Playfair Display',serif;font-size:1.1rem;cursor:pointer;box-shadow:0 4px 16px rgba(230,57,70,.3);transition:opacity .15s,transform .15s;touch-action:manipulation;-webkit-tap-highlight-color:transparent}
 .ls-confirm:active{opacity:.85;transform:scale(.98)}
-.ls-switch{margin-top:1rem;font-size:.72rem;color:var(--text-soft);text-align:center;cursor:pointer;text-decoration:underline}
+.ls-switch{margin-top:.75rem;font-size:.72rem;color:var(--text-soft);text-align:center;cursor:pointer;text-decoration:underline;touch-action:manipulation}
 
 /* ══ LOADING ══ */
 #loading{position:fixed;inset:0;background:var(--cream);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1rem;z-index:400;transition:opacity .6s}
@@ -290,32 +290,32 @@ body{background:var(--cream);color:var(--text);font-family:'DM Sans',sans-serif;
       <span class="ls-flag">🇫🇷</span>
       <div><div class="ls-lang-name">Français</div><div class="ls-lang-sub">France</div></div>
     </button>
-    <button class="ls-btn" data-lang="en" onclick="selectLang('en',this)">
+    <button class="ls-btn" data-lang="en" onclick="selectLang('en',this)" ontouchstart="event.preventDefault();selectLang('en',this)">
       <span class="ls-flag">🇬🇧</span>
       <div><div class="ls-lang-name">English</div><div class="ls-lang-sub">United Kingdom</div></div>
     </button>
-    <button class="ls-btn" data-lang="es" onclick="selectLang('es',this)">
+    <button class="ls-btn" data-lang="es" onclick="selectLang('es',this)" ontouchstart="event.preventDefault();selectLang('es',this)">
       <span class="ls-flag">🇪🇸</span>
       <div><div class="ls-lang-name">Español</div><div class="ls-lang-sub">España</div></div>
     </button>
-    <button class="ls-btn" data-lang="de" onclick="selectLang('de',this)">
+    <button class="ls-btn" data-lang="de" onclick="selectLang('de',this)" ontouchstart="event.preventDefault();selectLang('de',this)">
       <span class="ls-flag">🇩🇪</span>
       <div><div class="ls-lang-name">Deutsch</div><div class="ls-lang-sub">Deutschland</div></div>
     </button>
-    <button class="ls-btn" data-lang="it" onclick="selectLang('it',this)">
+    <button class="ls-btn" data-lang="it" onclick="selectLang('it',this)" ontouchstart="event.preventDefault();selectLang('it',this)">
       <span class="ls-flag">🇮🇹</span>
       <div><div class="ls-lang-name">Italiano</div><div class="ls-lang-sub">Italia</div></div>
     </button>
-    <button class="ls-btn" data-lang="zh" onclick="selectLang('zh',this)">
+    <button class="ls-btn" data-lang="zh" onclick="selectLang('zh',this)" ontouchstart="event.preventDefault();selectLang('zh',this)">
       <span class="ls-flag">🇨🇳</span>
       <div><div class="ls-lang-name">中文</div><div class="ls-lang-sub">中国</div></div>
     </button>
-    <button class="ls-btn" data-lang="ja" onclick="selectLang('ja',this)">
+    <button class="ls-btn" data-lang="ja" onclick="selectLang('ja',this)" ontouchstart="event.preventDefault();selectLang('ja',this)">
       <span class="ls-flag">🇯🇵</span>
       <div><div class="ls-lang-name">日本語</div><div class="ls-lang-sub">日本</div></div>
     </button>
   </div>
-  <button class="ls-confirm" id="ls-confirm" onclick="launchApp()">Continuer →</button>
+  <button class="ls-confirm" id="ls-confirm" onclick="launchApp()" ontouchstart="event.preventDefault();launchApp()">Continuer →</button>
 </div>
 
 <!-- ══ LOADING ══ -->
