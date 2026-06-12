@@ -302,9 +302,17 @@ body{background:var(--cream);color:var(--text);font-family:'DM Sans',sans-serif;
       <span class="ls-flag">🇩🇪</span>
       <div><div class="ls-lang-name">Deutsch</div><div class="ls-lang-sub">Deutschland</div></div>
     </button>
-    <button class="ls-btn" data-lang="it" onclick="selectLang('it',this)" style="grid-column:1/-1;max-width:calc(50% - .43rem);margin:0 auto">
+    <button class="ls-btn" data-lang="it" onclick="selectLang('it',this)">
       <span class="ls-flag">🇮🇹</span>
       <div><div class="ls-lang-name">Italiano</div><div class="ls-lang-sub">Italia</div></div>
+    </button>
+    <button class="ls-btn" data-lang="zh" onclick="selectLang('zh',this)">
+      <span class="ls-flag">🇨🇳</span>
+      <div><div class="ls-lang-name">中文</div><div class="ls-lang-sub">中国</div></div>
+    </button>
+    <button class="ls-btn" data-lang="ja" onclick="selectLang('ja',this)">
+      <span class="ls-flag">🇯🇵</span>
+      <div><div class="ls-lang-name">日本語</div><div class="ls-lang-sub">日本</div></div>
     </button>
   </div>
   <button class="ls-confirm" id="ls-confirm" onclick="launchApp()">Continuer →</button>
