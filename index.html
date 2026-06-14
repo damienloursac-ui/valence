@@ -275,6 +275,47 @@ body{background:var(--cream);color:var(--text);font-family:'DM Sans',sans-serif;
 .wx-hour-temp{font-family:'Playfair Display',serif;font-size:.9rem;color:var(--text)}
 .wx-hour-rain{font-size:.55rem;color:#4A90D9}
 .wx-credits{font-size:.58rem;color:var(--text-soft);text-align:center;padding:.8rem 1.2rem 0}
+
+/* ══ GAMIFICATION ══ */
+.gamif-body{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:.75rem 1rem 5rem;background:var(--cream)}
+.gamif-hero{background:linear-gradient(135deg,var(--red),#c5303c);border-radius:18px;padding:1.3rem;color:#fff;margin-bottom:1rem;box-shadow:0 6px 24px rgba(230,57,70,.28)}
+.gamif-hero-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:.8rem}
+.gamif-level{font-family:'Playfair Display',serif;font-size:1.3rem}
+.gamif-level-sub{font-size:.65rem;opacity:.85;letter-spacing:.1em;text-transform:uppercase;margin-top:.1rem}
+.gamif-points{text-align:right}
+.gamif-points-val{font-family:'Playfair Display',serif;font-size:1.8rem;line-height:1}
+.gamif-points-lbl{font-size:.62rem;opacity:.85;letter-spacing:.1em;text-transform:uppercase}
+.gamif-progress-track{background:rgba(255,255,255,.25);border-radius:20px;height:10px;overflow:hidden;margin-top:.3rem}
+.gamif-progress-fill{background:#fff;height:100%;border-radius:20px;transition:width .5s ease}
+.gamif-progress-txt{font-size:.7rem;opacity:.9;margin-top:.45rem;text-align:center}
+.gamif-section-lbl{font-size:.65rem;letter-spacing:.18em;text-transform:uppercase;color:var(--text-soft);margin:1.1rem 0 .65rem}
+.badge-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:.6rem}
+.badge-card{background:var(--white);border:1px solid var(--border);border-radius:14px;padding:.8rem .5rem;text-align:center;box-shadow:var(--shadow);transition:transform .15s}
+.badge-card.unlocked{border-color:var(--red);background:var(--red-light)}
+.badge-card.locked{opacity:.45}
+.badge-icon{font-size:1.8rem;margin-bottom:.35rem}
+.badge-name{font-family:'Playfair Display',serif;font-size:.78rem;color:var(--text);line-height:1.15}
+.badge-desc{font-size:.6rem;color:var(--text-soft);margin-top:.2rem;line-height:1.3}
+.gpx-list{display:flex;flex-direction:column;gap:.5rem}
+.gpx-item{display:flex;align-items:center;gap:.7rem;background:var(--white);border:1px solid var(--border);border-radius:12px;padding:.7rem .85rem;box-shadow:var(--shadow);cursor:pointer;transition:box-shadow .18s}
+.gpx-item:active{box-shadow:var(--shadow-lg)}
+.gpx-item.done{border-color:var(--red);background:var(--red-light)}
+.gpx-check{width:26px;height:26px;border-radius:50%;border:2px solid var(--border-mid);flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:.85rem;color:transparent;transition:all .2s}
+.gpx-item.done .gpx-check{background:var(--red);border-color:var(--red);color:#fff}
+.gpx-name{font-family:'Playfair Display',serif;font-size:.92rem;color:var(--text);flex:1}
+.gpx-pts{font-size:.65rem;color:var(--red);font-weight:600;white-space:nowrap}
+.gamif-actions{display:flex;gap:.6rem;margin-top:1.2rem}
+.gamif-btn{flex:1;padding:.75rem;border-radius:10px;border:1px solid var(--border-mid);background:var(--white);color:var(--text-mid);font-size:.78rem;cursor:pointer;font-family:'DM Sans',sans-serif;font-weight:500}
+.gamif-btn.danger{color:var(--red);border-color:var(--red-mid)}
+.gps-toast{position:fixed;bottom:80px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--text);color:#fff;padding:.7rem 1.2rem;border-radius:30px;font-size:.8rem;box-shadow:0 6px 20px rgba(0,0,0,.25);z-index:300;opacity:0;transition:all .3s;max-width:90%;text-align:center}
+.gps-toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+.dp-visited-btn{width:100%;padding:.85rem;border-radius:10px;border:2px solid var(--red);background:var(--white);color:var(--red);font-family:'Playfair Display',serif;font-size:1rem;cursor:pointer;margin-bottom:.6rem;transition:all .2s}
+.dp-visited-btn.done{background:var(--red);color:#fff}
+.badge-toast{position:fixed;top:90px;left:50%;transform:translateX(-50%) translateY(-30px);background:var(--white);border:2px solid var(--red);border-radius:16px;padding:1rem 1.4rem;box-shadow:0 10px 36px rgba(26,10,8,.18);z-index:300;opacity:0;transition:all .4s cubic-bezier(.32,.72,0,1);display:flex;align-items:center;gap:.85rem;max-width:90%}
+.badge-toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+.badge-toast-icon{font-size:2.2rem}
+.badge-toast-title{font-size:.6rem;letter-spacing:.18em;text-transform:uppercase;color:var(--red);font-weight:600}
+.badge-toast-name{font-family:'Playfair Display',serif;font-size:1.05rem;color:var(--text)}
 </style>
 </head>
 <body>
@@ -412,12 +453,22 @@ body{background:var(--cream);color:var(--text);font-family:'DM Sans',sans-serif;
     <div class="food-body" id="food-body"></div>
   </div>
 
+  <!-- GAMIFICATION / DISCOVERIES -->
+  <div id="gamif-screen" class="screen" style="flex-direction:column">
+    <div class="section-screen-hdr">
+      <div class="section-ttl" id="gamif-title-hdr">Mes <span>découvertes</span></div>
+      <div class="section-sub" id="gamif-sub-hdr">Badges, points et progression</div>
+    </div>
+    <div class="gamif-body" id="gamif-body"></div>
+  </div>
+
   <!-- BOTTOM NAV -->
   <div id="bottom-nav">
     <button class="nav-btn active" id="nav-monuments" onclick="switchTab('monuments')"><span class="nav-icon">🏛️</span><span class="nav-label" id="nav-lbl-monuments">Lieux</span></button>
     <button class="nav-btn" id="nav-itin" onclick="switchTab('itin')"><span class="nav-icon">🗺️</span><span class="nav-label" id="nav-lbl-itin">Itinéraire</span></button>
     <button class="nav-btn" id="nav-sports" onclick="switchTab('sports')"><span class="nav-icon">🏆</span><span class="nav-label" id="nav-lbl-sports">Sports</span></button>
     <button class="nav-btn" id="nav-food" onclick="switchTab('food')"><span class="nav-icon">🍽️</span><span class="nav-label" id="nav-lbl-food">Food</span></button>
+    <button class="nav-btn" id="nav-gamif" onclick="switchTab('gamif')"><span class="nav-icon">🏅</span><span class="nav-label" id="nav-lbl-gamif">Découvertes</span></button>
   </div>
 
   <!-- DETAIL PANEL -->
@@ -440,6 +491,7 @@ body{background:var(--cream);color:var(--text);font-family:'DM Sans',sans-serif;
       <div class="stat"><div class="stat-val" id="p-yr">—</div><div class="stat-label" id="p-lbl-yr">Siècle</div></div>
       <div class="stat"><div class="stat-val" id="p-tag1">—</div><div class="stat-label" id="p-lbl-cat">Catégorie</div></div>
     </div>
+    <button class="dp-visited-btn" id="dp-visited-btn" onclick="toggleVisited()">✓ J'y suis allé(e) !</button>
     <div class="p-actions">
       <button class="btn-pri" id="gmaps-btn" onclick="openMaps()">📍 Google Maps</button>
       <button class="btn-sec" onclick="closePanel()">✕</button>
@@ -469,6 +521,13 @@ body{background:var(--cream);color:var(--text);font-family:'DM Sans',sans-serif;
     <div id="wx-hourly" class="wx-hourly"></div>
     <div class="wx-credits" id="wx-credits">Météo · Open-Meteo.com · Temps réel</div>
   </div>
+
+  <!-- TOASTS -->
+  <div class="gps-toast" id="gps-toast"></div>
+  <div class="badge-toast" id="badge-toast">
+    <span class="badge-toast-icon" id="badge-toast-icon">🏅</span>
+    <div><div class="badge-toast-title">Badge débloqué !</div><div class="badge-toast-name" id="badge-toast-name"></div></div>
+  </div>
 </div>
 
 <script>
@@ -479,7 +538,7 @@ const T = {
   fr:{
     langSelect:'Choisissez votre langue', confirm:'Continuer →',
     loading:'Chargement…', region:'Drôme · Rhône-Alpes',
-    nav:['Lieux','Itinéraire','Sports','Food'],
+    nav:['Lieux','Itinéraire','Sports','Food','Découvertes'],
     searchPlaceholder:'🔍  Rechercher un lieu…',
     itinTitle:'Itinéraire', itinSub:'Parcours optimisé sur-mesure',
     cfgDays:'⏱ Combien de jours ?', cfgInt:'🎯 Centres d\'intérêt', cfgTrans:'🚶 Déplacement',
@@ -497,11 +556,19 @@ const T = {
     travelWalk:'🚶 Marche', travelBike:'🚲 Vélo', travelCar:'🚗 Voiture',
     noResult:'Aucun lieu trouvé', dayLabel:'Jour', daysLabel:'jours', dayLabelSingular:'jour', sitesLabel:'lieux',
     changeLanguage:'Changer de langue',
+    gamifTitle:'Mes découvertes', gamifTitleHtml:'Mes <span>découvertes</span>', gamifSub:'Badges, points et progression',
+    visitedBtn:'✓ J\'y suis allé(e) !', visitedDone:'✓ Visité', nearbyBtn:'📍 Vérifier ma position',
+    nearbyFound:'🎉 Vous êtes sur place ! Lieu marqué comme visité.', nearbyNotFound:'Vous n\'êtes pas encore assez proche de ce lieu.',
+    nearbyError:'Géolocalisation indisponible sur cet appareil.',
+    pointsLabel:'points', progressLabel:'lieux découverts', badgesLabel:'Badges',
+    badgeLocked:'À débloquer', shareProgress:'📤 Partager ma progression',
+    levelLabel:'Niveau', levelNames:['Touriste','Explorateur','Aventurier','Expert local','Ambassadeur de Valence'],
+    resetProgress:'Réinitialiser', resetConfirm:'Réinitialiser toute votre progression ?',
   },
   en:{
     langSelect:'Choose your language', confirm:'Continue →',
     loading:'Loading…', region:'Drôme · Rhône-Alpes',
-    nav:['Places','Itinerary','Sports','Food'],
+    nav:['Places','Itinerary','Sports','Food','Discoveries'],
     searchPlaceholder:'🔍  Search a place…',
     itinTitle:'Itinerary', itinSub:'Optimised route, tailored for you',
     cfgDays:'⏱ How many days?', cfgInt:'🎯 Interests', cfgTrans:'🚶 Getting around',
@@ -519,11 +586,19 @@ const T = {
     travelWalk:'🚶 Walking', travelBike:'🚲 Cycling', travelCar:'🚗 Driving',
     noResult:'No place found', dayLabel:'Day', daysLabel:'days', dayLabelSingular:'day', sitesLabel:'places',
     changeLanguage:'Change language',
+    gamifTitle:'My Discoveries', gamifTitleHtml:'My <span>Discoveries</span>', gamifSub:'Badges, points and progress',
+    visitedBtn:'✓ I\'ve been here!', visitedDone:'✓ Visited', nearbyBtn:'📍 Check my location',
+    nearbyFound:'🎉 You\'re here! Place marked as visited.', nearbyNotFound:'You\'re not close enough to this place yet.',
+    nearbyError:'Location services unavailable on this device.',
+    pointsLabel:'points', progressLabel:'places discovered', badgesLabel:'Badges',
+    badgeLocked:'To unlock', shareProgress:'📤 Share my progress',
+    levelLabel:'Level', levelNames:['Tourist','Explorer','Adventurer','Local Expert','Valence Ambassador'],
+    resetProgress:'Reset', resetConfirm:'Reset all your progress?',
   },
   es:{
     langSelect:'Elige tu idioma', confirm:'Continuar →',
     loading:'Cargando…', region:'Drôme · Ródano-Alpes',
-    nav:['Lugares','Itinerario','Deportes','Gastronomía'],
+    nav:['Lugares','Itinerario','Deportes','Gastronomía','Logros'],
     searchPlaceholder:'🔍  Buscar un lugar…',
     itinTitle:'Itinerario', itinSub:'Ruta optimizada a tu medida',
     cfgDays:'⏱ ¿Cuántos días?', cfgInt:'🎯 Intereses', cfgTrans:'🚶 Desplazamiento',
@@ -541,11 +616,19 @@ const T = {
     travelWalk:'🚶 A pie', travelBike:'🚲 Bicicleta', travelCar:'🚗 Coche',
     noResult:'Ningún lugar encontrado', dayLabel:'Día', daysLabel:'días', dayLabelSingular:'día', sitesLabel:'lugares',
     changeLanguage:'Cambiar idioma',
+    gamifTitle:'Mis Descubrimientos', gamifTitleHtml:'Mis <span>Descubrimientos</span>', gamifSub:'Insignias, puntos y progreso',
+    visitedBtn:'✓ ¡He estado aquí!', visitedDone:'✓ Visitado', nearbyBtn:'📍 Verificar mi ubicación',
+    nearbyFound:'🎉 ¡Estás aquí! Lugar marcado como visitado.', nearbyNotFound:'Aún no estás lo suficientemente cerca de este lugar.',
+    nearbyError:'Geolocalización no disponible en este dispositivo.',
+    pointsLabel:'puntos', progressLabel:'lugares descubiertos', badgesLabel:'Insignias',
+    badgeLocked:'Por desbloquear', shareProgress:'📤 Compartir mi progreso',
+    levelLabel:'Nivel', levelNames:['Turista','Explorador','Aventurero','Experto local','Ambajador de Valence'],
+    resetProgress:'Reiniciar', resetConfirm:'¿Reiniciar todo tu progreso?',
   },
   de:{
     langSelect:'Sprache wählen', confirm:'Weiter →',
     loading:'Wird geladen…', region:'Drôme · Rhône-Alpen',
-    nav:['Orte','Reiseroute','Sport','Food'],
+    nav:['Orte','Reiseroute','Sport','Food','Erlebnisse'],
     searchPlaceholder:'🔍  Ort suchen…',
     itinTitle:'Reiseroute', itinSub:'Optimierte Route nach Maß',
     cfgDays:'⏱ Wie viele Tage?', cfgInt:'🎯 Interessen', cfgTrans:'🚶 Fortbewegung',
@@ -563,11 +646,19 @@ const T = {
     travelWalk:'🚶 Zu Fuß', travelBike:'🚲 Fahrrad', travelCar:'🚗 Auto',
     noResult:'Kein Ort gefunden', dayLabel:'Tag', daysLabel:'Tage', dayLabelSingular:'Tag', sitesLabel:'Orte',
     changeLanguage:'Sprache wechseln',
+    gamifTitle:'Meine Entdeckungen', gamifTitleHtml:'Meine <span>Entdeckungen</span>', gamifSub:'Abzeichen, Punkte und Fortschritt',
+    visitedBtn:'✓ War ich schon hier!', visitedDone:'✓ Besucht', nearbyBtn:'📍 Standort prüfen',
+    nearbyFound:'🎉 Du bist hier! Ort als besucht markiert.', nearbyNotFound:'Du bist diesem Ort noch nicht nah genug.',
+    nearbyError:'Standortdienste auf diesem Gerät nicht verfügbar.',
+    pointsLabel:'Punkte', progressLabel:'entdeckte Orte', badgesLabel:'Abzeichen',
+    badgeLocked:'Freischaltbar', shareProgress:'📤 Fortschritt teilen',
+    levelLabel:'Stufe', levelNames:['Tourist','Entdecker','Abenteurer','Lokaler Experte','Valence-Botschafter'],
+    resetProgress:'Zurücksetzen', resetConfirm:'Gesamten Fortschritt zurücksetzen?',
   },
   it:{
     langSelect:'Scegli la tua lingua', confirm:'Continua →',
     loading:'Caricamento…', region:'Drôme · Rodano-Alpi',
-    nav:['Luoghi','Itinerario','Sport','Food'],
+    nav:['Luoghi','Itinerario','Sport','Food','Scoperte'],
     searchPlaceholder:'🔍  Cerca un luogo…',
     itinTitle:'Itinerario', itinSub:'Percorso ottimizzato su misura',
     cfgDays:'⏱ Quanti giorni?', cfgInt:'🎯 Interessi', cfgTrans:'🚶 Spostamento',
@@ -585,6 +676,14 @@ const T = {
     travelWalk:'🚶 A piedi', travelBike:'🚲 Bici', travelCar:'🚗 Auto',
     noResult:'Nessun luogo trovato', dayLabel:'Giorno', daysLabel:'giorni', dayLabelSingular:'giorno', sitesLabel:'luoghi',
     changeLanguage:'Cambia lingua',
+    gamifTitle:'Le Mie Scoperte', gamifTitleHtml:'Le Mie <span>Scoperte</span>', gamifSub:'Distintivi, punti e progressi',
+    visitedBtn:'✓ Sono stato qui!', visitedDone:'✓ Visitato', nearbyBtn:'📍 Verifica la mia posizione',
+    nearbyFound:'🎉 Sei qui! Luogo segnato come visitato.', nearbyNotFound:'Non sei ancora abbastanza vicino a questo luogo.',
+    nearbyError:'Geolocalizzazione non disponibile su questo dispositivo.',
+    pointsLabel:'punti', progressLabel:'luoghi scoperti', badgesLabel:'Distintivi',
+    badgeLocked:'Da sbloccare', shareProgress:'📤 Condividi i miei progressi',
+    levelLabel:'Livello', levelNames:['Turista','Esploratore','Avventuriero','Esperto locale','Ambasciatore di Valence'],
+    resetProgress:'Reimposta', resetConfirm:'Reimpostare tutti i tuoi progressi?',
   }
 };
 
@@ -668,6 +767,26 @@ let activeLM = null;
 let selDaysN = 2, selInts = new Set(['all']), selTrns = 'walking', itinData = null;
 let activeSportTab = 0, activeFoodCat = 0;
 
+// Gamification state (session-only, not persisted)
+const VISITED = new Set();
+const UNLOCKED_BADGES = new Set();
+const POINTS_BY_LM = {
+  cathedrale:20, pendentif:15, champdemars:10, musee:15, napoleon:10,
+  maisonsdtetes:15, parcjouvet:10, vieuxvalence:10, rhone:10, chabeuil:10,
+  crussol:25, citechocolat:20, chapoutier:20,
+};
+const BADGES = [
+  {id:'first',     icon:'🥉', threshold:1,  names:{fr:'Premier pas',en:'First Step',es:'Primer paso',de:'Erster Schritt',it:'Primo passo'}, descs:{fr:'Visitez votre premier lieu',en:'Visit your first place',es:'Visita tu primer lugar',de:'Besuche deinen ersten Ort',it:'Visita il tuo primo luogo'}},
+  {id:'explorer',  icon:'🧭', threshold:4,  names:{fr:'Explorateur',en:'Explorer',es:'Explorador',de:'Entdecker',it:'Esploratore'}, descs:{fr:'Visitez 4 lieux',en:'Visit 4 places',es:'Visita 4 lugares',de:'Besuche 4 Orte',it:'Visita 4 luoghi'}},
+  {id:'halfway',   icon:'⭐', threshold:7,  names:{fr:'À mi-chemin',en:'Halfway There',es:'A medio camino',de:'Auf halbem Weg',it:'A metà strada'}, descs:{fr:'Visitez 7 lieux',en:'Visit 7 places',es:'Visita 7 lugares',de:'Besuche 7 Orte',it:'Visita 7 luoghi'}},
+  {id:'complete',  icon:'🏆', threshold:13, names:{fr:'Maître de Valence',en:'Master of Valence',es:'Maestro de Valence',de:'Meister von Valence',it:'Maestro di Valence'}, descs:{fr:'Visitez les 13 lieux',en:'Visit all 13 places',es:'Visita los 13 lugares',de:'Besuche alle 13 Orte',it:'Visita tutti i 13 luoghi'}},
+  {id:'oldtown',   icon:'🏘️', special:'oldtown', names:{fr:'Cœur historique',en:'Historic Heart',es:'Corazón histórico',de:'Historisches Herz',it:'Cuore storico'}, descs:{fr:'Tous les lieux du Vieux Valence',en:'All Old Town sites',es:'Todos los lugares del casco antiguo',de:'Alle Orte der Altstadt',it:'Tutti i luoghi del centro storico'}},
+  {id:'gourmet',   icon:'🍫', special:'gourmet', names:{fr:'Gourmand',en:'Foodie',es:'Goloso',de:'Feinschmecker',it:'Goloso'}, descs:{fr:'Chocolat + vignoble visités',en:'Chocolate + winery visited',es:'Chocolate y bodega visitados',de:'Schokolade + Weingut besucht',it:'Cioccolato e cantina visitati'}},
+  {id:'rhone',     icon:'⛵', special:'rhone', names:{fr:'Au fil du Rhône',en:'Along the Rhône',es:'Junto al Ródano',de:'Entlang der Rhône',it:'Lungo il Rodano'}, descs:{fr:'Parc Jouvet + Bords du Rhône',en:'Jouvet Park + Rhône riverside',es:'Parque Jouvet y orillas del Ródano',de:'Park Jouvet + Rhôneufer',it:'Parco Jouvet e rive del Rodano'}},
+  {id:'summit',    icon:'⛰️', special:'summit', names:{fr:'Sommet conquis',en:'Summit Conquered',es:'Cumbre conquistada',de:'Gipfel erobert',it:'Vetta conquistata'}, descs:{fr:'Château de Crussol visité',en:'Crussol Castle visited',es:'Castillo de Crussol visitado',de:'Burg Crussol besucht',it:'Castello di Crussol visitato'}},
+];
+const LEVEL_THRESHOLDS = [0, 50, 110, 180, 260]; // cumulative points per level
+
 // ═══════════════════════════════════════════════════════════
 //  LANGUAGE SELECT
 // ═══════════════════════════════════════════════════════════
@@ -720,6 +839,7 @@ function applyTranslations() {
   document.getElementById('nav-lbl-itin').textContent = t.nav[1];
   document.getElementById('nav-lbl-sports').textContent = t.nav[2];
   document.getElementById('nav-lbl-food').textContent = t.nav[3];
+  document.getElementById('nav-lbl-gamif').textContent = t.nav[4];
   document.getElementById('itin-title-hdr').innerHTML = `${t.itinTitle} <span>Valence</span>`;
   document.getElementById('itin-sub-hdr').textContent = t.itinSub;
   document.getElementById('cfg-days-lbl').textContent = t.cfgDays;
@@ -831,10 +951,11 @@ function closeWeather(){document.getElementById('weather-panel').classList.remov
 //  TABS
 // ═══════════════════════════════════════════════════════════
 function switchTab(tab){
-  ['monuments','itin','sports','food'].forEach(t=>{
+  ['monuments','itin','sports','food','gamif'].forEach(t=>{
     document.getElementById('nav-'+t).classList.toggle('active',t===tab);
     document.getElementById(t+'-screen').classList.toggle('active',t===tab);
   });
+  if(tab==='gamif') renderGamif();
 }
 
 // ═══════════════════════════════════════════════════════════
@@ -855,13 +976,15 @@ function renderMonuments(query){
 }
 function mkFeatured(lm){
   const card=document.createElement('div');card.className='mc-featured';card.onclick=()=>showDetail(lm);
-  card.innerHTML=`<div class="mc-feat-photo"><div class="shimmer"></div><img alt="${lmName(lm)}"><div class="ef">${lm.e}</div></div><div class="mc-feat-badge">${lm.tags[0]}</div><div class="mc-feat-gmap" onclick="event.stopPropagation();window.open('${lm.g}','_blank')">📍</div><div class="mc-feat-body"><div class="mc-feat-name">${lmName(lm)}</div><div class="mc-feat-hood">${lmHood(lm)}</div><div class="mc-feat-tags">${lm.tags.map(t=>`<span class="mc-tag">${t}</span>`).join('')}</div></div>`;
+  const visitedDot=VISITED.has(lm.id)?`<div class="mc-feat-gmap" style="left:.75rem;right:auto;background:var(--red);color:#fff;border-color:var(--red)">✓</div>`:'';
+  card.innerHTML=`<div class="mc-feat-photo"><div class="shimmer"></div><img alt="${lmName(lm)}"><div class="ef">${lm.e}</div></div><div class="mc-feat-badge">${lm.tags[0]}</div>${visitedDot}<div class="mc-feat-gmap" onclick="event.stopPropagation();window.open('${lm.g}','_blank')">📍</div><div class="mc-feat-body"><div class="mc-feat-name">${lmName(lm)}</div><div class="mc-feat-hood">${lmHood(lm)}</div><div class="mc-feat-tags">${lm.tags.map(t=>`<span class="mc-tag">${t}</span>`).join('')}</div></div>`;
   loadPhoto(card.querySelector('.mc-feat-photo'),lm.wiki,lm.e);
   return card;
 }
 function mkCard(lm){
   const card=document.createElement('div');card.className='mc-card';card.onclick=()=>showDetail(lm);
-  card.innerHTML=`<div class="mc-card-photo"><div class="shimmer"></div><img alt="${lmName(lm)}"><div class="ef">${lm.e}</div></div><div class="mc-card-body"><div class="mc-card-name">${lmName(lm)}</div><div class="mc-card-hood">${lmHood(lm)}</div><div class="mc-card-tags">${lm.tags.map(t=>`<span class="mc-tag">${t}</span>`).join('')}</div></div><div class="mc-card-gmap" onclick="event.stopPropagation();window.open('${lm.g}','_blank')">📍</div>`;
+  const visitedDot=VISITED.has(lm.id)?`<div class="mc-card-gmap" style="left:.5rem;right:auto;background:var(--red);color:#fff;border-color:var(--red)">✓</div>`:'';
+  card.innerHTML=`<div class="mc-card-photo"><div class="shimmer"></div><img alt="${lmName(lm)}"><div class="ef">${lm.e}</div></div><div class="mc-card-body"><div class="mc-card-name">${lmName(lm)}</div><div class="mc-card-hood">${lmHood(lm)}</div><div class="mc-card-tags">${lm.tags.map(t=>`<span class="mc-tag">${t}</span>`).join('')}</div></div>${visitedDot}<div class="mc-card-gmap" onclick="event.stopPropagation();window.open('${lm.g}','_blank')">📍</div>`;
   loadPhoto(card.querySelector('.mc-card-photo'),lm.wiki,lm.e);
   return card;
 }
@@ -884,12 +1007,176 @@ function showDetail(lm){
   document.getElementById('p-h').textContent=lm.h;
   document.getElementById('p-yr').textContent=lm.yr;
   document.getElementById('p-tag1').textContent=lm.tags[0]||'—';
+  updateVisitedBtn();
   document.getElementById('detail-panel').classList.add('open');
 }
 function closePanel(){document.getElementById('detail-panel').classList.remove('open');activeLM=null;}
 function openMaps(){if(activeLM)window.open(activeLM.g,'_blank');}
 
 // ═══════════════════════════════════════════════════════════
+//  GAMIFICATION
+// ═══════════════════════════════════════════════════════════
+function updateVisitedBtn(){
+  const btn=document.getElementById('dp-visited-btn');
+  if(!activeLM)return;
+  const done=VISITED.has(activeLM.id);
+  btn.classList.toggle('done',done);
+  btn.textContent=done?T[LANG].visitedDone:T[LANG].visitedBtn;
+}
+function toggleVisited(){
+  if(!activeLM)return;
+  if(VISITED.has(activeLM.id)){
+    VISITED.delete(activeLM.id);
+  }else{
+    markVisited(activeLM.id);
+  }
+  updateVisitedBtn();
+  refreshMonumentBadges();
+  if(document.getElementById('gamif-screen').classList.contains('active')) renderGamif();
+}
+function markVisited(id){
+  if(VISITED.has(id))return;
+  VISITED.add(id);
+  checkBadges();
+}
+function totalPoints(){
+  let pts=0;
+  VISITED.forEach(id=>pts+=(POINTS_BY_LM[id]||10));
+  UNLOCKED_BADGES.forEach(()=>pts+=15); // bonus per badge
+  return pts;
+}
+function currentLevel(){
+  const pts=totalPoints();
+  let lvl=0;
+  for(let i=LEVEL_THRESHOLDS.length-1;i>=0;i--){ if(pts>=LEVEL_THRESHOLDS[i]){lvl=i;break;} }
+  return lvl;
+}
+function checkBadges(){
+  const count=VISITED.size;
+  BADGES.forEach(b=>{
+    if(UNLOCKED_BADGES.has(b.id))return;
+    let unlocked=false;
+    if(b.threshold!==undefined){
+      unlocked = count>=b.threshold;
+    } else if(b.special==='oldtown'){
+      unlocked = ['cathedrale','pendentif','maisonsdtetes','vieuxvalence'].every(id=>VISITED.has(id));
+    } else if(b.special==='gourmet'){
+      unlocked = VISITED.has('citechocolat') && VISITED.has('chapoutier');
+    } else if(b.special==='rhone'){
+      unlocked = VISITED.has('parcjouvet') && VISITED.has('rhone');
+    } else if(b.special==='summit'){
+      unlocked = VISITED.has('crussol');
+    }
+    if(unlocked){
+      UNLOCKED_BADGES.add(b.id);
+      showBadgeToast(b);
+    }
+  });
+}
+function showBadgeToast(b){
+  const toast=document.getElementById('badge-toast');
+  document.getElementById('badge-toast-icon').textContent=b.icon;
+  document.getElementById('badge-toast-name').textContent=b.names[LANG]||b.names.fr;
+  toast.classList.add('show');
+  setTimeout(()=>toast.classList.remove('show'),3200);
+}
+function showGpsToast(msg){
+  const toast=document.getElementById('gps-toast');
+  toast.textContent=msg;
+  toast.classList.add('show');
+  setTimeout(()=>toast.classList.remove('show'),3200);
+}
+function checkNearby(){
+  const t=T[LANG];
+  if(!navigator.geolocation){ showGpsToast(t.nearbyError); return; }
+  navigator.geolocation.getCurrentPosition(pos=>{
+    const here={lat:pos.coords.latitude,lng:pos.coords.longitude};
+    let found=null;
+    for(const lm of LANDMARKS){
+      if(VISITED.has(lm.id))continue;
+      if(dist(here,lm)<=150){ found=lm; break; }
+    }
+    if(found){
+      markVisited(found.id);
+      showGpsToast(`${t.nearbyFound} ${found.e} ${lmName(found)}`);
+      refreshMonumentBadges();
+      renderGamif();
+      if(activeLM && activeLM.id===found.id) updateVisitedBtn();
+    } else {
+      showGpsToast(t.nearbyNotFound);
+    }
+  }, ()=>{ showGpsToast(t.nearbyError); }, {enableHighAccuracy:true,timeout:8000});
+}
+function resetProgress(){
+  const t=T[LANG];
+  if(!confirm(t.resetConfirm))return;
+  VISITED.clear();
+  UNLOCKED_BADGES.clear();
+  refreshMonumentBadges();
+  renderGamif();
+  if(activeLM) updateVisitedBtn();
+}
+function refreshMonumentBadges(){
+  // Re-render monument list to update "visited" indicators on cards
+  renderMonuments(document.getElementById('search-input').value);
+}
+function shareProgress(){
+  const t=T[LANG];
+  const pts=totalPoints(), lvl=currentLevel();
+  const txt=`🏅 ${t.gamifTitle} — Valence\n${t.levelLabel}: ${t.levelNames[lvl]}\n${pts} ${t.pointsLabel} · ${VISITED.size}/${LANDMARKS.length} ${t.progressLabel}\n${UNLOCKED_BADGES.size}/${BADGES.length} ${t.badgesLabel.toLowerCase()}`;
+  if(navigator.share){navigator.share({title:t.gamifTitle,text:txt});}
+  else if(navigator.clipboard){navigator.clipboard.writeText(txt).then(()=>showGpsToast('Copié !'));}
+}
+function renderGamif(){
+  const t=T[LANG];
+  document.getElementById('gamif-title-hdr').innerHTML=t.gamifTitleHtml;
+  document.getElementById('gamif-sub-hdr').textContent=t.gamifSub;
+  const body=document.getElementById('gamif-body');
+  const pts=totalPoints(), lvl=currentLevel(), pct=Math.round((VISITED.size/LANDMARKS.length)*100);
+  let html='';
+  // Hero
+  html+=`<div class="gamif-hero">
+    <div class="gamif-hero-top">
+      <div><div class="gamif-level">${t.levelNames[lvl]}</div><div class="gamif-level-sub">${t.levelLabel} ${lvl+1}/${LEVEL_THRESHOLDS.length}</div></div>
+      <div class="gamif-points"><div class="gamif-points-val">${pts}</div><div class="gamif-points-lbl">${t.pointsLabel}</div></div>
+    </div>
+    <div class="gamif-progress-track"><div class="gamif-progress-fill" style="width:${pct}%"></div></div>
+    <div class="gamif-progress-txt">${VISITED.size} / ${LANDMARKS.length} ${t.progressLabel} (${pct}%)</div>
+  </div>`;
+  // Checklist
+  html+=`<div class="gamif-section-lbl">${t.progressLabel.charAt(0).toUpperCase()+t.progressLabel.slice(1)}</div><div class="gpx-list">`;
+  LANDMARKS.forEach(lm=>{
+    const done=VISITED.has(lm.id);
+    html+=`<div class="gpx-item${done?' done':''}" onclick="switchTab('monuments');setTimeout(()=>showDetail(LANDMARKS.find(l=>l.id==='${lm.id}')),200)">
+      <div class="gpx-check">✓</div>
+      <div class="gpx-name">${lm.e} ${lmName(lm)}</div>
+      <div class="gpx-pts">+${POINTS_BY_LM[lm.id]||10}</div>
+    </div>`;
+  });
+  html+=`</div>`;
+  // Badges
+  html+=`<div class="gamif-section-lbl">${t.badgesLabel}</div><div class="badge-grid">`;
+  BADGES.forEach(b=>{
+    const unlocked=UNLOCKED_BADGES.has(b.id);
+    html+=`<div class="badge-card ${unlocked?'unlocked':'locked'}">
+      <div class="badge-icon">${b.icon}</div>
+      <div class="badge-name">${b.names[LANG]||b.names.fr}</div>
+      <div class="badge-desc">${unlocked?(b.descs[LANG]||b.descs.fr):t.badgeLocked}</div>
+    </div>`;
+  });
+  html+=`</div>`;
+  // Actions
+  html+=`<div class="gamif-actions">
+    <button class="gamif-btn" onclick="checkNearby()">${t.nearbyBtn}</button>
+    <button class="gamif-btn" onclick="shareProgress()">${t.shareProgress}</button>
+  </div>
+  <div class="gamif-actions">
+    <button class="gamif-btn danger" onclick="resetProgress()">${t.resetProgress}</button>
+  </div>`;
+  body.innerHTML=html;
+}
+
+
 //  ITINERARY
 // ═══════════════════════════════════════════════════════════
 const CITY_TAGS={fr:['Patrimoine','Nature','Gastronomie','Art','Histoire','Rhône','Plein air'],en:['Heritage','Nature','Gastronomy','Art','History','Rhône','Outdoors'],es:['Patrimonio','Naturaleza','Gastronomía','Arte','Historia','Ródano','Aire libre'],de:['Kulturerbe','Natur','Gastronomie','Kunst','Geschichte','Rhône','Outdoor'],it:['Patrimonio','Natura','Gastronomia','Arte','Storia','Rodano','Aria aperta']};
