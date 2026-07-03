@@ -303,6 +303,20 @@ body{background:var(--page);color:var(--text);font-family:'Inter',sans-serif;ove
 .wx-hour-temp{font-family:'Cormorant Garamond',serif;font-size:.9rem;color:var(--text)}
 .wx-hour-rain{font-size:.55rem;color:var(--blue)}
 .wx-credits{font-size:.58rem;color:var(--text-soft);text-align:center;padding:.8rem 1.2rem 0}
+/* ══ PASSPORT MODAL ══ */
+#passport-overlay{position:fixed;inset:0;background:rgba(13,43,69,.7);backdrop-filter:blur(6px);z-index:600;display:none;align-items:center;justify-content:center;padding:1.2rem}
+#passport-overlay.show{display:flex}
+#passport-modal{background:var(--white);border-radius:20px;width:100%;max-width:360px;overflow:hidden;box-shadow:0 20px 60px rgba(13,43,69,.3);animation:slideUp .35s cubic-bezier(.32,.72,0,1)}
+@keyframes slideUp{from{opacity:0;transform:translateY(30px)}to{opacity:1;transform:translateY(0)}}
+#passport-modal-hdr{display:flex;align-items:center;justify-content:space-between;padding:.9rem 1.1rem .7rem;border-bottom:1px solid var(--border)}
+#passport-modal-hdr-title{font-family:'Cormorant Garamond',serif;font-size:1.1rem;color:var(--text)}
+#passport-close{background:var(--page);border:1px solid var(--border-mid);border-radius:50%;width:28px;height:28px;cursor:pointer;font-size:.8rem;color:var(--text-mid)}
+#passport-canvas-wrap{padding:1rem;background:var(--page)}
+#passport-canvas{width:100%;border-radius:12px;display:block;box-shadow:var(--shadow)}
+#passport-actions{display:flex;gap:.6rem;padding:.8rem 1rem 1rem}
+.passport-btn{flex:1;padding:.75rem;border-radius:10px;font-size:.82rem;cursor:pointer;font-family:'Inter',sans-serif;font-weight:500;border:1px solid var(--border-mid);background:var(--white);color:var(--text-mid)}
+.passport-btn.primary{background:var(--blue);border-color:var(--blue);color:#fff}
+
 /* Theme pills */
 .theme-row{display:flex;gap:.38rem;flex-wrap:wrap;margin-bottom:1.3rem}
 .theme-pill{display:flex;align-items:center;gap:.4rem;padding:.45rem .85rem;background:var(--white);border:1.5px solid var(--border-mid);border-radius:20px;color:var(--text-mid);font-size:.76rem;cursor:pointer;transition:all .2s;font-family:'Inter',sans-serif;font-weight:500}
@@ -612,6 +626,23 @@ body{background:var(--page);color:var(--text);font-family:'Inter',sans-serif;ove
     <div class="wx-credits" id="wx-credits">Météo · Open-Meteo.com · Temps réel</div>
   </div>
 
+
+  <!-- PASSPORT MODAL -->
+  <div id="passport-overlay" onclick="closePassport(event)">
+    <div id="passport-modal">
+      <div id="passport-modal-hdr">
+        <div id="passport-modal-hdr-title">🗺️ Mon Passeport Valence</div>
+        <button id="passport-close" onclick="closePassport()">✕</button>
+      </div>
+      <div id="passport-canvas-wrap">
+        <canvas id="passport-canvas" width="680" height="420"></canvas>
+      </div>
+      <div id="passport-actions">
+        <button class="passport-btn" onclick="closePassport()">Fermer</button>
+        <button class="passport-btn primary" onclick="downloadPassport()">📥 Télécharger</button>
+      </div>
+    </div>
+  </div>
   <!-- TOASTS -->
   <div class="gps-toast" id="gps-toast"></div>
   <div class="badge-toast" id="badge-toast">
@@ -1369,7 +1400,7 @@ function renderGamif(){
   // Actions
   html+=`<div class="gamif-actions">
     <button class="gamif-btn" onclick="checkNearby()">${t.nearbyBtn}</button>
-    <button class="gamif-btn" onclick="shareProgress()">${t.shareProgress}</button>
+    <button class="gamif-btn" onclick="openPassport()">🗺️ Mon Passeport</button>
   </div>
   <div class="gamif-actions">
     <button class="gamif-btn danger" onclick="resetProgress()">${t.resetProgress}</button>
@@ -1760,6 +1791,239 @@ function getCurrentTab(){ return TABS[currentTabIdx]; }
     swipeStartX = 0;
   }, {passive:true});
 })();
+
+
+// ═══════════════════════════════════════════════════════════
+//  PASSPORT
+// ═══════════════════════════════════════════════════════════
+function openPassport(){
+  const overlay = document.getElementById('passport-overlay');
+  overlay.classList.add('show');
+  drawPassport();
+}
+function closePassport(e){
+  if(e && e.target !== document.getElementById('passport-overlay')) return;
+  document.getElementById('passport-overlay').classList.remove('show');
+}
+function downloadPassport(){
+  const canvas = document.getElementById('passport-canvas');
+  const a = document.createElement('a');
+  a.download = 'passeport-valence.png';
+  a.href = canvas.toDataURL('image/png');
+  a.click();
+}
+
+function drawPassport(){
+  const canvas = document.getElementById('passport-canvas');
+  const ctx = canvas.getContext('2d');
+  const W = canvas.width, H = canvas.height;
+  const t = T[LANG];
+  const pts = totalPoints(), lvl = currentLevel(), pct = Math.round((VISITED.size/LANDMARKS.length)*100);
+
+  // ── Background ──────────────────────────────────────────
+  // Dark navy gradient
+  const bgGrad = ctx.createLinearGradient(0,0,W,H);
+  bgGrad.addColorStop(0, '#0D2B45');
+  bgGrad.addColorStop(1, '#1A5A96');
+  ctx.fillStyle = bgGrad;
+  roundRect(ctx, 0, 0, W, H, 16);
+  ctx.fill();
+
+  // Subtle grid pattern
+  ctx.strokeStyle = 'rgba(255,255,255,.04)';
+  ctx.lineWidth = 1;
+  for(let x=0;x<W;x+=28){ctx.beginPath();ctx.moveTo(x,0);ctx.lineTo(x,H);ctx.stroke();}
+  for(let y=0;y<H;y+=28){ctx.beginPath();ctx.moveTo(0,y);ctx.lineTo(W,y);ctx.stroke();}
+
+  // Decorative corner arcs
+  ctx.strokeStyle = 'rgba(58,127,189,.35)';
+  ctx.lineWidth = 1.5;
+  [[20,20],[W-20,20],[20,H-20],[W-20,H-20]].forEach(([cx,cy])=>{
+    ctx.beginPath();ctx.arc(cx,cy,30,0,Math.PI*2);ctx.stroke();
+  });
+
+  // ── Left stripe — passport look ─────────────────────────
+  const stripeGrad = ctx.createLinearGradient(0,0,0,H);
+  stripeGrad.addColorStop(0,'#3A7FBD');
+  stripeGrad.addColorStop(1,'#1A5A96');
+  ctx.fillStyle = stripeGrad;
+  roundRect(ctx,0,0,12,H,16);
+  ctx.fill();
+
+  // ── Top header ──────────────────────────────────────────
+  ctx.fillStyle = 'rgba(255,255,255,.07)';
+  ctx.fillRect(12, 0, W-12, 70);
+
+  // "PASSEPORT" label
+  ctx.fillStyle = 'rgba(58,127,189,.8)';
+  ctx.font = 'bold 10px Inter,sans-serif';
+  ctx.letterSpacing = '0.25em';
+  ctx.fillText('PASSEPORT TOURISTIQUE', 30, 22);
+
+  // City name
+  ctx.fillStyle = '#FFFFFF';
+  ctx.font = 'bold 30px "Cormorant Garamond",serif';
+  ctx.fillText('Valence', 30, 54);
+
+  // Region
+  ctx.fillStyle = 'rgba(255,255,255,.55)';
+  ctx.font = '11px Inter,sans-serif';
+  ctx.fillText('Drôme · Auvergne-Rhône-Alpes', 170, 54);
+
+  // Rose/heart emoji right side
+  ctx.font = '32px serif';
+  ctx.fillText('🌹', W-60, 50);
+
+  // ── Level badge ─────────────────────────────────────────
+  // Circle
+  const cx=W-70, cy=130;
+  const circleGrad = ctx.createRadialGradient(cx,cy,5,cx,cy,45);
+  circleGrad.addColorStop(0,'#3A7FBD');
+  circleGrad.addColorStop(1,'#1A5A96');
+  ctx.beginPath();ctx.arc(cx,cy,45,0,Math.PI*2);
+  ctx.fillStyle=circleGrad;ctx.fill();
+  ctx.strokeStyle='rgba(255,255,255,.25)';ctx.lineWidth=2;ctx.stroke();
+
+  ctx.fillStyle='rgba(255,255,255,.7)';
+  ctx.font='9px Inter,sans-serif';
+  ctx.textAlign='center';
+  ctx.fillText((t.levelLabel||'NIVEAU').toUpperCase(), cx, cy-18);
+
+  ctx.fillStyle='#FFFFFF';
+  ctx.font=`bold 22px "Cormorant Garamond",serif`;
+  ctx.fillText(lvl+1, cx, cy+8);
+
+  ctx.fillStyle='rgba(255,255,255,.7)';
+  ctx.font='9px Inter,sans-serif';
+  ctx.fillText((t.levelNames[lvl]||'').split(' ').slice(0,2).join(' '), cx, cy+24);
+  ctx.fillText((t.levelNames[lvl]||'').split(' ').slice(2).join(' '), cx, cy+36);
+  ctx.textAlign='left';
+
+  // ── Visitor info block ───────────────────────────────────
+  const infoY = 84;
+  ctx.fillStyle='rgba(255,255,255,.12)';
+  roundRect(ctx,26,infoY,W-130,100,10);ctx.fill();
+
+  ctx.fillStyle='rgba(255,255,255,.45)';ctx.font='9px Inter,sans-serif';
+  ctx.fillText('LIEUX DÉCOUVERTS', 40, infoY+16);
+  ctx.fillStyle='#FFFFFF';ctx.font=`bold 26px "Cormorant Garamond",serif`;
+  ctx.fillText(`${VISITED.size}`, 40, infoY+46);
+  ctx.fillStyle='rgba(255,255,255,.5)';ctx.font='11px Inter,sans-serif';
+  ctx.fillText(`/ ${LANDMARKS.length}`, 40+ctx.measureText(`${VISITED.size}`).width+4, infoY+46);
+
+  ctx.fillStyle='rgba(255,255,255,.45)';ctx.font='9px Inter,sans-serif';
+  ctx.fillText('POINTS', 140, infoY+16);
+  ctx.fillStyle='#3A9FDD';ctx.font=`bold 26px "Cormorant Garamond",serif`;
+  ctx.fillText(`${pts}`, 140, infoY+46);
+
+  ctx.fillStyle='rgba(255,255,255,.45)';ctx.font='9px Inter,sans-serif';
+  ctx.fillText('BADGES', 230, infoY+16);
+  ctx.fillStyle='#FFFFFF';ctx.font=`bold 26px "Cormorant Garamond",serif`;
+  ctx.fillText(`${UNLOCKED_BADGES.size}`, 230, infoY+46);
+  ctx.fillStyle='rgba(255,255,255,.5)';ctx.font='11px Inter,sans-serif';
+  ctx.fillText(`/ ${BADGES.length}`, 230+ctx.measureText(`${UNLOCKED_BADGES.size}`).width+4, infoY+46);
+
+  // ── Progress bar ─────────────────────────────────────────
+  const barY=196, barX=26, barW=W-140;
+  ctx.fillStyle='rgba(255,255,255,.12)';
+  roundRect(ctx,barX,barY,barW,8,4);ctx.fill();
+  if(pct>0){
+    const fillGrad=ctx.createLinearGradient(barX,0,barX+barW,0);
+    fillGrad.addColorStop(0,'#3A7FBD');fillGrad.addColorStop(1,'#5EB4E8');
+    ctx.fillStyle=fillGrad;
+    roundRect(ctx,barX,barY,Math.max(8,barW*(pct/100)),8,4);ctx.fill();
+  }
+  ctx.fillStyle='rgba(255,255,255,.5)';ctx.font='9px Inter,sans-serif';
+  ctx.fillText(`${pct}% exploré`, barX, barY-5);
+
+  // ── Badges grid ──────────────────────────────────────────
+  const badgeY=220, cols=4, badgeSize=36, gap=12;
+  const startX=26;
+  BADGES.forEach((b,i)=>{
+    const col=i%cols, row=Math.floor(i/cols);
+    const bx=startX+col*(badgeSize+gap), by=badgeY+row*(badgeSize+gap+14);
+    const unlocked=UNLOCKED_BADGES.has(b.id);
+
+    // Badge background
+    ctx.fillStyle=unlocked?'rgba(58,127,189,.35)':'rgba(255,255,255,.06)';
+    roundRect(ctx,bx,by,badgeSize,badgeSize,8);ctx.fill();
+    if(unlocked){ctx.strokeStyle='rgba(94,180,232,.5)';ctx.lineWidth=1.5;ctx.stroke();}
+
+    // Badge emoji
+    ctx.globalAlpha=unlocked?1:.3;
+    ctx.font=`${badgeSize*0.55}px serif`;
+    ctx.textAlign='center';
+    ctx.fillStyle='#FFFFFF';
+    ctx.fillText(b.icon, bx+badgeSize/2, by+badgeSize*0.68);
+    ctx.globalAlpha=1;
+    ctx.textAlign='left';
+  });
+
+  // ── Visited monuments list ───────────────────────────────
+  const visitedLms = LANDMARKS.filter(lm=>VISITED.has(lm.id));
+  if(visitedLms.length>0){
+    const listX=26+cols*(badgeSize+gap)+10, listY=220;
+    ctx.fillStyle='rgba(255,255,255,.45)';ctx.font='9px Inter,sans-serif';
+    ctx.fillText('LIEUX VISITÉS', listX, listY+12);
+    ctx.fillStyle='rgba(255,255,255,.15)';
+    ctx.fillRect(listX,listY+16,W-listX-20,1);
+
+    visitedLms.slice(0,8).forEach((lm,i)=>{
+      const vy=listY+28+i*20;
+      ctx.fillStyle='rgba(58,127,189,.6)';
+      ctx.beginPath();ctx.arc(listX+5,vy+4,3,0,Math.PI*2);ctx.fill();
+      ctx.fillStyle='rgba(255,255,255,.8)';ctx.font='10px "Cormorant Garamond",serif';
+      const name=(lmName(lm)||lm.names.fr).slice(0,28);
+      ctx.fillText(`${lm.e} ${name}`, listX+14, vy+8);
+    });
+    if(visitedLms.length>8){
+      ctx.fillStyle='rgba(255,255,255,.4)';ctx.font='9px Inter,sans-serif';
+      ctx.fillText(`+ ${visitedLms.length-8} autres…`, listX+14, listY+28+8*20);
+    }
+  }
+
+  // ── Footer ───────────────────────────────────────────────
+  ctx.fillStyle='rgba(255,255,255,.08)';
+  ctx.fillRect(12,H-36,W-12,36);
+
+  ctx.fillStyle='rgba(255,255,255,.35)';ctx.font='9px Inter,sans-serif';
+  const dateStr=new Date().toLocaleDateString(LANG==='fr'?'fr-FR':LANG,{year:'numeric',month:'long',day:'numeric'});
+  ctx.fillText(`Émis le ${dateStr}`, 30, H-15);
+
+  ctx.textAlign='right';
+  ctx.fillText('CityExplorer Valence · Drôme', W-20, H-15);
+  ctx.textAlign='left';
+
+  // ── Stamp (if complete) ──────────────────────────────────
+  if(UNLOCKED_BADGES.has('complete')){
+    ctx.save();
+    ctx.translate(W-50, H-90);
+    ctx.rotate(-0.35);
+    ctx.strokeStyle='rgba(58,189,130,.7)';ctx.lineWidth=3;
+    roundRect(ctx,-42,-22,84,44,8);ctx.stroke();
+    ctx.fillStyle='rgba(58,189,130,.7)';ctx.font='bold 11px Inter,sans-serif';
+    ctx.textAlign='center';
+    ctx.fillText('VALENCE', 0, -5);
+    ctx.fillText('EXPLORÉ ✓', 0, 10);
+    ctx.textAlign='left';
+    ctx.restore();
+  }
+}
+
+// Helper
+function roundRect(ctx,x,y,w,h,r){
+  ctx.beginPath();
+  ctx.moveTo(x+r,y);
+  ctx.lineTo(x+w-r,y);
+  ctx.quadraticCurveTo(x+w,y,x+w,y+r);
+  ctx.lineTo(x+w,y+h-r);
+  ctx.quadraticCurveTo(x+w,y+h,x+w-r,y+h);
+  ctx.lineTo(x+r,y+h);
+  ctx.quadraticCurveTo(x,y+h,x,y+h-r);
+  ctx.lineTo(x,y+r);
+  ctx.quadraticCurveTo(x,y,x+r,y);
+  ctx.closePath();
+}
 
 // ═══════════════════════════════════════════════════════════
 //  UTILS
