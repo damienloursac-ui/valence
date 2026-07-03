@@ -105,7 +105,7 @@ body{background:var(--page);color:var(--text);font-family:'Inter',sans-serif;ove
 .mc-tag{font-size:.6rem;padding:.15rem .5rem;border-radius:20px;background:var(--blue-light);color:var(--blue);border:1px solid var(--blue-mid);font-weight:500}
 .mc-card{display:flex;border-radius:14px;overflow:hidden;cursor:pointer;background:var(--white);box-shadow:var(--shadow);transition:box-shadow .18s;position:relative}
 .mc-card:active{box-shadow:var(--shadow-lg)}
-.mc-card-photo{width:90px;flex-shrink:0;position:relative;background:#C8DBE8;overflow:hidden}
+.mc-card-photo{width:90px;height:90px;flex-shrink:0;position:relative;background:#C8DBE8;overflow:hidden}
 .mc-card-photo img{width:100%;height:100%;object-fit:cover;display:block;transition:opacity .5s;opacity:0}
 .mc-card-photo img.ok{opacity:1}
 .mc-card-photo .ef{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:2.5rem;opacity:.3}
@@ -243,7 +243,7 @@ body{background:var(--page);color:var(--text);font-family:'Inter',sans-serif;ove
 .resto-tag{font-size:.58rem;padding:.12rem .45rem;border-radius:20px;background:var(--blue-light);color:var(--blue);border:1px solid var(--blue-mid)}
 .resto-gmap{position:absolute;bottom:.8rem;right:.8rem;font-size:.75rem;background:var(--blue);color:#fff;border-radius:8px;padding:.28rem .6rem;cursor:pointer;font-weight:500}
 .resto-card{display:flex;border-radius:14px;overflow:hidden;background:var(--white);box-shadow:var(--shadow);margin-bottom:.65rem;cursor:pointer;position:relative;border:1px solid var(--border)}
-.resto-card-photo{width:95px;flex-shrink:0;position:relative;background:#C8DBE8;overflow:hidden}
+.resto-card-photo{width:95px;height:95px;flex-shrink:0;position:relative;background:#C8DBE8;overflow:hidden}
 .resto-card-photo img{width:100%;height:100%;object-fit:cover;display:block;transition:opacity .5s;opacity:0}
 .resto-card-photo img.ok{opacity:1}
 .resto-card-photo .ef{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:2.5rem;opacity:.3}
@@ -289,6 +289,34 @@ body{background:var(--page);color:var(--text);font-family:'Inter',sans-serif;ove
 .wx-hour-temp{font-family:'Cormorant Garamond',serif;font-size:.9rem;color:var(--text)}
 .wx-hour-rain{font-size:.55rem;color:var(--blue)}
 .wx-credits{font-size:.58rem;color:var(--text-soft);text-align:center;padding:.8rem 1.2rem 0}
+/* ══ EVENTS ══ */
+.events-body{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:.75rem 1rem 5rem;background:var(--page)}
+.event-type-row{display:flex;gap:.35rem;padding:.6rem 1.2rem;overflow-x:auto;scrollbar-width:none;flex-shrink:0;background:var(--page);border-bottom:1px solid var(--border)}
+.event-type-row::-webkit-scrollbar{display:none}
+.event-cat-btn{padding:.35rem .9rem;border-radius:20px;border:1px solid var(--border-mid);background:var(--white);color:var(--text-mid);font-size:.72rem;cursor:pointer;white-space:nowrap;font-family:'Inter',sans-serif;transition:all .18s;font-weight:500}
+.event-cat-btn.active{background:var(--blue);border-color:var(--blue);color:#fff}
+
+.event-section-lbl{font-size:.62rem;letter-spacing:.2em;text-transform:uppercase;color:var(--text-soft);padding:.9rem 0 .45rem;display:flex;align-items:center;gap:.5rem}
+.event-section-lbl::after{content:'';flex:1;height:1px;background:var(--border)}
+
+.event-card{background:var(--white);border:1px solid var(--border);border-radius:14px;padding:1rem;margin-bottom:.65rem;box-shadow:var(--shadow);cursor:pointer;transition:box-shadow .18s;position:relative;overflow:hidden}
+.event-card:active{box-shadow:var(--shadow-lg)}
+.event-card-accent{position:absolute;top:0;left:0;width:4px;height:100%;border-radius:14px 0 0 14px}
+.event-card-top{display:flex;align-items:flex-start;gap:.85rem}
+.event-icon{font-size:2rem;flex-shrink:0;line-height:1;margin-top:.1rem}
+.event-info{flex:1;min-width:0}
+.event-name{font-family:'Cormorant Garamond',serif;font-size:1.05rem;color:var(--text);line-height:1.2}
+.event-date{font-size:.68rem;color:var(--blue);font-weight:600;margin-top:.2rem;letter-spacing:.05em}
+.event-location{font-size:.64rem;color:var(--text-soft);margin-top:.08rem}
+.event-desc{font-size:.78rem;color:var(--text-mid);line-height:1.55;margin-top:.55rem}
+.event-tags{display:flex;gap:.35rem;flex-wrap:wrap;margin-top:.5rem}
+.event-tag{font-size:.6rem;padding:.12rem .45rem;border-radius:20px;background:var(--blue-light);color:var(--blue);border:1px solid var(--blue-mid);font-weight:500}
+.event-tag.red{background:rgba(220,50,50,.1);color:#cc3333;border-color:rgba(220,50,50,.2)}
+.event-recurrence{font-size:.65rem;color:var(--text-soft);font-style:italic;margin-top:.4rem}
+.event-badge-ponctuel{position:absolute;top:.75rem;right:.75rem;background:var(--blue);color:#fff;font-size:.6rem;font-weight:600;padding:.18rem .5rem;border-radius:20px;letter-spacing:.06em}
+.event-badge-recurrent{position:absolute;top:.75rem;right:.75rem;background:rgba(40,160,80,.15);color:#1a8040;font-size:.6rem;font-weight:600;padding:.18rem .5rem;border-radius:20px;border:1px solid rgba(40,160,80,.25)}
+.events-empty{padding:3rem 1rem;text-align:center;color:var(--text-soft);font-size:.85rem}
+
 
 /* ══ GAMIFICATION ══ */
 .gamif-body{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:.75rem 1rem 5rem;background:var(--page)}
@@ -467,6 +495,16 @@ body{background:var(--page);color:var(--text);font-family:'Inter',sans-serif;ove
     <div class="food-body" id="food-body"></div>
   </div>
 
+  <!-- EVENTS SCREEN -->
+  <div id="events-screen" class="screen" style="flex-direction:column">
+    <div class="section-screen-hdr">
+      <div class="section-ttl" id="events-title-hdr">Événements à <span>Valence</span></div>
+      <div class="section-sub" id="events-sub-hdr">Fêtes, festivals et marchés</div>
+    </div>
+    <div class="event-type-row" id="event-cats"></div>
+    <div class="events-body" id="events-body"></div>
+  </div>
+
   <!-- GAMIFICATION / DISCOVERIES -->
   <div id="gamif-screen" class="screen" style="flex-direction:column">
     <div class="section-screen-hdr">
@@ -482,6 +520,7 @@ body{background:var(--page);color:var(--text);font-family:'Inter',sans-serif;ove
     <button class="nav-btn" id="nav-itin" onclick="switchTab('itin')"><span class="nav-icon">🗺️</span><span class="nav-label" id="nav-lbl-itin">Itinéraire</span></button>
     <button class="nav-btn" id="nav-sports" onclick="switchTab('sports')"><span class="nav-icon">🏆</span><span class="nav-label" id="nav-lbl-sports">Sports</span></button>
     <button class="nav-btn" id="nav-food" onclick="switchTab('food')"><span class="nav-icon">🍽️</span><span class="nav-label" id="nav-lbl-food">Food</span></button>
+    <button class="nav-btn" id="nav-events" onclick="switchTab('events')"><span class="nav-icon">📅</span><span class="nav-label" id="nav-lbl-events">Événements</span></button>
     <button class="nav-btn" id="nav-gamif" onclick="switchTab('gamif')"><span class="nav-icon">🏅</span><span class="nav-label" id="nav-lbl-gamif">Découvertes</span></button>
   </div>
 
@@ -552,7 +591,7 @@ const T = {
   fr:{
     langSelect:'Choisissez votre langue', confirm:'Continuer →',
     loading:'Chargement…', region:'Drôme · Rhône-Alpes',
-    nav:['Lieux','Itinéraire','Sports','Food','Découvertes'],
+    nav:['Lieux','Itinéraire','Sports','Food','Événements','Découvertes'],
     searchPlaceholder:'🔍  Rechercher un lieu…',
     itinTitle:'Itinéraire', itinSub:'Parcours optimisé sur-mesure',
     cfgDays:'⏱ Combien de jours ?', cfgInt:'🎯 Centres d\'intérêt', cfgTrans:'🚶 Déplacement',
@@ -570,6 +609,7 @@ const T = {
     travelWalk:'🚶 Marche', travelBike:'🚲 Vélo', travelCar:'🚗 Voiture',
     noResult:'Aucun lieu trouvé', dayLabel:'Jour', daysLabel:'jours', dayLabelSingular:'jour', sitesLabel:'lieux',
     changeLanguage:'Changer de langue',
+    eventsTitle:'Événements à', eventsSub:'Fêtes, festivals et marchés', eventsUpcoming:'À venir', eventsRecurrent:'Récurrents',
     gamifTitle:'Mes découvertes', gamifTitleHtml:'Mes <span>découvertes</span>', gamifSub:'Badges, points et progression',
     visitedBtn:'✓ J\'y suis allé(e) !', visitedDone:'✓ Visité', nearbyBtn:'📍 Vérifier ma position',
     nearbyFound:'🎉 Vous êtes sur place ! Lieu marqué comme visité.', nearbyNotFound:'Vous n\'êtes pas encore assez proche de ce lieu.',
@@ -582,7 +622,7 @@ const T = {
   en:{
     langSelect:'Choose your language', confirm:'Continue →',
     loading:'Loading…', region:'Drôme · Rhône-Alpes',
-    nav:['Places','Itinerary','Sports','Food','Discoveries'],
+    nav:['Places','Itinerary','Sports','Food','Events','Discoveries'],
     searchPlaceholder:'🔍  Search a place…',
     itinTitle:'Itinerary', itinSub:'Optimised route, tailored for you',
     cfgDays:'⏱ How many days?', cfgInt:'🎯 Interests', cfgTrans:'🚶 Getting around',
@@ -600,6 +640,7 @@ const T = {
     travelWalk:'🚶 Walking', travelBike:'🚲 Cycling', travelCar:'🚗 Driving',
     noResult:'No place found', dayLabel:'Day', daysLabel:'days', dayLabelSingular:'day', sitesLabel:'places',
     changeLanguage:'Change language',
+    eventsTitle:'Events in', eventsSub:'Festivals, fairs and markets', eventsUpcoming:'Upcoming', eventsRecurrent:'Annual',
     gamifTitle:'My Discoveries', gamifTitleHtml:'My <span>Discoveries</span>', gamifSub:'Badges, points and progress',
     visitedBtn:'✓ I\'ve been here!', visitedDone:'✓ Visited', nearbyBtn:'📍 Check my location',
     nearbyFound:'🎉 You\'re here! Place marked as visited.', nearbyNotFound:'You\'re not close enough to this place yet.',
@@ -612,7 +653,7 @@ const T = {
   es:{
     langSelect:'Elige tu idioma', confirm:'Continuar →',
     loading:'Cargando…', region:'Drôme · Ródano-Alpes',
-    nav:['Lugares','Itinerario','Deportes','Gastronomía','Logros'],
+    nav:['Lugares','Itinerario','Deportes','Gastronomía','Eventos','Logros'],
     searchPlaceholder:'🔍  Buscar un lugar…',
     itinTitle:'Itinerario', itinSub:'Ruta optimizada a tu medida',
     cfgDays:'⏱ ¿Cuántos días?', cfgInt:'🎯 Intereses', cfgTrans:'🚶 Desplazamiento',
@@ -630,6 +671,7 @@ const T = {
     travelWalk:'🚶 A pie', travelBike:'🚲 Bicicleta', travelCar:'🚗 Coche',
     noResult:'Ningún lugar encontrado', dayLabel:'Día', daysLabel:'días', dayLabelSingular:'día', sitesLabel:'lugares',
     changeLanguage:'Cambiar idioma',
+    eventsTitle:'Eventos en', eventsSub:'Fiestas, festivales y mercados', eventsUpcoming:'Próximos', eventsRecurrent:'Anuales',
     gamifTitle:'Mis Descubrimientos', gamifTitleHtml:'Mis <span>Descubrimientos</span>', gamifSub:'Insignias, puntos y progreso',
     visitedBtn:'✓ ¡He estado aquí!', visitedDone:'✓ Visitado', nearbyBtn:'📍 Verificar mi ubicación',
     nearbyFound:'🎉 ¡Estás aquí! Lugar marcado como visitado.', nearbyNotFound:'Aún no estás lo suficientemente cerca de este lugar.',
@@ -642,7 +684,7 @@ const T = {
   de:{
     langSelect:'Sprache wählen', confirm:'Weiter →',
     loading:'Wird geladen…', region:'Drôme · Rhône-Alpen',
-    nav:['Orte','Reiseroute','Sport','Food','Erlebnisse'],
+    nav:['Orte','Reiseroute','Sport','Food','Veranstaltungen','Erlebnisse'],
     searchPlaceholder:'🔍  Ort suchen…',
     itinTitle:'Reiseroute', itinSub:'Optimierte Route nach Maß',
     cfgDays:'⏱ Wie viele Tage?', cfgInt:'🎯 Interessen', cfgTrans:'🚶 Fortbewegung',
@@ -660,6 +702,7 @@ const T = {
     travelWalk:'🚶 Zu Fuß', travelBike:'🚲 Fahrrad', travelCar:'🚗 Auto',
     noResult:'Kein Ort gefunden', dayLabel:'Tag', daysLabel:'Tage', dayLabelSingular:'Tag', sitesLabel:'Orte',
     changeLanguage:'Sprache wechseln',
+    eventsTitle:'Veranstaltungen in', eventsSub:'Feste, Festivals und Märkte', eventsUpcoming:'Bevorstehend', eventsRecurrent:'Jährlich',
     gamifTitle:'Meine Entdeckungen', gamifTitleHtml:'Meine <span>Entdeckungen</span>', gamifSub:'Abzeichen, Punkte und Fortschritt',
     visitedBtn:'✓ War ich schon hier!', visitedDone:'✓ Besucht', nearbyBtn:'📍 Standort prüfen',
     nearbyFound:'🎉 Du bist hier! Ort als besucht markiert.', nearbyNotFound:'Du bist diesem Ort noch nicht nah genug.',
@@ -672,7 +715,7 @@ const T = {
   it:{
     langSelect:'Scegli la tua lingua', confirm:'Continua →',
     loading:'Caricamento…', region:'Drôme · Rodano-Alpi',
-    nav:['Luoghi','Itinerario','Sport','Food','Scoperte'],
+    nav:['Luoghi','Itinerario','Sport','Food','Eventi','Scoperte'],
     searchPlaceholder:'🔍  Cerca un luogo…',
     itinTitle:'Itinerario', itinSub:'Percorso ottimizzato su misura',
     cfgDays:'⏱ Quanti giorni?', cfgInt:'🎯 Interessi', cfgTrans:'🚶 Spostamento',
@@ -690,6 +733,7 @@ const T = {
     travelWalk:'🚶 A piedi', travelBike:'🚲 Bici', travelCar:'🚗 Auto',
     noResult:'Nessun luogo trovato', dayLabel:'Giorno', daysLabel:'giorni', dayLabelSingular:'giorno', sitesLabel:'luoghi',
     changeLanguage:'Cambia lingua',
+    eventsTitle:'Eventi a', eventsSub:'Feste, festival e mercati', eventsUpcoming:'In arrivo', eventsRecurrent:'Annuali',
     gamifTitle:'Le Mie Scoperte', gamifTitleHtml:'Le Mie <span>Scoperte</span>', gamifSub:'Distintivi, punti e progressi',
     visitedBtn:'✓ Sono stato qui!', visitedDone:'✓ Visitato', nearbyBtn:'📍 Verifica la mia posizione',
     nearbyFound:'🎉 Sei qui! Luogo segnato come visitato.', nearbyNotFound:'Non sei ancora abbastanza vicino a questo luogo.',
@@ -773,6 +817,75 @@ const ITIN_2J = [
   ]},
 ];
 
+
+// ═══════════════════════════════════════════════════════════
+//  EVENTS DATA
+// ═══════════════════════════════════════════════════════════
+const EVENTS = [
+  // ── RÉCURRENTS ──
+  {id:'e1', type:'recurrent', month:12, day:6,  icon:'🎅', cat:'fete',
+   names:{fr:'Fête de la Saint-Nicolas',en:'Saint Nicholas Festival',es:'Fiesta de San Nicolás',de:'Sankt-Nikolaus-Fest',it:'Festa di San Nicola'},
+   descs:{fr:"La fête patronale de Valence, le 6 décembre, attire des milliers de valentinois. Défilé aux flambeaux, feux d\'artifice sur le Rhône et illuminations du centre-ville.",en:"Valence\'s patron saint festival on December 6th draws thousands. Torchlit procession, fireworks over the Rhône and city-centre illuminations.",es:"La fiesta patronal de Valence, el 6 de diciembre, atrae a miles de valencianos. Desfile de antorchas, fuegos artificiales sobre el Ródano e iluminaciones del centro.",de:"Valences Patronatsfest am 6. Dezember zieht Tausende an. Fackelzug, Feuerwerk über der Rhône und Beleuchtung der Innenstadt.",it:"La festa patronale di Valence, il 6 dicembre, attira migliaia di valenciani. Corteo con fiaccole, fuochi d\'artificio sul Rodano e illuminazioni del centro."},
+   location:'Centre-ville', lieu:'Place de la République', tags:['Incontournable','Gratuit','Feu d\'artifice'], recurrence:{fr:'Chaque année · 6 décembre',en:'Every year · December 6th',es:'Cada año · 6 de diciembre',de:'Jedes Jahr · 6. Dezember',it:'Ogni anno · 6 dicembre'}},
+
+  {id:'e2', type:'recurrent', month:7, day:14, icon:'🎆', cat:'fete',
+   names:{fr:'Feu d\'artifice du 14 Juillet',en:'Bastille Day Fireworks',es:'Fuegos Artificiales del 14 de Julio',de:'Feuerwerk zum 14. Juli',it:'Fuochi d\'artificio del 14 Luglio'},
+   descs:{fr:"Le feu d\'artifice du 14 juillet tiré depuis les bords du Rhône est l\'un des plus beaux de la région. Des milliers de spectateurs se retrouvent au Champ de Mars et le long des berges pour admirer le spectacle.",en:"The July 14th fireworks launched from the Rhône banks are among the region\'s most spectacular. Thousands gather at the Champ de Mars and along the riverbanks.",es:"Los fuegos artificiales del 14 de julio lanzados desde las orillas del Ródano son de los más bonitos de la región. Miles de espectadores se reúnen en el Champ de Mars.",de:"Das Feuerwerk vom 14. Juli, das von den Rhône-Ufern abgeschossen wird, ist eines der schönsten der Region. Tausende versammeln sich am Champ de Mars.",it:"I fuochi d\'artificio del 14 luglio lanciati dalle rive del Rodano sono tra i più belli della regione. Migliaia di spettatori si riuniscono al Champ de Mars."},
+   location:'Bords du Rhône', lieu:'Champ de Mars & Bords du Rhône', tags:['Gratuit','Feu d\'artifice','Rhône'], recurrence:{fr:'Chaque année · 14 juillet',en:'Every year · July 14th',es:'Cada año · 14 de julio',de:'Jedes Jahr · 14. Juli',it:'Ogni anno · 14 luglio'}},
+
+  {id:'e3', type:'recurrent', month:12, day:1, icon:'🎄', cat:'marche',
+   names:{fr:'Marché de Noël de Valence',en:'Valence Christmas Market',es:'Mercado de Navidad de Valence',de:'Weihnachtsmarkt Valence',it:'Mercatino di Natale di Valence'},
+   descs:{fr:"Le marché de Noël de Valence anime le centre-ville tout au long du mois de décembre. Chalets en bois, spécialités régionales, vin chaud et patinoire transforment la place du Général-Leclerc en village hivernal enchanteur.",en:"Valence\'s Christmas market brings the city centre to life throughout December. Wooden chalets, regional specialities, mulled wine and an ice rink transform Place du Général-Leclerc into an enchanting winter village.",es:"El mercado de Navidad de Valence anima el centro durante todo diciembre. Casetas de madera, especialidades regionales, vino caliente y pista de hielo transforman la plaza.",de:"Valences Weihnachtsmarkt belebt die Innenstadt den ganzen Dezember. Holzhütten, regionale Spezialitäten, Glühwein und eine Eisbahn verwandeln den Platz.",it:"Il mercatino di Natale di Valence anima il centro per tutto dicembre. Chalet in legno, specialità regionali, vin brulé e pista di pattinaggio trasformano la piazza."},
+   location:'Centre-ville', lieu:'Place du Général-Leclerc', tags:['Famille','Décembre','Gratuit'], recurrence:{fr:'Tout le mois de décembre',en:'Throughout December',es:'Todo diciembre',de:'Den ganzen Dezember',it:'Per tutto dicembre'}},
+
+  {id:'e4', type:'recurrent', month:6, day:21, icon:'🎵', cat:'culture',
+   names:{fr:'Fête de la Musique',en:'Music Festival',es:'Fiesta de la Música',de:'Musikfest',it:'Festa della Musica'},
+   descs:{fr:"Le 21 juin, Valence se transforme en scène musicale géante. Des concerts gratuits envahissent les rues, places et terrasses de la ville. Tous les styles y sont représentés, du jazz au rock en passant par les musiques du monde.",en:"On June 21st, Valence becomes a giant musical stage. Free concerts fill the streets, squares and terraces. All styles are represented, from jazz and rock to world music.",es:"El 21 de junio, Valence se convierte en un enorme escenario musical. Conciertos gratuitos invaden las calles, plazas y terrazas de la ciudad.",de:"Am 21. Juni verwandelt sich Valence in eine riesige Musikbühne. Kostenlose Konzerte füllen die Straßen, Plätze und Terrassen der Stadt.",it:"Il 21 giugno, Valence si trasforma in un gigantesco palcoscenico musicale. Concerti gratuiti invadono le strade, le piazze e le terrazze della città."},
+   location:'Centre-ville', lieu:'Toute la ville', tags:['Gratuit','Musique','Été'], recurrence:{fr:'Chaque année · 21 juin',en:'Every year · June 21st',es:'Cada año · 21 de junio',de:'Jedes Jahr · 21. Juni',it:'Ogni anno · 21 giugno'}},
+
+  {id:'e5', type:'recurrent', month:3, day:1, icon:'🌸', cat:'marche',
+   names:{fr:'Marché du Printemps & Foire aux Fleurs',en:'Spring Market & Flower Fair',es:'Mercado de Primavera y Feria de Flores',de:'Frühlingsmarkt & Blumenmesse',it:'Mercato di Primavera & Fiera dei Fiori'},
+   descs:{fr:"Chaque printemps, le marché des Halles déborde sur la place et les producteurs locaux célèbrent les premières fleurs de la saison. Une occasion parfaite de découvrir les produits du terroir drômois — abricots, lavande et huile d\'olive.",en:"Every spring, the Halles market spills into the square and local producers celebrate the season\'s first flowers. A perfect opportunity to discover Drôme produce — apricots, lavender and olive oil.",es:"Cada primavera, el mercado de las Halles desborda la plaza y los productores locales celebran las primeras flores. Una oportunidad perfecta para descubrir los productos del Drôme.",de:"Jeden Frühling läuft der Halles-Markt auf den Platz über und lokale Erzeuger feiern die ersten Blumen der Saison.",it:"Ogni primavera, il mercato delle Halles trabocca sulla piazza e i produttori locali celebrano i primi fiori della stagione."},
+   location:'Centre-ville', lieu:'Halles de Valence & Place', tags:['Terroir','Famille','Printemps'], recurrence:{fr:'Mars–Avril',en:'March–April',es:'Marzo–Abril',de:'März–April',it:'Marzo–Aprile'}},
+
+  {id:'e6', type:'recurrent', month:9, day:1, icon:'🍷', cat:'culture',
+   names:{fr:'Fête des Vendanges de Crozes-Hermitage',en:'Crozes-Hermitage Harvest Festival',es:'Fiesta de la Vendimia de Crozes-Hermitage',de:'Weinlesefest Crozes-Hermitage',it:'Festa della Vendemmia di Crozes-Hermitage'},
+   descs:{fr:"Chaque automne, les vignobles de Crozes-Hermitage proches de Valence célèbrent les vendanges. Dégustations, visites de caves et animations dans les villages viticoles aux portes de la ville.",en:"Each autumn, the Crozes-Hermitage vineyards near Valence celebrate the harvest. Tastings, cellar visits and events in the wine villages at the city\'s doorstep.",es:"Cada otoño, los viñedos de Crozes-Hermitage celebran la vendimia. Degustaciones, visitas a bodegas y animaciones en los pueblos viticultores.",de:"Jeden Herbst feiern die Weinberge von Crozes-Hermitage die Weinlese. Verkostungen, Kellerbesuche und Veranstaltungen in den Winzerdörfern.",it:"Ogni autunno, i vigneti di Crozes-Hermitage festeggiano la vendemmia. Degustazioni, visite in cantina e animazioni nei villaggi vinicoli."},
+   location:'Périphérie', lieu:'Vignobles Crozes-Hermitage', tags:['Vin','Terroir','Automne'], recurrence:{fr:'Septembre–Octobre',en:'September–October',es:'Septiembre–Octubre',de:'September–Oktober',it:'Settembre–Ottobre'}},
+
+  // ── PONCTUELS 2025-2026 ──
+  {id:'p1', type:'ponctuel', date:'2025-07-04', icon:'🎪', cat:'culture',
+   names:{fr:'Festival Sounds of Valence',en:'Sounds of Valence Festival',es:'Festival Sounds of Valence',de:'Sounds of Valence Festival',it:'Festival Sounds of Valence'},
+   descs:{fr:"Festival de musiques actuelles organisé sur la scène des bords du Rhône. Artistes locaux et nationaux se succèdent sur deux scènes pendant trois jours dans un cadre exceptionnel face au Vercors.",en:"Contemporary music festival on the Rhône riverside stage. Local and national artists perform across two stages over three days with exceptional views of the Vercors.",es:"Festival de músicas actuales en el escenario de las orillas del Ródano. Artistas locales y nacionales en dos escenarios durante tres días.",de:"Festival zeitgenössischer Musik auf der Bühne am Rhôneufer. Lokale und nationale Künstler auf zwei Bühnen über drei Tage.",it:"Festival di musica contemporanea sul palco delle rive del Rodano. Artisti locali e nazionali su due palchi per tre giorni."},
+   location:'Bords du Rhône', lieu:'Scène des Bords du Rhône', tags:['Musique','Été','Payant'], dateLabel:{fr:'4–6 juillet 2025',en:'July 4–6, 2025',es:'4–6 julio 2025',de:'4.–6. Juli 2025',it:'4–6 luglio 2025'}},
+
+  {id:'p2', type:'ponctuel', date:'2025-10-18', icon:'🍫', cat:'gastronomie',
+   names:{fr:'Fête du Chocolat de Tain-l\'Hermitage',en:'Tain-l\'Hermitage Chocolate Festival',es:'Fiesta del Chocolate de Tain-l\'Hermitage',de:'Schokoladenfest Tain-l\'Hermitage',it:'Festa del Cioccolato di Tain-l\'Hermitage'},
+   descs:{fr:"Le grand rendez-vous mondial du chocolat à 15 minutes de Valence. La Cité du Chocolat Valrhona ouvre ses portes pour des ateliers, dégustations et rencontres avec les plus grands chocolatiers. Un événement unique au monde.",en:"The world\'s great chocolate gathering, 15 minutes from Valence. The Valrhona Chocolate City opens its doors for workshops, tastings and meetings with the world\'s greatest chocolatiers.",es:"La gran cita mundial del chocolate a 15 minutos de Valence. La Cité du Chocolat Valrhona abre sus puertas para talleres, degustaciones y encuentros.",de:"Das große weltweite Schokoladentreffen, 15 Minuten von Valence. Die Valrhona Schokoladenstadt öffnet ihre Türen für Workshops und Verkostungen.",it:"Il grande appuntamento mondiale del cioccolato a 15 minuti da Valence. La Cité du Chocolat Valrhona apre le sue porte per laboratori e degustazioni."},
+   location:'Tain-l\'Hermitage (15 min)', lieu:'Cité du Chocolat Valrhona', tags:['Gastronomie','Famille','Payant'], dateLabel:{fr:'18–19 octobre 2025',en:'October 18–19, 2025',es:'18–19 octubre 2025',de:'18.–19. Oktober 2025',it:'18–19 ottobre 2025'}},
+
+  {id:'p3', type:'ponctuel', date:'2026-06-27', icon:'🎭', cat:'culture',
+   names:{fr:'Nuits de Valence — Spectacles en plein air',en:'Valence Nights — Open-Air Shows',es:'Noches de Valence — Espectáculos al aire libre',de:'Valence-Nächte — Open-Air-Shows',it:'Notti di Valence — Spettacoli all\'aperto'},
+   descs:{fr:"Les Nuits de Valence investissent les plus beaux sites de la ville — cathédrale, Champ de Mars, jardins du musée — pour des spectacles son et lumière, théâtre de rue et concerts en plein air tout l\'été.",en:"Valence Nights take over the city\'s most beautiful sites — cathedral, Champ de Mars, museum gardens — for sound and light shows, street theatre and open-air concerts throughout summer.",es:"Las Noches de Valence toman los sitios más bellos de la ciudad para espectáculos de luz y sonido, teatro de calle y conciertos al aire libre.",de:"Die Valence-Nächte belegen die schönsten Orte der Stadt — Kathedrale, Champ de Mars, Museumsgärten — für Licht-und-Ton-Shows und Open-Air-Konzerte.",it:"Le Notti di Valence animano i siti più belli della città — cattedrale, Champ de Mars, giardini del museo — per spettacoli sonoro-luminosi e concerti all\'aperto."},
+   location:'Centre-ville', lieu:'Sites historiques de Valence', tags:['Culture','Été','Son & Lumière'], dateLabel:{fr:'Juin–Août 2026',en:'June–August 2026',es:'Junio–Agosto 2026',de:'Juni–August 2026',it:'Giugno–Agosto 2026'}},
+];
+
+const EVENT_CATS = {
+  fr:['🗓 Tous','🎉 Fêtes','🎵 Culture','🛒 Marchés','🍷 Gastronomie'],
+  en:['🗓 All','🎉 Festivals','🎵 Culture','🛒 Markets','🍷 Gastronomy'],
+  es:['🗓 Todos','🎉 Fiestas','🎵 Cultura','🛒 Mercados','🍷 Gastronomía'],
+  de:['🗓 Alle','🎉 Feste','🎵 Kultur','🛒 Märkte','🍷 Gastronomie'],
+  it:['🗓 Tutti','🎉 Feste','🎵 Cultura','🛒 Mercati','🍷 Gastronomia'],
+};
+const EVENT_CAT_KEYS = ['all','fete','culture','marche','gastronomie'];
+const MONTHS = {
+  fr:['Jan','Fév','Mar','Avr','Mai','Juin','Juil','Août','Sep','Oct','Nov','Déc'],
+  en:['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'],
+  es:['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic'],
+  de:['Jan','Feb','Mär','Apr','Mai','Jun','Jul','Aug','Sep','Okt','Nov','Dez'],
+  it:['Gen','Feb','Mar','Apr','Mag','Giu','Lug','Ago','Set','Ott','Nov','Dic'],
+};
+
 // ═══════════════════════════════════════════════════════════
 //  STATE
 // ═══════════════════════════════════════════════════════════
@@ -826,6 +939,7 @@ function launchApp() {
     FOOD_RESTAURANTS.forEach(r => { if(r.wiki) fetchWikiPhoto(r.wiki); });
     fetchWeather();
     renderMonuments('');
+    buildEvents();
     buildInterestPills();
     buildSports();
     buildFood();
@@ -853,7 +967,9 @@ function applyTranslations() {
   document.getElementById('nav-lbl-itin').textContent = t.nav[1];
   document.getElementById('nav-lbl-sports').textContent = t.nav[2];
   document.getElementById('nav-lbl-food').textContent = t.nav[3];
-  document.getElementById('nav-lbl-gamif').textContent = t.nav[4];
+  document.getElementById('nav-lbl-gamif').textContent = t.nav[5];
+  document.getElementById('nav-lbl-events').textContent = t.nav[4];
+  if(document.getElementById('events-screen').classList.contains('active')) renderEvents();
   document.getElementById('itin-title-hdr').innerHTML = `${t.itinTitle} <span>Valence</span>`;
   document.getElementById('itin-sub-hdr').textContent = t.itinSub;
   document.getElementById('cfg-days-lbl').textContent = t.cfgDays;
@@ -965,11 +1081,13 @@ function closeWeather(){document.getElementById('weather-panel').classList.remov
 //  TABS
 // ═══════════════════════════════════════════════════════════
 function switchTab(tab){
-  ['monuments','itin','sports','food','gamif'].forEach(t=>{
+  ['monuments','itin','sports','food','events','gamif'].forEach(t=>{
     document.getElementById('nav-'+t).classList.toggle('active',t===tab);
     document.getElementById(t+'-screen').classList.toggle('active',t===tab);
   });
+  currentTabIdx = TABS.indexOf(tab);
   if(tab==='gamif') renderGamif();
+  if(tab==='events') renderEvents();
 }
 
 // ═══════════════════════════════════════════════════════════
@@ -1350,6 +1468,152 @@ function mkRestoCard(r){
   loadRestoPhoto(card.querySelector('.resto-card-photo'),r.wiki,r.e);
   return card;
 }
+
+
+// ═══════════════════════════════════════════════════════════
+//  EVENTS
+// ═══════════════════════════════════════════════════════════
+let activeEventCat = 'all';
+
+function buildEvents(){
+  const t = T[LANG];
+  document.getElementById('events-title-hdr').innerHTML = `${t.eventsTitle} <span>Valence</span>`;
+  document.getElementById('events-sub-hdr').textContent = t.eventsSub;
+  const catsEl = document.getElementById('event-cats');
+  catsEl.innerHTML = '';
+  (EVENT_CATS[LANG]||EVENT_CATS.fr).forEach((label,i) => {
+    const btn = document.createElement('button');
+    btn.className = 'event-cat-btn' + (i===0?' active':'');
+    btn.textContent = label;
+    btn.onclick = () => {
+      activeEventCat = EVENT_CAT_KEYS[i];
+      document.querySelectorAll('.event-cat-btn').forEach((b,j)=>b.classList.toggle('active',j===i));
+      renderEvents();
+    };
+    catsEl.appendChild(btn);
+  });
+  renderEvents();
+}
+
+function renderEvents(){
+  const t = T[LANG];
+  const body = document.getElementById('events-body');
+  const now = new Date();
+  const months = MONTHS[LANG]||MONTHS.fr;
+
+  // Filter
+  const filtered = EVENTS.filter(e => activeEventCat==='all' || e.cat===activeEventCat);
+
+  // Separate upcoming ponctuel vs recurrent
+  const upcoming = filtered.filter(e => e.type==='ponctuel').sort((a,b)=>a.date.localeCompare(b.date));
+  const recurrent = filtered.filter(e => e.type==='recurrent').sort((a,b)=>a.month-b.month);
+
+  if(!filtered.length){
+    body.innerHTML = `<div class="events-empty">Aucun événement dans cette catégorie</div>`;
+    return;
+  }
+
+  let html = '';
+
+  // ── Upcoming (ponctuels) ──
+  if(upcoming.length){
+    html += `<div class="event-section-lbl">📅 ${t.eventsUpcoming}</div>`;
+    upcoming.forEach(e => {
+      const isPast = new Date(e.date) < now;
+      const accentColor = catColor(e.cat);
+      html += `<div class="event-card" style="padding-left:1.4rem">
+        <div class="event-card-accent" style="background:${accentColor}"></div>
+        <div class="event-badge-ponctuel">${isPast?'✓ Passé':'Prochainement'}</div>
+        <div class="event-card-top">
+          <div class="event-icon">${e.icon}</div>
+          <div class="event-info">
+            <div class="event-name">${e.names[LANG]||e.names.fr}</div>
+            <div class="event-date">📅 ${e.dateLabel[LANG]||e.dateLabel.fr}</div>
+            <div class="event-location">📍 ${e.lieu}</div>
+          </div>
+        </div>
+        <div class="event-desc">${e.descs[LANG]||e.descs.fr}</div>
+        <div class="event-tags">${e.tags.map(tag=>`<span class="event-tag${tag==='Payant'?' red':''}">${tag}</span>`).join('')}</div>
+      </div>`;
+    });
+  }
+
+  // ── Recurrent (annuels) ──
+  if(recurrent.length){
+    html += `<div class="event-section-lbl">🔁 ${t.eventsRecurrent}</div>`;
+    // Sort by upcoming month first
+    const curMonth = now.getMonth()+1;
+    const sorted = [...recurrent].sort((a,b)=>{
+      const da = (a.month - curMonth + 12)%12;
+      const db = (b.month - curMonth + 12)%12;
+      return da-db;
+    });
+    sorted.forEach(e => {
+      const accentColor = catColor(e.cat);
+      html += `<div class="event-card" style="padding-left:1.4rem">
+        <div class="event-card-accent" style="background:${accentColor}"></div>
+        <div class="event-badge-recurrent">🔁 ${months[e.month-1]}</div>
+        <div class="event-card-top">
+          <div class="event-icon">${e.icon}</div>
+          <div class="event-info">
+            <div class="event-name">${e.names[LANG]||e.names.fr}</div>
+            <div class="event-date">📅 ${e.recurrence[LANG]||e.recurrence.fr}</div>
+            <div class="event-location">📍 ${e.lieu}</div>
+          </div>
+        </div>
+        <div class="event-desc">${e.descs[LANG]||e.descs.fr}</div>
+        <div class="event-tags">${e.tags.map(tag=>`<span class="event-tag${tag==='Payant'?' red':''}">${tag}</span>`).join('')}</div>
+      </div>`;
+    });
+  }
+
+  body.innerHTML = html;
+}
+
+function catColor(cat){
+  return {fete:'#E04A4A',culture:'#3A7FBD',marche:'#2A9E5A',gastronomie:'#C47A20'}[cat]||'var(--blue)';
+}
+
+
+// ═══════════════════════════════════════════════════════════
+//  SWIPE BETWEEN TABS
+// ═══════════════════════════════════════════════════════════
+const TABS = ['monuments','itin','sports','food','events','gamif'];
+let swipeStartX = 0, swipeStartY = 0, swipeStartTime = 0;
+let currentTabIdx = 0;
+
+function getTabIdx(tab){ return TABS.indexOf(tab); }
+function getCurrentTab(){ return TABS[currentTabIdx]; }
+
+(function initSwipe(){
+  const app = document.getElementById('app');
+
+  app.addEventListener('touchstart', e => {
+    // Don't swipe if touching a scroll area that needs horizontal scroll
+    const target = e.target.closest('.wx-forecast,.wx-hourly,.chips-row,.sport-tabs,.food-cats-row,.event-type-row,.pill-row,.day-row,.mc-feat-tags,.event-tags,.team-tags,.resto-tags');
+    if(target) return;
+    swipeStartX = e.touches[0].clientX;
+    swipeStartY = e.touches[0].clientY;
+    swipeStartTime = Date.now();
+  }, {passive:true});
+
+  app.addEventListener('touchend', e => {
+    if(!swipeStartX) return;
+    const dx = e.changedTouches[0].clientX - swipeStartX;
+    const dy = e.changedTouches[0].clientY - swipeStartY;
+    const dt = Date.now() - swipeStartTime;
+
+    // Valid swipe: mostly horizontal, fast enough, long enough
+    if(Math.abs(dx) > Math.abs(dy) * 1.5 && Math.abs(dx) > 50 && dt < 400){
+      const dir = dx < 0 ? 1 : -1; // left = next, right = prev
+      const newIdx = Math.max(0, Math.min(TABS.length - 1, currentTabIdx + dir));
+      if(newIdx !== currentTabIdx){
+        switchTab(TABS[newIdx]);
+      }
+    }
+    swipeStartX = 0;
+  }, {passive:true});
+})();
 
 // ═══════════════════════════════════════════════════════════
 //  UTILS
