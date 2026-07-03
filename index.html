@@ -48,6 +48,20 @@ body{background:var(--page);color:var(--text);font-family:'Inter',sans-serif;ove
 .ld-logo{font-family:'Cormorant Garamond',serif;font-size:2rem;color:var(--blue);letter-spacing:.05em}
 .ld-sub{font-size:.72rem;letter-spacing:.25em;text-transform:uppercase;color:var(--text-soft)}
 .ld-ring{width:40px;height:40px;border:2px solid var(--blue-mid);border-top-color:var(--blue);border-radius:50%;animation:spin .8s linear infinite;margin-top:.5rem}
+/* New loading animation */
+.ld-scene{display:flex;flex-direction:column;align-items:center;gap:1.6rem}
+.ld-logo-wrap{position:relative}
+.ld-wave{display:flex;gap:6px;align-items:flex-end;height:36px}
+.ld-wave span{display:block;width:5px;border-radius:3px;background:var(--blue);animation:wave 1.2s ease-in-out infinite}
+.ld-wave span:nth-child(1){animation-delay:0s}
+.ld-wave span:nth-child(2){animation-delay:.15s}
+.ld-wave span:nth-child(3){animation-delay:.3s}
+.ld-wave span:nth-child(4){animation-delay:.45s}
+.ld-wave span:nth-child(5){animation-delay:.6s}
+@keyframes wave{0%,100%{height:8px;opacity:.4}50%{height:36px;opacity:1}}
+.ld-progress{width:160px;height:3px;background:var(--blue-mid);border-radius:2px;overflow:hidden}
+.ld-progress-fill{height:100%;background:var(--blue);border-radius:2px;width:0%;transition:width .4s ease}
+.ld-msg{font-size:.72rem;color:var(--text-soft);letter-spacing:.1em;text-align:center;min-height:1.2em;transition:opacity .3s}
 @keyframes spin{to{transform:rotate(360deg)}}
 
 /* ══ APP ══ */
@@ -289,6 +303,15 @@ body{background:var(--page);color:var(--text);font-family:'Inter',sans-serif;ove
 .wx-hour-temp{font-family:'Cormorant Garamond',serif;font-size:.9rem;color:var(--text)}
 .wx-hour-rain{font-size:.55rem;color:var(--blue)}
 .wx-credits{font-size:.58rem;color:var(--text-soft);text-align:center;padding:.8rem 1.2rem 0}
+/* Theme pills */
+.theme-row{display:flex;gap:.38rem;flex-wrap:wrap;margin-bottom:1.3rem}
+.theme-pill{display:flex;align-items:center;gap:.4rem;padding:.45rem .85rem;background:var(--white);border:1.5px solid var(--border-mid);border-radius:20px;color:var(--text-mid);font-size:.76rem;cursor:pointer;transition:all .2s;font-family:'Inter',sans-serif;font-weight:500}
+.theme-pill.active{background:var(--blue);border-color:var(--blue);color:#fff;box-shadow:0 3px 12px rgba(58,127,189,.3)}
+/* Day summary chips */
+.day-summary{display:flex;gap:.5rem;margin-bottom:.6rem;flex-wrap:wrap}
+.day-chip{font-size:.62rem;padding:.18rem .55rem;border-radius:20px;background:var(--page);border:1px solid var(--border);color:var(--text-soft)}
+.day-chip.blue{background:var(--blue-light);border-color:var(--blue-mid);color:var(--blue)}
+
 /* ══ EVENTS ══ */
 .events-body{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:.75rem 1rem 5rem;background:var(--page)}
 .event-type-row{display:flex;gap:.35rem;padding:.6rem 1.2rem;overflow-x:auto;scrollbar-width:none;flex-shrink:0;background:var(--page);border-bottom:1px solid var(--border)}
@@ -395,9 +418,19 @@ body{background:var(--page);color:var(--text);font-family:'Inter',sans-serif;ove
 
 <!-- ══ LOADING ══ -->
 <div id="loading" style="display:none">
-  <div class="ld-logo">Valence</div>
-  <div class="ld-sub" id="ld-sub">Drôme · Rhône-Alpes</div>
-  <div class="ld-ring"></div>
+  <div class="ld-scene">
+    <div class="ld-logo-wrap">
+      <div style="font-family:'Cormorant Garamond',serif;font-size:2rem;color:var(--blue);letter-spacing:.05em;text-align:center">Valence</div>
+      <div style="font-size:.65rem;color:var(--blue);letter-spacing:.28em;text-transform:uppercase;text-align:center;margin-top:.15rem" id="ld-sub">Drôme · Rhône-Alpes</div>
+    </div>
+    <div class="ld-wave">
+      <span></span><span></span><span></span><span></span><span></span>
+    </div>
+    <div style="width:160px">
+      <div class="ld-progress"><div class="ld-progress-fill" id="ld-fill"></div></div>
+      <div class="ld-msg" id="ld-msg">Chargement…</div>
+    </div>
+  </div>
 </div>
 
 <!-- ══ APP ══ -->
@@ -448,7 +481,11 @@ body{background:var(--page);color:var(--text);font-family:'Inter',sans-serif;ove
             <button class="day-pill" data-d="3" onclick="selDays(3)" id="dp3">3</button>
           </div>
         </div>
-        <div class="cfg-sec">
+        <div class="cfg-sec" id="cfg-theme-sec">
+          <div class="cfg-label" id="cfg-theme-lbl">🎨 Thème de voyage</div>
+          <div class="theme-row" id="theme-pills"></div>
+        </div>
+        <div class="cfg-sec" id="cfg-int-sec">
           <div class="cfg-label" id="cfg-int-lbl">🎯 Centres d'intérêt</div>
           <div class="pill-row" id="interest-pills"></div>
         </div>
@@ -608,6 +645,8 @@ const T = {
     day1Theme:'Patrimoine & Vieille Ville', day2Theme:'Nature, Rhône, Crussol & Tain',
     travelWalk:'🚶 Marche', travelBike:'🚲 Vélo', travelCar:'🚗 Voiture',
     noResult:'Aucun lieu trouvé', dayLabel:'Jour', daysLabel:'jours', dayLabelSingular:'jour', sitesLabel:'lieux',
+    cfgTheme:'🎨 Thème de voyage', themeAll:'✨ Sur mesure', themeHistory:'🏛️ Histoire', themeGastro:'🍷 Gastronomie', themeNature:'🌿 Nature', themeFamily:'👨‍👩‍👧 Famille',
+    totalTime:'Temps total', totalDist:'Distance estimée', km:'km',
     changeLanguage:'Changer de langue',
     eventsTitle:'Événements à', eventsSub:'Fêtes, festivals et marchés', eventsUpcoming:'À venir', eventsRecurrent:'Récurrents',
     gamifTitle:'Mes découvertes', gamifTitleHtml:'Mes <span>découvertes</span>', gamifSub:'Badges, points et progression',
@@ -639,6 +678,8 @@ const T = {
     day1Theme:'Heritage & Old Town', day2Theme:'Nature, Rhône, Crussol & Tain',
     travelWalk:'🚶 Walking', travelBike:'🚲 Cycling', travelCar:'🚗 Driving',
     noResult:'No place found', dayLabel:'Day', daysLabel:'days', dayLabelSingular:'day', sitesLabel:'places',
+    cfgTheme:'🎨 Travel theme', themeAll:'✨ Custom', themeHistory:'🏛️ History', themeGastro:'🍷 Gastronomy', themeNature:'🌿 Nature', themeFamily:'👨‍👩‍👧 Family',
+    totalTime:'Total time', totalDist:'Estimated distance', km:'km',
     changeLanguage:'Change language',
     eventsTitle:'Events in', eventsSub:'Festivals, fairs and markets', eventsUpcoming:'Upcoming', eventsRecurrent:'Annual',
     gamifTitle:'My Discoveries', gamifTitleHtml:'My <span>Discoveries</span>', gamifSub:'Badges, points and progress',
@@ -670,6 +711,8 @@ const T = {
     day1Theme:'Patrimonio & Casco Antiguo', day2Theme:'Naturaleza, Ródano, Crussol & Tain',
     travelWalk:'🚶 A pie', travelBike:'🚲 Bicicleta', travelCar:'🚗 Coche',
     noResult:'Ningún lugar encontrado', dayLabel:'Día', daysLabel:'días', dayLabelSingular:'día', sitesLabel:'lugares',
+    cfgTheme:'🎨 Tema de viaje', themeAll:'✨ Personalizado', themeHistory:'🏛️ Historia', themeGastro:'🍷 Gastronomía', themeNature:'🌿 Naturaleza', themeFamily:'👨‍👩‍👧 Familia',
+    totalTime:'Tiempo total', totalDist:'Distancia estimada', km:'km',
     changeLanguage:'Cambiar idioma',
     eventsTitle:'Eventos en', eventsSub:'Fiestas, festivales y mercados', eventsUpcoming:'Próximos', eventsRecurrent:'Anuales',
     gamifTitle:'Mis Descubrimientos', gamifTitleHtml:'Mis <span>Descubrimientos</span>', gamifSub:'Insignias, puntos y progreso',
@@ -701,6 +744,8 @@ const T = {
     day1Theme:'Kulturerbe & Altstadt', day2Theme:'Natur, Rhône, Crussol & Tain',
     travelWalk:'🚶 Zu Fuß', travelBike:'🚲 Fahrrad', travelCar:'🚗 Auto',
     noResult:'Kein Ort gefunden', dayLabel:'Tag', daysLabel:'Tage', dayLabelSingular:'Tag', sitesLabel:'Orte',
+    cfgTheme:'🎨 Reisethema', themeAll:'✨ Individuell', themeHistory:'🏛️ Geschichte', themeGastro:'🍷 Gastronomie', themeNature:'🌿 Natur', themeFamily:'👨‍👩‍👧 Familie',
+    totalTime:'Gesamtzeit', totalDist:'Geschätzte Strecke', km:'km',
     changeLanguage:'Sprache wechseln',
     eventsTitle:'Veranstaltungen in', eventsSub:'Feste, Festivals und Märkte', eventsUpcoming:'Bevorstehend', eventsRecurrent:'Jährlich',
     gamifTitle:'Meine Entdeckungen', gamifTitleHtml:'Meine <span>Entdeckungen</span>', gamifSub:'Abzeichen, Punkte und Fortschritt',
@@ -732,6 +777,8 @@ const T = {
     day1Theme:'Patrimonio & Centro Storico', day2Theme:'Natura, Rodano, Crussol & Tain',
     travelWalk:'🚶 A piedi', travelBike:'🚲 Bici', travelCar:'🚗 Auto',
     noResult:'Nessun luogo trovato', dayLabel:'Giorno', daysLabel:'giorni', dayLabelSingular:'giorno', sitesLabel:'luoghi',
+    cfgTheme:'🎨 Tema di viaggio', themeAll:'✨ Su misura', themeHistory:'🏛️ Storia', themeGastro:'🍷 Gastronomia', themeNature:'🌿 Natura', themeFamily:'👨‍👩‍👧 Famiglia',
+    totalTime:'Tempo totale', totalDist:'Distanza stimata', km:'km',
     changeLanguage:'Cambia lingua',
     eventsTitle:'Eventi a', eventsSub:'Feste, festival e mercati', eventsUpcoming:'In arrivo', eventsRecurrent:'Annuali',
     gamifTitle:'Le Mie Scoperte', gamifTitleHtml:'Le Mie <span>Scoperte</span>', gamifSub:'Distintivi, punti e progressi',
@@ -891,7 +938,7 @@ const MONTHS = {
 // ═══════════════════════════════════════════════════════════
 let LANG = 'fr';
 let activeLM = null;
-let selDaysN = 2, selInts = new Set(['all']), selTrns = 'walking', itinData = null;
+let selDaysN = 2, selInts = new Set(['all']), selTrns = 'walking', selTheme = 'all', itinData = null;
 let activeSportTab = 0, activeFoodCat = 0;
 
 // Gamification state (session-only, not persisted)
@@ -929,21 +976,43 @@ function launchApp() {
   document.getElementById('lang-screen').classList.add('hidden');
   const loading = document.getElementById('loading');
   loading.style.display = 'flex';
-  document.getElementById('ld-sub').textContent = T[LANG].region;
   document.getElementById('lang-flag-btn').textContent = FLAGS[LANG];
   applyTranslations();
+
+  // Animated loading messages
+  const msgs = {
+    fr:['Découverte de Valence…','Chargement des monuments…','Préparation de la météo…','Presque prêt…'],
+    en:['Discovering Valence…','Loading monuments…','Fetching weather…','Almost ready…'],
+    es:['Descubriendo Valence…','Cargando monumentos…','Obteniendo el tiempo…','Casi listo…'],
+    de:['Valence entdecken…','Sehenswürdigkeiten laden…','Wetter abrufen…','Fast fertig…'],
+    it:['Scoprendo Valence…','Caricamento monumenti…','Meteo in arrivo…','Quasi pronto…'],
+  };
+  const steps = msgs[LANG] || msgs.fr;
+  const fill = document.getElementById('ld-fill');
+  const msg = document.getElementById('ld-msg');
+  let step = 0;
+  const tick = setInterval(() => {
+    step++;
+    if(fill) fill.style.width = (step / steps.length * 100) + '%';
+    if(msg && steps[step]) { msg.style.opacity='0'; setTimeout(()=>{msg.textContent=steps[step];msg.style.opacity='1';},150); }
+    if(step >= steps.length - 1) clearInterval(tick);
+  }, 220);
+
   setTimeout(() => {
-    loading.classList.add('done');
-    document.getElementById('app').style.display = 'flex';
-    LANDMARKS.forEach(lm => { if(lm.wiki) fetchWikiPhoto(lm.wiki); });
-    FOOD_RESTAURANTS.forEach(r => { if(r.wiki) fetchWikiPhoto(r.wiki); });
-    fetchWeather();
-    renderMonuments('');
-    buildEvents();
-    buildInterestPills();
-    buildSports();
-    buildFood();
-  }, 800);
+    if(fill) fill.style.width = '100%';
+    setTimeout(() => {
+      loading.classList.add('done');
+      document.getElementById('app').style.display = 'flex';
+      LANDMARKS.forEach(lm => { if(lm.wiki) fetchWikiPhoto(lm.wiki); });
+      FOOD_RESTAURANTS.forEach(r => { if(r.wiki) fetchWikiPhoto(r.wiki); });
+      fetchWeather();
+      renderMonuments('');
+      buildEvents();
+      buildInterestPills();
+      buildSports();
+      buildFood();
+    }, 200);
+  }, 900);
 }
 
 function showLangSwitch() {
@@ -1311,14 +1380,56 @@ function renderGamif(){
 
 //  ITINERARY
 // ═══════════════════════════════════════════════════════════
+
+const THEMES = {
+  all:     {tags:null, lmFilter:null},
+  history: {tags:['Histoire','Napoléon','Médiéval','Renaissance','Roman','XIe s.','XIIe s.','XVIe','XVIIIe','Monument Historique','Architecture'],
+             lmIds:['cathedrale','pendentif','maisonsdtetes','napoleon','vieuxvalence','musee','crussol']},
+  gastro:  {tags:['Gastronomie','Terroir','Abricots AOC','Vignes','Chocolat','Hermitage AOC','Biodynamie'],
+             lmIds:['citechocolat','chapoutier','chabeuil','champdemars','parcjouvet']},
+  nature:  {tags:['Parc','Rhône','Plein air','Vélo','Belle Époque','Gratuit','Terroir','Vignes'],
+             lmIds:['parcjouvet','rhone','champdemars','chabeuil','crussol']},
+  family:  {tags:['Gratuit','Parc','Musée','Rhône','Chocolat','Belle Époque','Panorama 360°'],
+             lmIds:['parcjouvet','champdemars','musee','citechocolat','rhone','crussol','vieuxvalence']},
+};
 const CITY_TAGS={fr:['Patrimoine','Nature','Gastronomie','Art','Histoire','Rhône','Plein air'],en:['Heritage','Nature','Gastronomy','Art','History','Rhône','Outdoors'],es:['Patrimonio','Naturaleza','Gastronomía','Arte','Historia','Ródano','Aire libre'],de:['Kulturerbe','Natur','Gastronomie','Kunst','Geschichte','Rhône','Outdoor'],it:['Patrimonio','Natura','Gastronomia','Arte','Storia','Rodano','Aria aperta']};
 
 function buildInterestPills(){
-  const c=document.getElementById('interest-pills');c.innerHTML='';
-  const ab=document.createElement('button');ab.className='pill active';ab.dataset.t='all';ab.textContent=T[LANG].allInterest;ab.onclick=()=>togInt(ab);c.appendChild(ab);
+  // Theme pills
+  const tp=document.getElementById('theme-pills');
+  if(tp){
+    tp.innerHTML='';
+    const t=T[LANG];
+    const themeList=[
+      {id:'all',  label:t.themeAll},
+      {id:'history', label:t.themeHistory},
+      {id:'gastro',  label:t.themeGastro},
+      {id:'nature',  label:t.themeNature},
+      {id:'family',  label:t.themeFamily},
+    ];
+    themeList.forEach(th=>{
+      const btn=document.createElement('button');
+      btn.className='theme-pill'+(th.id===selTheme?' active':'');
+      btn.textContent=th.label;
+      btn.onclick=()=>selectTheme(th.id);
+      tp.appendChild(btn);
+    });
+  }
+  // Interest pills (hidden when a specific theme is selected)
+  const intSec=document.getElementById('cfg-int-sec');
+  if(intSec) intSec.style.display = selTheme==='all'?'block':'none';
+  const cp=document.getElementById('interest-pills');cp.innerHTML='';
+  const ab=document.createElement('button');ab.className='pill active';ab.dataset.t='all';ab.textContent=T[LANG].allInterest;ab.onclick=()=>togInt(ab);cp.appendChild(ab);
   (CITY_TAGS[LANG]||CITY_TAGS.fr).forEach((tag,i)=>{
-    const btn=document.createElement('button');btn.className='pill';btn.dataset.t=CITY_TAGS.fr[i];btn.textContent=tag;btn.onclick=()=>togInt(btn);c.appendChild(btn);
+    const btn=document.createElement('button');btn.className='pill';btn.dataset.t=CITY_TAGS.fr[i];btn.textContent=tag;btn.onclick=()=>togInt(btn);cp.appendChild(btn);
   });
+}
+function selectTheme(themeId){
+  selTheme=themeId;
+  selInts=new Set(['all']);
+  document.querySelectorAll('.theme-pill').forEach(b=>b.classList.toggle('active',b.textContent===((T[LANG]||T.fr)['theme'+themeId.charAt(0).toUpperCase()+themeId.slice(1)]||b.textContent)));
+  // Re-render theme pills cleanly
+  buildInterestPills();
 }
 function selDays(n){selDaysN=n;document.querySelectorAll('.day-pill').forEach(b=>b.classList.toggle('active',+b.dataset.d===n));}
 function togInt(btn){
@@ -1332,33 +1443,48 @@ function selTrans(btn){selTrns=btn.dataset.m;document.querySelectorAll('.pill[da
 function fmtT(m){return`${Math.floor(m/60)}h${String(m%60).padStart(2,'0')}`;}
 
 function generateItin(){
-  if(selDaysN===2&&selInts.has('all')){renderCuratedItin();return;}
+  if(selDaysN===2&&selInts.has('all')&&selTheme==='all'){renderCuratedItin();return;}
   const VD={cathedrale:45,pendentif:20,champdemars:30,musee:90,napoleon:20,maisonsdtetes:30,parcjouvet:60,vieuxvalence:60,rhone:60,chabeuil:60,crussol:90,citechocolat:90,chapoutier:60};
   function getDur(id){return VD[id]||45;}
-  function tvt(a,b){const R=6371000,p1=a.lat*Math.PI/180,p2=b.lat*Math.PI/180,dp=(b.lat-a.lat)*Math.PI/180,dl=(b.lng-a.lng)*Math.PI/180,x=Math.sin(dp/2)**2+Math.cos(p1)*Math.cos(p2)*Math.sin(dl/2)**2;return Math.round(R*2*Math.atan2(Math.sqrt(x),Math.sqrt(1-x))/({walking:70,transit:200,driving:500}[selTrns]))+2;}
+  function distM(a,b){const R=6371000,p1=a.lat*Math.PI/180,p2=b.lat*Math.PI/180,dp=(b.lat-a.lat)*Math.PI/180,dl=(b.lng-a.lng)*Math.PI/180,x=Math.sin(dp/2)**2+Math.cos(p1)*Math.cos(p2)*Math.sin(dl/2)**2;return R*2*Math.atan2(Math.sqrt(x),Math.sqrt(1-x));}
+  function tvt(a,b){return Math.round(distM(a,b)/({walking:70,transit:200,driving:500}[selTrns]))+2;}
   function nnRoute(pool,start){const rem=[...pool],route=[];let cur=start;while(rem.length){let mi=Infinity,ni=null,ni2=-1;rem.forEach((lm,i)=>{const d2=tvt(cur,lm);if(d2<mi){mi=d2;ni=lm;ni2=i;}});route.push(ni);rem.splice(ni2,1);cur=ni;}return route;}
   const center={lat:44.9334,lng:4.8924};
-  let pool=selInts.has('all')?[...LANDMARKS]:LANDMARKS.filter(lm=>lm.tags.some(t=>selInts.has(t)));
+  // Filter by theme or interest tags
+  let pool;
+  if(selTheme!=='all' && THEMES[selTheme]){
+    const ids=THEMES[selTheme].lmIds;
+    pool=LANDMARKS.filter(lm=>ids.includes(lm.id));
+  } else {
+    pool=selInts.has('all')?[...LANDMARKS]:LANDMARKS.filter(lm=>lm.tags.some(t=>selInts.has(t)));
+  }
   pool=pool.slice(0,selDaysN*5);
   const route=nnRoute(pool,center);
   const days=[];let cur=[];let m=540;let prev=center;
-  for(const lm of route){const tr=tvt(prev,lm),vi=getDur(lm.id);if(m+tr+vi>1200&&cur.length){days.push(cur);cur=[];m=540;prev=center;}cur.push({lm,arrival:m+tr,dur:vi,tr});m+=tr+vi;prev=lm;}
+  for(const lm of route){const tr=tvt(prev,lm),vi=getDur(lm.id);if(m+tr+vi>1200&&cur.length){days.push(cur);cur=[];m=540;prev=center;}cur.push({lm,arrival:m+tr,dur:vi,tr,distM:Math.round(distM(prev,lm))});m+=tr+vi;prev=lm;}
   if(cur.length)days.push(cur);
   itinData=days;
   const t=T[LANG];
-  const themes=[t.day1Theme,t.day2Theme,'Nature & Rhône'];
-  const dayObjs=days.map((stops,di)=>({label:`${t.dayLabel} ${di+1}`,theme:themes[di]||`${t.dayLabel} ${di+1}`,stops:stops.map(s=>({lm:s.lm,t:fmtT(s.arrival),dur:s.dur,tr:s.tr,tip:null}))}));
+  const themeNames={all:t.themeAll,history:t.themeHistory,gastro:t.themeGastro,nature:t.themeNature,family:t.themeFamily};
+  const baseThemes=[t.day1Theme,t.day2Theme,'Nature & Rhône'];
+  const dayObjs=days.map((stops,di)=>({
+    label:`${t.dayLabel} ${di+1}`,
+    theme: selTheme!=='all' ? themeNames[selTheme] : (baseThemes[di]||`${t.dayLabel} ${di+1}`),
+    stops:stops.map(s=>({lm:s.lm,t:fmtT(s.arrival),dur:s.dur,tr:s.tr,distM:s.distM,tip:null})),
+    totalDur: stops.reduce((a,s)=>a+s.dur+s.tr,0),
+    totalDist: stops.reduce((a,s)=>a+(s.distM||0),0),
+  }));
   renderDaysUI(dayObjs,days.length);
 }
 
 function renderCuratedItin(){
   const t=T[LANG];
   itinData=ITIN_2J.map(d=>d.stops.map(s=>{const[h,min]=s.t.split(':');return{lm:LANDMARKS.find(l=>l.id===s.id),arrival:+h*60+ +min,dur:s.dur,tr:0};}));
-  const dayObjs=ITIN_2J.map(d=>({
-    label:d.label[LANG]||d.label.fr,
-    theme:t[d.theme]||d.theme,
-    stops:d.stops.map(s=>({lm:LANDMARKS.find(l=>l.id===s.id),t:s.t,dur:s.dur,tr:0,tip:s.tips[LANG]||s.tips.fr}))
-  }));
+  const dayObjs=ITIN_2J.map(d=>{
+    const stops=d.stops.map(s=>({lm:LANDMARKS.find(l=>l.id===s.id),t:s.t,dur:s.dur,tr:0,tip:s.tips[LANG]||s.tips.fr}));
+    const totalDur=stops.reduce((a,s)=>a+s.dur,0);
+    return {label:d.label[LANG]||d.label.fr, theme:t[d.theme]||d.theme, stops, totalDur, totalDist:0};
+  });
   renderDaysUI(dayObjs,2);
 }
 
@@ -1367,12 +1493,32 @@ function renderDaysUI(dayObjs,nDays){
   const res=document.getElementById('itin-res');res.style.display='flex';res.style.flexDirection='column';
   const t=T[LANG],total=dayObjs.reduce((s,d)=>s+d.stops.length,0);
   const tl={walking:t.travelWalk,transit:t.travelBike,driving:t.travelCar}[selTrns];
-  document.getElementById('res-chips').innerHTML=`<div class="chip"><span>${nDays}</span> ${nDays>1?t.daysLabel:t.dayLabelSingular}</div><div class="chip"><span>${total}</span> ${t.sitesLabel}</div><div class="chip">${tl}</div>`;
+  const tripTotalDur=dayObjs.reduce((a,d)=>a+(d.totalDur||0),0);
+  const tripTotalDist=dayObjs.reduce((a,d)=>a+(d.totalDist||0),0);
+  const tripH=Math.floor(tripTotalDur/60),tripM=tripTotalDur%60;
+  const tripTimeStr=tripH>0?`${tripH}h${tripM>0?tripM+'':''}`:'';
+  const tripDistStr=tripTotalDist>0?`${(tripTotalDist/1000).toFixed(1)} km`:'';
+  let chipsHtml=`<div class="chip"><span>${nDays}</span> ${nDays>1?t.daysLabel:t.dayLabelSingular}</div><div class="chip"><span>${total}</span> ${t.sitesLabel}</div><div class="chip">${tl}</div>`;
+  if(tripTimeStr) chipsHtml+=`<div class="chip">⏱ ${tripTimeStr}</div>`;
+  if(tripDistStr) chipsHtml+=`<div class="chip">📍 ${tripDistStr}</div>`;
+  document.getElementById('res-chips').innerHTML=chipsHtml;
   document.getElementById('res-title').textContent=`Valence · ${nDays}${nDays>1?t.daysLabel[0]:t.dayLabelSingular[0]}`;
   const container=document.getElementById('res-days');container.innerHTML='';
   dayObjs.forEach((day)=>{
     const blk=document.createElement('div');blk.className='day-block';
-    blk.innerHTML=`<div class="day-block-hdr"><div class="day-num-badge">${day.label}</div><div class="day-theme-lbl">${day.theme}</div></div>`;
+    // Build day summary: total time + distance
+    let summaryHtml='';
+    if(day.totalDur){
+      const h=Math.floor(day.totalDur/60),mn=day.totalDur%60;
+      const timeStr=h>0?`${h}h${mn>0?mn+'min':''}`:mn+'min';
+      summaryHtml+=`<span class="day-chip blue">⏱ ${timeStr}</span>`;
+    }
+    if(day.totalDist && day.totalDist>0){
+      const km=(day.totalDist/1000).toFixed(1);
+      summaryHtml+=`<span class="day-chip blue">📍 ${km} ${t.km||'km'}</span>`;
+    }
+    summaryHtml+=`<span class="day-chip">${day.stops.filter(s=>s.lm).length} lieux</span>`;
+    blk.innerHTML=`<div class="day-block-hdr"><div class="day-num-badge">${day.label}</div><div class="day-theme-lbl">${day.theme}</div></div><div class="day-summary">${summaryHtml}</div>`;
     day.stops.forEach((s,si)=>{if(s.lm)blk.appendChild(mkStop(s.lm,s.t||fmtT(s.arrival||540),s.dur,s.tr||0,si===day.stops.length-1,s.tip));});
     container.appendChild(blk);
     const ids=day.stops.map(s=>s.lm).filter(Boolean);
