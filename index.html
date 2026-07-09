@@ -196,6 +196,7 @@ body{background:var(--page);color:var(--text);font-family:'Inter',sans-serif;ove
 .day-num-badge{background:var(--blue);color:#fff;font-size:.68rem;font-weight:600;letter-spacing:.15em;padding:.2rem .6rem;border-radius:20px}
 .day-theme-lbl{font-size:.72rem;color:var(--text-soft);letter-spacing:.1em;text-transform:uppercase}
 .gmaps-blk{padding:.75rem 1rem 1.5rem}
+#itin-res{flex-direction:column}
 .btn-gfull{width:100%;padding:.85rem;background:var(--white);border:1px solid var(--blue);border-radius:10px;color:var(--blue);font-size:.88rem;cursor:pointer;font-family:'Inter',sans-serif;font-weight:500}
 
 /* Stop cards */
@@ -537,7 +538,7 @@ body{background:var(--page);color:var(--text);font-family:'Inter',sans-serif;ove
         <button class="gen-btn" id="gen-btn" onclick="generateItin()">✨ Générer mon parcours</button>
       </div>
     </div>
-    <div id="itin-res" style="display:none;flex:1;flex-direction:column;overflow-y:auto;-webkit-overflow-scrolling:touch;background:var(--page);min-height:0">
+    <div id="itin-res" style="display:none;flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;background:var(--page);min-height:0">
       <div class="result-hdr">
         <button class="back-btn" id="back-btn" onclick="showCfg()">← Modifier</button>
         <div class="result-title" id="res-title">Itinéraire</div>
@@ -1729,7 +1730,7 @@ function renderCuratedItin(){
 
 function renderDaysUI(dayObjs,nDays){
   const cfg=document.getElementById('itin-cfg');cfg.style.display='none';
-  const res=document.getElementById('itin-res');res.style.display='flex';
+  const res=document.getElementById('itin-res');res.style.display='flex';res.style.flexDirection='column';
   const t=T[LANG],total=dayObjs.reduce((s,d)=>s+d.stops.length,0);
   const tl={walking:t.travelWalk,transit:t.travelBike,driving:t.travelCar}[selTrns];
   const tripTotalDur=dayObjs.reduce((a,d)=>a+(d.totalDur||0),0);
