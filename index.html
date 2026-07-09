@@ -173,7 +173,6 @@ body{background:var(--page);color:var(--text);font-family:'Inter',sans-serif;ove
 
 /* ══ ITINERARY ══ */
 .itin-bg{background:var(--page);flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch}
-#itin-res{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;flex-direction:column;min-height:0}
 .cfg-inner{padding:1.3rem 1.2rem .8rem}
 .cfg-label{font-size:.65rem;letter-spacing:.18em;text-transform:uppercase;color:var(--text-soft);margin-bottom:.65rem}
 .cfg-sec{margin-bottom:1.3rem}
@@ -505,8 +504,8 @@ body{background:var(--page);color:var(--text);font-family:'Inter',sans-serif;ove
   </div>
 
   <!-- ITINERARY -->
-  <div id="itin-screen" class="screen" style="flex-direction:column;overflow:hidden">
-    <div id="itin-cfg" class="itin-bg">
+  <div id="itin-screen" class="screen" style="flex-direction:column">
+    <div id="itin-cfg" class="itin-bg" style="flex:1">
       <div class="section-screen-hdr" style="background:var(--white)">
         <div class="section-ttl" id="itin-title-hdr">Itinéraire <span>Valence</span></div>
         <div class="section-sub" id="itin-sub-hdr">Parcours optimisé sur-mesure</div>
@@ -538,7 +537,7 @@ body{background:var(--page);color:var(--text);font-family:'Inter',sans-serif;ove
         <button class="gen-btn" id="gen-btn" onclick="generateItin()">✨ Générer mon parcours</button>
       </div>
     </div>
-    <div id="itin-res" class="screen-body" style="display:none;background:var(--page)">
+    <div id="itin-res" style="display:none;flex:1;flex-direction:column;overflow-y:auto;-webkit-overflow-scrolling:touch;background:var(--page);min-height:0">
       <div class="result-hdr">
         <button class="back-btn" id="back-btn" onclick="showCfg()">← Modifier</button>
         <div class="result-title" id="res-title">Itinéraire</div>
@@ -1729,7 +1728,7 @@ function renderCuratedItin(){
 }
 
 function renderDaysUI(dayObjs,nDays){
-  const cfg=document.getElementById('itin-cfg');cfg.style.display='none';cfg.style.flex='0';
+  const cfg=document.getElementById('itin-cfg');cfg.style.display='none';
   const res=document.getElementById('itin-res');res.style.display='flex';
   const t=T[LANG],total=dayObjs.reduce((s,d)=>s+d.stops.length,0);
   const tl={walking:t.travelWalk,transit:t.travelBike,driving:t.travelCar}[selTrns];
@@ -1782,7 +1781,7 @@ function mkStop(lm,tStr,durMin,trMin,isLast,tip){
   else ef2.style.display='flex';
   return card;
 }
-function showCfg(){const cfg=document.getElementById('itin-cfg');cfg.style.display='block';cfg.style.flex='1';document.getElementById('itin-res').style.display='none';}
+function showCfg(){document.getElementById('itin-cfg').style.display='block';document.getElementById('itin-res').style.display='none';}
 function openFullRoute(){
   if(!itinData)return;
   const all=itinData.flat().map(s=>s.lm||s).filter(Boolean);
