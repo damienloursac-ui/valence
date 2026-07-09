@@ -3,6 +3,35 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+
+<!-- SEO -->
+<meta name="description" content="CityExplorer Valence — Guide touristique numérique de Valence, Drôme. 13 monuments, itinéraires sur mesure, restaurants, événements. Disponible en 5 langues.">
+<meta name="author" content="Zenko Développement — Damien Loursac">
+
+<!-- Open Graph (Facebook, LinkedIn, WhatsApp) -->
+<meta property="og:type" content="website">
+<meta property="og:title" content="CityExplorer Valence — Guide touristique numérique">
+<meta property="og:description" content="Découvrez Valence avec le guide touristique numérique local. 13 monuments, itinéraires thématiques, restaurants, bons plans. Gratuit, en 5 langues, sans téléchargement.">
+<meta property="og:image" content="https://damienloursac-ui.github.io/images/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:url" content="https://damienloursac-ui.github.io">
+<meta property="og:locale" content="fr_FR">
+<meta property="og:site_name" content="CityExplorer Valence">
+
+<!-- Twitter Card -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="CityExplorer Valence — Guide touristique numérique">
+<meta name="twitter:description" content="Découvrez Valence avec le guide touristique local. 13 monuments, itinéraires, restaurants, bons plans. Gratuit et disponible en 5 langues.">
+<meta name="twitter:image" content="https://damienloursac-ui.github.io/images/og-image.png">
+
+<!-- PWA & mobile -->
+<meta name="theme-color" content="#0D2B45">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="CityExplorer Valence">
 <title>CityExplorer Valence · Rhône</title>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600&family=Inter:wght@300;400;500&display=swap');
@@ -1029,11 +1058,11 @@ function renderTips(){
   const t = T[LANG];
   const cats = TIPS_CATS[LANG] || TIPS_CATS.fr;
   document.getElementById('tips-title-hdr').innerHTML = `Bons <span>plans</span>`;
-  document.getElementById('tips-sub-hdr').textContent = `${cats.pratique.replace(/^.+? /,'')} · ${cats.mobilite.replace(/^.+? /,'')}`;
+  document.getElementById('tips-sub-hdr').textContent = `${cats.pratique.replace(/^.+? /,'')} · ${cats.hotels.replace(/^.+? /,'')} · ${cats.mobilite.replace(/^.+? /,'')}`;
   const body = document.getElementById('tips-body');
   let html = '';
 
-  ['pratique','mobilite'].forEach(cat => {
+  ['pratique','hotels','mobilite'].forEach(cat => {
     html += `<div class="tips-section-lbl">${cats[cat]}</div>`;
     TIPS[cat].forEach(item => {
       const isEmergency = ['samu','police','pompiers'].includes(item.id);
@@ -1110,6 +1139,26 @@ const TIPS = {
       tags:{fr:['Centre-ville'],en:['City centre'],es:['Centro'],de:['Zentrum'],it:['Centro']} },
   ],
 
+  hotels: [
+    { id:'pic',   icon:'🏨', color:'#C49A6C',
+      names:{fr:'Hôtel Pic',en:'Hôtel Pic',es:'Hôtel Pic',de:'Hôtel Pic',it:'Hôtel Pic'},
+      details:{fr:'285 avenue Victor Hugo · 5 étoiles · Restaurant 3 étoiles Michelin. L\'adresse de prestige de Valence, associée à la Maison Pic depuis 1891.',en:'285 avenue Victor Hugo · 5 stars · 3 Michelin star restaurant. Valence\'s prestigious address, associated with Maison Pic since 1891.',es:'285 avenue Victor Hugo · 5 estrellas · Restaurante 3 estrellas Michelin. La dirección de prestigio de Valence.',de:'285 avenue Victor Hugo · 5 Sterne · 3-Sterne-Michelin-Restaurant. Valences Prestige-Adresse seit 1891.',it:'285 avenue Victor Hugo · 5 stelle · Ristorante 3 stelle Michelin. L\'indirizzo di prestigio di Valence dal 1891.'},
+      phone:'04 75 44 15 32', maps:'https://maps.google.com/?q=Hôtel+Pic+Valence',
+      tags:{fr:['5 étoiles','Michelin','Prestige'],en:['5 stars','Michelin','Prestige'],es:['5 estrellas','Michelin','Prestigio'],de:['5 Sterne','Michelin','Prestige'],it:['5 stelle','Michelin','Prestigio']} },
+
+    { id:'atrium', icon:'🏨', color:'#3A7FBD',
+      names:{fr:'Hôtel Atrium',en:'Hôtel Atrium',es:'Hôtel Atrium',de:'Hôtel Atrium',it:'Hôtel Atrium'},
+      details:{fr:'20 rue du Général Leclerc · 4 étoiles · En plein cœur de Valence, à deux pas du Champ de Mars et de la cathédrale. Chambres modernes, parking privé.',en:'20 rue du Général Leclerc · 4 stars · In the heart of Valence, steps from Champ de Mars and the cathedral. Modern rooms, private parking.',es:'20 rue du Général Leclerc · 4 estrellas · En el corazón de Valence, cerca del Champ de Mars y la catedral.',de:'20 rue du Général Leclerc · 4 Sterne · Im Herzen von Valence, nahe Champ de Mars und Kathedrale.',it:'20 rue du Général Leclerc · 4 stelle · Nel cuore di Valence, vicino al Champ de Mars e alla cattedrale.'},
+      phone:'04 75 55 53 62', maps:'https://maps.google.com/?q=Hôtel+Atrium+Valence',
+      tags:{fr:['4 étoiles','Centre-ville','Parking'],en:['4 stars','City centre','Parking'],es:['4 estrellas','Centro','Parking'],de:['4 Sterne','Zentrum','Parkplatz'],it:['4 stelle','Centro','Parcheggio']} },
+
+    { id:'ibis',  icon:'🏨', color:'#2A9E5A',
+      names:{fr:'Ibis Valence Centre',en:'Ibis Valence Centre',es:'Ibis Valence Centre',de:'Ibis Valence Centre',it:'Ibis Valence Centre'},
+      details:{fr:'9 rue Pierre Sémard · 3 étoiles · À 5 minutes à pied de la gare SNCF. Idéal pour les voyageurs de passage. Bon rapport qualité-prix, petit-déjeuner inclus en option.',en:'9 rue Pierre Sémard · 3 stars · 5 minutes walk from the train station. Ideal for passing travellers. Good value, breakfast optional.',es:'9 rue Pierre Sémard · 3 estrellas · A 5 minutos a pie de la estación. Ideal para viajeros de paso. Buena relación calidad-precio.',de:'9 rue Pierre Sémard · 3 Sterne · 5 Gehminuten vom Bahnhof. Ideal für Durchreisende. Gutes Preis-Leistungs-Verhältnis.',it:'9 rue Pierre Sémard · 3 stelle · 5 minuti a piedi dalla stazione. Ideale per i viaggiatori di passaggio. Buon rapporto qualità-prezzo.'},
+      phone:'04 75 43 45 16', maps:'https://maps.google.com/?q=Ibis+Valence+Centre',
+      tags:{fr:['3 étoiles','Gare','Rapport qualité-prix'],en:['3 stars','Station','Value for money'],es:['3 estrellas','Estación','Buena relación'],de:['3 Sterne','Bahnhof','Preis-Leistung'],it:['3 stelle','Stazione','Qualità-prezzo']} },
+  ],
+
   mobilite: [
     { id:'gare',  icon:'🚆',  color:'#2A4A8A',
       names:{fr:'Gare SNCF de Valence-Ville',en:'Valence-Ville Train Station',es:'Estación de tren Valence-Ville',de:'Bahnhof Valence-Ville',it:'Stazione Valence-Ville'},
@@ -1156,11 +1205,11 @@ const TIPS = {
 };
 
 const TIPS_CATS = {
-  fr:{pratique:'ℹ️ Infos pratiques', mobilite:'🚌 Mobilité & Parkings'},
-  en:{pratique:'ℹ️ Practical info',  mobilite:'🚌 Transport & Parking'},
-  es:{pratique:'ℹ️ Info práctica',   mobilite:'🚌 Transporte & Parking'},
-  de:{pratique:'ℹ️ Praktische Infos',mobilite:'🚌 Verkehr & Parken'},
-  it:{pratique:'ℹ️ Info pratiche',   mobilite:'🚌 Trasporti & Parcheggi'},
+  fr:{pratique:'ℹ️ Infos pratiques', hotels:'🏨 Hébergements', mobilite:'🚌 Mobilité & Parkings'},
+  en:{pratique:'ℹ️ Practical info',  hotels:'🏨 Accommodation',  mobilite:'🚌 Transport & Parking'},
+  es:{pratique:'ℹ️ Info práctica',   hotels:'🏨 Alojamientos',   mobilite:'🚌 Transporte & Parking'},
+  de:{pratique:'ℹ️ Praktische Infos',hotels:'🏨 Unterkünfte',    mobilite:'🚌 Verkehr & Parken'},
+  it:{pratique:'ℹ️ Info pratiche',   hotels:'🏨 Alloggi',        mobilite:'🚌 Trasporti & Parcheggi'},
 };
 
 // ═══════════════════════════════════════════════════════════
