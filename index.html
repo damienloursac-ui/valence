@@ -631,7 +631,7 @@ body{background:var(--page);color:var(--text);font-family:'Inter',sans-serif;ove
   <div id="weather-overlay" onclick="closeWeather()"></div>
   <div id="weather-panel">
     <div class="wx-panel-header">
-      <div class="wx-panel-city">🌹 Valence — Drôme</div>
+      <div class="wx-panel-city">Valence — Drôme</div>
       <button class="wx-panel-close" onclick="closeWeather()">✕</button>
     </div>
     <div class="wx-panel-now">
@@ -690,7 +690,7 @@ const T = {
     cfgDays:'⏱ Combien de jours ?', cfgInt:'🎯 Centres d\'intérêt', cfgTrans:'🚶 Déplacement',
     dayLabels:['1 jour','2 jours'],
     transLabels:['🚶 Marche','🚲 Vélo','🚗 Voiture'],
-    allInterest:'🌹 Tout', generateBtn:'✨ Générer mon parcours', backBtn:'← Modifier',
+    allInterest:'Tout', generateBtn:'✨ Générer mon parcours', backBtn:'← Modifier',
     openMaps:'📍 Google Maps', openMapsAll:'📍 Ouvrir dans Google Maps',
     sportsTitle:'Sports à', sportsSub:'Clubs locaux · Équipes emblématiques',
     foodTitle:'Food à', foodSub:'Restaurants · Spécialités drômoises',
@@ -723,7 +723,7 @@ const T = {
     cfgDays:'⏱ How many days?', cfgInt:'🎯 Interests', cfgTrans:'🚶 Getting around',
     dayLabels:['1 day','2 days'],
     transLabels:['🚶 Walking','🚲 Cycling','🚗 Driving'],
-    allInterest:'🌹 Everything', generateBtn:'✨ Generate my itinerary', backBtn:'← Edit',
+    allInterest:'Everything', generateBtn:'✨ Generate my itinerary', backBtn:'← Edit',
     openMaps:'📍 Google Maps', openMapsAll:'📍 Open in Google Maps',
     sportsTitle:'Sports in', sportsSub:'Local clubs · Iconic teams',
     foodTitle:'Food in', foodSub:'Restaurants · Local specialities',
@@ -756,7 +756,7 @@ const T = {
     cfgDays:'⏱ ¿Cuántos días?', cfgInt:'🎯 Intereses', cfgTrans:'🚶 Desplazamiento',
     dayLabels:['1 día','2 días'],
     transLabels:['🚶 A pie','🚲 Bicicleta','🚗 Coche'],
-    allInterest:'🌹 Todo', generateBtn:'✨ Generar mi ruta', backBtn:'← Modificar',
+    allInterest:'Todo', generateBtn:'✨ Generar mi ruta', backBtn:'← Modificar',
     openMaps:'📍 Google Maps', openMapsAll:'📍 Abrir en Google Maps',
     sportsTitle:'Deportes en', sportsSub:'Clubes locales · Equipos emblemáticos',
     foodTitle:'Gastronomía en', foodSub:'Restaurantes · Especialidades del Drôme',
@@ -789,7 +789,7 @@ const T = {
     cfgDays:'⏱ Wie viele Tage?', cfgInt:'🎯 Interessen', cfgTrans:'🚶 Fortbewegung',
     dayLabels:['1 Tag','2 Tage'],
     transLabels:['🚶 Zu Fuß','🚲 Fahrrad','🚗 Auto'],
-    allInterest:'🌹 Alles', generateBtn:'✨ Reiseroute erstellen', backBtn:'← Bearbeiten',
+    allInterest:'Alles', generateBtn:'✨ Reiseroute erstellen', backBtn:'← Bearbeiten',
     openMaps:'📍 Google Maps', openMapsAll:'📍 In Google Maps öffnen',
     sportsTitle:'Sport in', sportsSub:'Lokale Vereine · Emblematische Teams',
     foodTitle:'Food in', foodSub:'Restaurants · Regionale Spezialitäten',
@@ -822,7 +822,7 @@ const T = {
     cfgDays:'⏱ Quanti giorni?', cfgInt:'🎯 Interessi', cfgTrans:'🚶 Spostamento',
     dayLabels:['1 giorno','2 giorni'],
     transLabels:['🚶 A piedi','🚲 Bici','🚗 Auto'],
-    allInterest:'🌹 Tutto', generateBtn:'✨ Crea il mio itinerario', backBtn:'← Modifica',
+    allInterest:'Tutto', generateBtn:'✨ Crea il mio itinerario', backBtn:'← Modifica',
     openMaps:'📍 Google Maps', openMapsAll:'📍 Apri in Google Maps',
     sportsTitle:'Sport a', sportsSub:'Club locali · Squadre emblematiche',
     foodTitle:'Food a', foodSub:'Ristoranti · Specialità della Drôme',
@@ -1789,7 +1789,7 @@ function openFullRoute(){
   window.open(`https://www.google.com/maps/dir/?api=1&origin=${all[0].lat},${all[0].lng}&destination=${all[all.length-1].lat},${all[all.length-1].lng}&waypoints=${wp}&travelmode=${selTrns}`,'_blank');
 }
 function exportItin(){
-  const t=T[LANG];let txt=`🌹 ${t.itinTitle} Valence\n${'-'.repeat(26)}\n`;
+  const t=T[LANG];let txt=`${t.itinTitle} Valence\n${'-'.repeat(26)}\n`;
   if(itinData){itinData.forEach((stops,di)=>{txt+=`\n📅 ${t.dayLabel} ${di+1}\n`;stops.forEach(s=>{const lm=s.lm||s;txt+=`  — ${lmName(lm)}\n`;});});}
   navigator.share?navigator.share({title:`${t.itinTitle} Valence`,text:txt}):navigator.clipboard?.writeText(txt).then(()=>alert('Copié !'));
 }
@@ -2059,7 +2059,7 @@ function drawPassport(){
 
   // Rose/heart emoji right side
   ctx.font = '32px serif';
-  ctx.fillText('🌹', W-60, 50);
+  ctx.fillText('', W-60, 50);
 
   // ── Level badge ─────────────────────────────────────────
   // Circle
