@@ -173,6 +173,7 @@ body{background:var(--page);color:var(--text);font-family:'Inter',sans-serif;ove
 
 /* ══ ITINERARY ══ */
 .itin-bg{background:var(--page);flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch}
+#itin-res{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;flex-direction:column;min-height:0}
 .cfg-inner{padding:1.3rem 1.2rem .8rem}
 .cfg-label{font-size:.65rem;letter-spacing:.18em;text-transform:uppercase;color:var(--text-soft);margin-bottom:.65rem}
 .cfg-sec{margin-bottom:1.3rem}
@@ -516,7 +517,6 @@ body{background:var(--page);color:var(--text);font-family:'Inter',sans-serif;ove
           <div class="day-row">
             <button class="day-pill" data-d="1" onclick="selDays(1)" id="dp1">1</button>
             <button class="day-pill active" data-d="2" onclick="selDays(2)" id="dp2">2</button>
-            <button class="day-pill" data-d="3" onclick="selDays(3)" id="dp3">3</button>
           </div>
         </div>
         <div class="cfg-sec" id="cfg-theme-sec">
@@ -538,7 +538,7 @@ body{background:var(--page);color:var(--text);font-family:'Inter',sans-serif;ove
         <button class="gen-btn" id="gen-btn" onclick="generateItin()">✨ Générer mon parcours</button>
       </div>
     </div>
-    <div id="itin-res" class="screen-body" style="display:none;flex-direction:column;overflow-y:auto;-webkit-overflow-scrolling:touch;background:var(--page);flex:1">
+    <div id="itin-res" class="screen-body" style="display:none;background:var(--page)">
       <div class="result-hdr">
         <button class="back-btn" id="back-btn" onclick="showCfg()">← Modifier</button>
         <div class="result-title" id="res-title">Itinéraire</div>
@@ -688,7 +688,7 @@ const T = {
     searchPlaceholder:'🔍  Rechercher un lieu…',
     itinTitle:'Itinéraire', itinSub:'Parcours optimisé sur-mesure',
     cfgDays:'⏱ Combien de jours ?', cfgInt:'🎯 Centres d\'intérêt', cfgTrans:'🚶 Déplacement',
-    dayLabels:['1 jour','2 jours','3 jours'],
+    dayLabels:['1 jour','2 jours'],
     transLabels:['🚶 Marche','🚲 Vélo','🚗 Voiture'],
     allInterest:'🌹 Tout', generateBtn:'✨ Générer mon parcours', backBtn:'← Modifier',
     openMaps:'📍 Google Maps', openMapsAll:'📍 Ouvrir dans Google Maps',
@@ -721,7 +721,7 @@ const T = {
     searchPlaceholder:'🔍  Search a place…',
     itinTitle:'Itinerary', itinSub:'Optimised route, tailored for you',
     cfgDays:'⏱ How many days?', cfgInt:'🎯 Interests', cfgTrans:'🚶 Getting around',
-    dayLabels:['1 day','2 days','3 days'],
+    dayLabels:['1 day','2 days'],
     transLabels:['🚶 Walking','🚲 Cycling','🚗 Driving'],
     allInterest:'🌹 Everything', generateBtn:'✨ Generate my itinerary', backBtn:'← Edit',
     openMaps:'📍 Google Maps', openMapsAll:'📍 Open in Google Maps',
@@ -754,7 +754,7 @@ const T = {
     searchPlaceholder:'🔍  Buscar un lugar…',
     itinTitle:'Itinerario', itinSub:'Ruta optimizada a tu medida',
     cfgDays:'⏱ ¿Cuántos días?', cfgInt:'🎯 Intereses', cfgTrans:'🚶 Desplazamiento',
-    dayLabels:['1 día','2 días','3 días'],
+    dayLabels:['1 día','2 días'],
     transLabels:['🚶 A pie','🚲 Bicicleta','🚗 Coche'],
     allInterest:'🌹 Todo', generateBtn:'✨ Generar mi ruta', backBtn:'← Modificar',
     openMaps:'📍 Google Maps', openMapsAll:'📍 Abrir en Google Maps',
@@ -787,7 +787,7 @@ const T = {
     searchPlaceholder:'🔍  Ort suchen…',
     itinTitle:'Reiseroute', itinSub:'Optimierte Route nach Maß',
     cfgDays:'⏱ Wie viele Tage?', cfgInt:'🎯 Interessen', cfgTrans:'🚶 Fortbewegung',
-    dayLabels:['1 Tag','2 Tage','3 Tage'],
+    dayLabels:['1 Tag','2 Tage'],
     transLabels:['🚶 Zu Fuß','🚲 Fahrrad','🚗 Auto'],
     allInterest:'🌹 Alles', generateBtn:'✨ Reiseroute erstellen', backBtn:'← Bearbeiten',
     openMaps:'📍 Google Maps', openMapsAll:'📍 In Google Maps öffnen',
@@ -820,7 +820,7 @@ const T = {
     searchPlaceholder:'🔍  Cerca un luogo…',
     itinTitle:'Itinerario', itinSub:'Percorso ottimizzato su misura',
     cfgDays:'⏱ Quanti giorni?', cfgInt:'🎯 Interessi', cfgTrans:'🚶 Spostamento',
-    dayLabels:['1 giorno','2 giorni','3 giorni'],
+    dayLabels:['1 giorno','2 giorni'],
     transLabels:['🚶 A piedi','🚲 Bici','🚗 Auto'],
     allInterest:'🌹 Tutto', generateBtn:'✨ Crea il mio itinerario', backBtn:'← Modifica',
     openMaps:'📍 Google Maps', openMapsAll:'📍 Apri in Google Maps',
@@ -1275,7 +1275,6 @@ function applyTranslations() {
   document.getElementById('cfg-trans-lbl').textContent = t.cfgTrans;
   document.getElementById('dp1').textContent = t.dayLabels[0];
   document.getElementById('dp2').textContent = t.dayLabels[1];
-  document.getElementById('dp3').textContent = t.dayLabels[2];
   document.getElementById('trans-walk').textContent = t.transLabels[0];
   document.getElementById('trans-bike').textContent = t.transLabels[1];
   document.getElementById('trans-car').textContent = t.transLabels[2];
@@ -1682,6 +1681,7 @@ function selTrans(btn){selTrns=btn.dataset.m;document.querySelectorAll('.pill[da
 function fmtT(m){return`${Math.floor(m/60)}h${String(m%60).padStart(2,'0')}`;}
 
 function generateItin(){
+  if(selDaysN>2)selDaysN=2;
   if(selDaysN===2&&selInts.has('all')&&selTheme==='all'){renderCuratedItin();return;}
   const VD={cathedrale:45,pendentif:20,champdemars:30,musee:90,napoleon:20,maisonsdtetes:30,parcjouvet:60,vieuxvalence:60,rhone:60,chabeuil:60,crussol:90,citechocolat:90,chapoutier:60};
   function getDur(id){return VD[id]||45;}
@@ -1728,8 +1728,8 @@ function renderCuratedItin(){
 }
 
 function renderDaysUI(dayObjs,nDays){
-  document.getElementById('itin-cfg').style.display='none';
-  const res=document.getElementById('itin-res');res.style.display='flex';res.style.flexDirection='column';
+  const cfg=document.getElementById('itin-cfg');cfg.style.display='none';cfg.style.flex='0';
+  const res=document.getElementById('itin-res');res.style.display='flex';
   const t=T[LANG],total=dayObjs.reduce((s,d)=>s+d.stops.length,0);
   const tl={walking:t.travelWalk,transit:t.travelBike,driving:t.travelCar}[selTrns];
   const tripTotalDur=dayObjs.reduce((a,d)=>a+(d.totalDur||0),0);
@@ -1781,7 +1781,7 @@ function mkStop(lm,tStr,durMin,trMin,isLast,tip){
   else ef2.style.display='flex';
   return card;
 }
-function showCfg(){document.getElementById('itin-cfg').style.display='block';document.getElementById('itin-res').style.display='none';}
+function showCfg(){const cfg=document.getElementById('itin-cfg');cfg.style.display='block';cfg.style.flex='1';document.getElementById('itin-res').style.display='none';}
 function openFullRoute(){
   if(!itinData)return;
   const all=itinData.flat().map(s=>s.lm||s).filter(Boolean);
