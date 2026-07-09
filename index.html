@@ -607,6 +607,7 @@ body{background:var(--page);color:var(--text);font-family:'Inter',sans-serif;ove
       <div class="section-ttl" id="tips-title-hdr">Bons <span>plans</span></div>
       <div class="section-sub" id="tips-sub-hdr">Infos pratiques · Mobilité</div>
     </div>
+    <div class="event-type-row" id="tips-cats-row"></div>
     <div class="tips-body" id="tips-body"></div>
   </div>
 
@@ -1054,38 +1055,50 @@ const MONTHS = {
 // ═══════════════════════════════════════════════════════════
 //  BONS PLANS
 // ═══════════════════════════════════════════════════════════
+function buildTipsCats(){
+  const cats = TIPS_CATS[LANG] || TIPS_CATS.fr;
+  const row = document.getElementById('tips-cats-row');
+  if(!row) return;
+  row.innerHTML = '';
+  ['pratique','hotels','mobilite'].forEach(cat => {
+    const btn = document.createElement('button');
+    btn.className = 'event-cat-btn' + (cat === activeTipsCat ? ' active' : '');
+    btn.textContent = cats[cat];
+    btn.onclick = () => { activeTipsCat = cat; buildTipsCats(); renderTips(); };
+    row.appendChild(btn);
+  });
+}
+
 function renderTips(){
   const t = T[LANG];
   const cats = TIPS_CATS[LANG] || TIPS_CATS.fr;
   document.getElementById('tips-title-hdr').innerHTML = `Bons <span>plans</span>`;
-  document.getElementById('tips-sub-hdr').textContent = `${cats.pratique.replace(/^.+? /,'')} · ${cats.hotels.replace(/^.+? /,'')} · ${cats.mobilite.replace(/^.+? /,'')}`;
+  document.getElementById('tips-sub-hdr').textContent = cats[activeTipsCat].replace(/^.+? /,'');
+  buildTipsCats();
   const body = document.getElementById('tips-body');
   let html = '';
 
-  ['pratique','hotels','mobilite'].forEach(cat => {
-    html += `<div class="tips-section-lbl">${cats[cat]}</div>`;
-    TIPS[cat].forEach(item => {
-      const isEmergency = ['samu','police','pompiers'].includes(item.id);
-      const name = item.names[LANG] || item.names.fr;
-      const details = item.details[LANG] || item.details.fr;
-      const tags = (item.tags[LANG] || item.tags.fr).map(tg=>`<span class="tip-tag">${tg}</span>`).join('');
-      const btns = [];
-      if(item.phone) btns.push(`<button class="tip-btn call" onclick="window.location.href='tel:${item.phone}'">📞 ${item.phone}</button>`);
-      if(item.maps)  btns.push(`<button class="tip-btn maps" onclick="window.open('${item.maps}','_blank')">📍 Maps</button>`);
+  (TIPS[activeTipsCat] || []).forEach(item => {
+    const isEmergency = ['samu','police','pompiers'].includes(item.id);
+    const name = item.names[LANG] || item.names.fr;
+    const details = item.details[LANG] || item.details.fr;
+    const tags = (item.tags[LANG] || item.tags.fr).map(tg=>`<span class="tip-tag">${tg}</span>`).join('');
+    const btns = [];
+    if(item.phone) btns.push(`<button class="tip-btn call" onclick="window.location.href='tel:${item.phone}'">📞 ${item.phone}</button>`);
+    if(item.maps)  btns.push(`<button class="tip-btn maps" onclick="window.open('${item.maps}','_blank')">📍 Maps</button>`);
 
-      html += `<div class="tip-card${isEmergency?' tip-emergency':''}">
-        <div class="tip-accent" style="background:${item.color}"></div>
-        <div class="tip-card-inner">
-          <div class="tip-icon">${item.icon}</div>
-          <div class="tip-info">
-            <div class="tip-name">${name}</div>
-            <div class="tip-details">${details}</div>
-            <div class="tip-tags">${tags}</div>
-          </div>
+    html += `<div class="tip-card${isEmergency?' tip-emergency':''}">
+      <div class="tip-accent" style="background:${item.color}"></div>
+      <div class="tip-card-inner">
+        <div class="tip-icon">${item.icon}</div>
+        <div class="tip-info">
+          <div class="tip-name">${name}</div>
+          <div class="tip-details">${details}</div>
+          <div class="tip-tags">${tags}</div>
         </div>
-        ${btns.length ? `<div class="tip-actions">${btns.join('')}</div>` : ''}
-      </div>`;
-    });
+      </div>
+      ${btns.length ? `<div class="tip-actions">${btns.join('')}</div>` : ''}
+    </div>`;
   });
 
   body.innerHTML = html;
@@ -1218,6 +1231,7 @@ const TIPS_CATS = {
 let LANG = 'fr';
 let activeLM = null;
 let selDaysN = 2, selInts = new Set(['all']), selTrns = 'walking', selTheme = 'all', itinData = null;
+let activeTipsCat = 'pratique';
 let activeSportTab = 0, activeFoodCat = 0;
 
 // Gamification state (session-only, not persisted)
