@@ -92,7 +92,7 @@ body{background:var(--page);color:var(--text);font-family:'Inter',sans-serif;ove
 /* ══ SCREENS ══ */
 .screen{flex:1;overflow:hidden;display:none;flex-direction:column;min-height:0}
 .screen.active{display:flex}
-.screen-body{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch}
+.screen-body{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;min-height:0}
 
 /* ══ SEARCH ══ */
 .search-wrap{padding:.75rem 1.2rem;flex-shrink:0;background:var(--white);border-bottom:1px solid var(--border)}
@@ -504,7 +504,7 @@ body{background:var(--page);color:var(--text);font-family:'Inter',sans-serif;ove
   </div>
 
   <!-- ITINERARY -->
-  <div id="itin-screen" class="screen">
+  <div id="itin-screen" class="screen" style="flex-direction:column;overflow:hidden">
     <div id="itin-cfg" class="itin-bg">
       <div class="section-screen-hdr" style="background:var(--white)">
         <div class="section-ttl" id="itin-title-hdr">Itinéraire <span>Valence</span></div>
@@ -538,14 +538,14 @@ body{background:var(--page);color:var(--text);font-family:'Inter',sans-serif;ove
         <button class="gen-btn" id="gen-btn" onclick="generateItin()">✨ Générer mon parcours</button>
       </div>
     </div>
-    <div id="itin-res" class="screen-body" style="display:none;background:var(--page)">
+    <div id="itin-res" class="screen-body" style="display:none;flex-direction:column;overflow-y:auto;-webkit-overflow-scrolling:touch;background:var(--page);flex:1">
       <div class="result-hdr">
         <button class="back-btn" id="back-btn" onclick="showCfg()">← Modifier</button>
         <div class="result-title" id="res-title">Itinéraire</div>
         <button class="share-btn" onclick="exportItin()">📤</button>
       </div>
       <div class="chips-row" id="res-chips"></div>
-      <div id="res-days" style="padding:.75rem 0"></div>
+      <div id="res-days" style="padding:.75rem 0 6rem 0"></div>
       <div class="gmaps-blk"><button class="btn-gfull" id="gmaps-full-btn" onclick="openFullRoute()">📍 Ouvrir dans Google Maps</button></div>
     </div>
   </div>
