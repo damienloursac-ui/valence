@@ -1886,23 +1886,22 @@ function renderFood(catIdx){
 }
 function rDesc(r){return r.descs[LANG]||r.descs.fr;}
 function rCuisine(r){return r.cuisine[LANG]||r.cuisine.fr;}
-function loadRestoPhoto(wrap,wiki,emoji){
+function loadRestoPhoto(wrap,wiki,emoji,localImg){
   const img=wrap.querySelector('img'),sh=wrap.querySelector('.shimmer'),ef2=wrap.querySelector('.ef');
-  if(wiki){fetchWikiPhoto(wiki).then(src=>{sh.style.display='none';if(src){img.onload=()=>{img.classList.add('ok');ef2.style.display='none';};img.onerror=()=>{ef2.style.display='flex';};img.src=src;}else ef2.style.display='flex';});}
-  else{sh.style.display='none';ef2.style.display='flex';}
+  fetchWikiPhoto(wiki||'',localImg||'').then(src=>{sh.style.display='none';if(src){img.onload=()=>{img.classList.add('ok');ef2.style.display='none';};img.onerror=()=>{ef2.style.display='flex';};img.src=src;}else{sh.style.display='none';ef2.style.display='flex';}});
 }
 function mkRestoFeatured(r){
   const card=document.createElement('div');card.className='resto-featured';
   const stars=r.michelin?`<div class="michelin-badge">${r.michelin}</div>`:'';
   card.innerHTML=`<div class="resto-feat-photo"><div class="shimmer"></div><img alt="${r.name}"><div class="ef">${r.e}</div>${stars}<div class="feat-price-badge">${r.price}</div></div><div class="resto-feat-body"><div class="resto-feat-name">${r.name}</div><div class="resto-feat-cuisine">${rCuisine(r)}</div><div class="resto-feat-desc">${rDesc(r)}</div><div class="resto-feat-meta"><span class="resto-meta-item">📍 ${r.hood}</span></div><div class="resto-tags">${r.tags.map(t=>`<span class="resto-tag">${t}</span>`).join('')}</div></div><div class="resto-gmap" onclick="window.open('${r.map}','_blank')">📍 Maps</div>`;
-  loadRestoPhoto(card.querySelector('.resto-feat-photo'),r.wiki,r.e);
+  loadRestoPhoto(card.querySelector('.resto-feat-photo'),r.wiki,r.e,r.img);
   return card;
 }
 function mkRestoCard(r){
   const card=document.createElement('div');card.className='resto-card';
   const stars=r.michelin?`<span class="sb">${r.michelin}</span>`:'';
   card.innerHTML=`<div class="resto-card-photo"><div class="shimmer"></div><img alt="${r.name}"><div class="ef">${r.e}</div></div><div class="resto-card-body"><div class="resto-card-name">${r.name}</div><div class="resto-card-cuisine">${rCuisine(r)}</div><div class="resto-card-desc">${rDesc(r)}</div><div class="resto-card-meta">${stars}<span class="price-tag">${r.price}</span><span class="resto-meta-item" style="font-size:.6rem">📍 ${r.hood}</span></div></div><div class="resto-card-gmap" onclick="event.stopPropagation();window.open('${r.map}','_blank')">📍</div>`;
-  loadRestoPhoto(card.querySelector('.resto-card-photo'),r.wiki,r.e);
+  loadRestoPhoto(card.querySelector('.resto-card-photo'),r.wiki,r.e,r.img);
   return card;
 }
 
