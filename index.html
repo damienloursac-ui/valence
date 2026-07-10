@@ -625,8 +625,8 @@ body{background:var(--page);color:var(--text);font-family:'Inter',sans-serif;ove
     <button class="nav-btn active" id="nav-monuments" onclick="switchTab('monuments')"><span class="nav-icon">🏛️</span><span class="nav-label" id="nav-lbl-monuments">Lieux</span></button>
     <button class="nav-btn" id="nav-itin" onclick="switchTab('itin')"><span class="nav-icon">🗺️</span><span class="nav-label" id="nav-lbl-itin">Itinéraire</span></button>
     <button class="nav-btn" id="nav-food" onclick="switchTab('food')"><span class="nav-icon">🍽️</span><span class="nav-label" id="nav-lbl-food">Food</span></button>
-    <button class="nav-btn" id="nav-tips" onclick="switchTab('tips')"><span class="nav-icon">💡</span><span class="nav-label" id="nav-lbl-tips">Bons plans</span></button>
     <button class="nav-btn" id="nav-events" onclick="switchTab('events')"><span class="nav-icon">📅</span><span class="nav-label" id="nav-lbl-events">Événements</span></button>
+    <button class="nav-btn" id="nav-tips" onclick="switchTab('tips')"><span class="nav-icon">💡</span><span class="nav-label" id="nav-lbl-tips">Bons plans</span></button>
     <button class="nav-btn" id="nav-gamif" onclick="switchTab('gamif')"><span class="nav-icon">🏅</span><span class="nav-label" id="nav-lbl-gamif">Découvertes</span></button>
   </div>
 
@@ -714,7 +714,7 @@ const T = {
   fr:{
     langSelect:'Choisissez votre langue', confirm:'Continuer →',
     loading:'Chargement…', region:'Drôme · Rhône-Alpes',
-    nav:['Lieux','Itinéraire','Food','Bons plans','Événements','Découvertes'],
+    nav:['Lieux','Itinéraire','Food','Événements','Bons plans','Découvertes'],
     searchPlaceholder:'🔍  Rechercher un lieu…',
     itinTitle:'Itinéraire', itinSub:'Parcours optimisé sur-mesure',
     cfgDays:'⏱ Combien de jours ?', cfgInt:'🎯 Centres d\'intérêt', cfgTrans:'🚶 Déplacement',
@@ -747,7 +747,7 @@ const T = {
   en:{
     langSelect:'Choose your language', confirm:'Continue →',
     loading:'Loading…', region:'Drôme · Rhône-Alpes',
-    nav:['Places','Itinerary','Food','Tips','Events','Discoveries'],
+    nav:['Places','Itinerary','Food','Events','Tips','Discoveries'],
     searchPlaceholder:'🔍  Search a place…',
     itinTitle:'Itinerary', itinSub:'Optimised route, tailored for you',
     cfgDays:'⏱ How many days?', cfgInt:'🎯 Interests', cfgTrans:'🚶 Getting around',
@@ -780,7 +780,7 @@ const T = {
   es:{
     langSelect:'Elige tu idioma', confirm:'Continuar →',
     loading:'Cargando…', region:'Drôme · Ródano-Alpes',
-    nav:['Lugares','Itinerario','Gastronomía','Consejos','Eventos','Logros'],
+    nav:['Lugares','Itinerario','Gastronomía','Eventos','Consejos','Logros'],
     searchPlaceholder:'🔍  Buscar un lugar…',
     itinTitle:'Itinerario', itinSub:'Ruta optimizada a tu medida',
     cfgDays:'⏱ ¿Cuántos días?', cfgInt:'🎯 Intereses', cfgTrans:'🚶 Desplazamiento',
@@ -813,7 +813,7 @@ const T = {
   de:{
     langSelect:'Sprache wählen', confirm:'Weiter →',
     loading:'Wird geladen…', region:'Drôme · Rhône-Alpen',
-    nav:['Orte','Reiseroute','Food','Tipps','Veranstaltungen','Erlebnisse'],
+    nav:['Orte','Reiseroute','Food','Veranstaltungen','Tipps','Erlebnisse'],
     searchPlaceholder:'🔍  Ort suchen…',
     itinTitle:'Reiseroute', itinSub:'Optimierte Route nach Maß',
     cfgDays:'⏱ Wie viele Tage?', cfgInt:'🎯 Interessen', cfgTrans:'🚶 Fortbewegung',
@@ -846,7 +846,7 @@ const T = {
   it:{
     langSelect:'Scegli la tua lingua', confirm:'Continua →',
     loading:'Caricamento…', region:'Drôme · Rodano-Alpi',
-    nav:['Luoghi','Itinerario','Food','Consigli','Eventi','Scoperte'],
+    nav:['Luoghi','Itinerario','Food','Eventi','Consigli','Scoperte'],
     searchPlaceholder:'🔍  Cerca un luogo…',
     itinTitle:'Itinerario', itinSub:'Percorso ottimizzato su misura',
     cfgDays:'⏱ Quanti giorni?', cfgInt:'🎯 Interessi', cfgTrans:'🚶 Spostamento',
@@ -1346,8 +1346,8 @@ function applyTranslations() {
   document.getElementById('nav-lbl-monuments').textContent = t.nav[0];
   document.getElementById('nav-lbl-itin').textContent = t.nav[1];
   document.getElementById('nav-lbl-food').textContent = t.nav[2];
-  document.getElementById('nav-lbl-tips').textContent = t.nav[3];
-  document.getElementById('nav-lbl-events').textContent = t.nav[4];
+  document.getElementById('nav-lbl-events').textContent = t.nav[3];
+  document.getElementById('nav-lbl-tips').textContent = t.nav[4];
   document.getElementById('nav-lbl-gamif').textContent = t.nav[5];
   if(document.getElementById('events-screen').classList.contains('active')) renderEvents();
   document.getElementById('itin-title-hdr').innerHTML = `${t.itinTitle} <span>Valence</span>`;
@@ -1469,7 +1469,7 @@ function closeWeather(){document.getElementById('weather-panel').classList.remov
 //  TABS
 // ═══════════════════════════════════════════════════════════
 function switchTab(tab){
-  ['monuments','itin','food','tips','events','gamif'].forEach(t=>{
+  ['monuments','itin','food','events','tips','gamif'].forEach(t=>{
     document.getElementById('nav-'+t).classList.toggle('active',t===tab);
     document.getElementById(t+'-screen').classList.toggle('active',t===tab);
   });
@@ -2023,7 +2023,7 @@ function catColor(cat){
 // ═══════════════════════════════════════════════════════════
 //  SWIPE BETWEEN TABS
 // ═══════════════════════════════════════════════════════════
-const TABS = ['monuments','itin','food','tips','events','gamif'];
+const TABS = ['monuments','itin','food','events','tips','gamif'];
 let swipeStartX = 0, swipeStartY = 0, swipeStartTime = 0;
 let currentTabIdx = 0;
 
