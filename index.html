@@ -456,8 +456,8 @@ body{background:var(--page);color:var(--text);font-family:'Inter',sans-serif;ove
 #map-toggle-bar{display:flex;gap:.4rem;padding:.45rem .75rem;background:var(--white);border-bottom:1px solid var(--border);flex-shrink:0}
 .map-toggle-btn{flex:1;padding:.38rem;border-radius:8px;border:1px solid var(--border-mid);background:var(--page);color:var(--text-mid);font-size:.74rem;font-family:'Inter',sans-serif;cursor:pointer;font-weight:500;transition:all .18s;display:flex;align-items:center;justify-content:center;gap:.3rem}
 .map-toggle-btn.active{background:var(--blue);border-color:var(--blue);color:#fff}
-#map-wrap{height:240px;flex-shrink:0;display:none;position:relative}
-#map-container{height:100%;width:100%}
+#map-wrap{flex:1;display:none;position:relative;min-height:0}
+#map-container{height:100%;width:100%;position:absolute;inset:0}
 .leaflet-container{font-family:'Inter',sans-serif}
 .map-pin-popup .leaflet-popup-content-wrapper{border-radius:12px;box-shadow:0 4px 20px rgba(13,43,69,.15);border:1px solid rgba(58,127,189,.15);padding:0}
 .map-pin-popup .leaflet-popup-content{margin:0;padding:.7rem .9rem}
@@ -543,7 +543,7 @@ body{background:var(--page);color:var(--text);font-family:'Inter',sans-serif;ove
   </div>
 
   <!-- MONUMENTS -->
-  <div id="monuments-screen" class="screen active">
+  <div id="monuments-screen" class="screen active" style="flex-direction:column;overflow:hidden">
     <div class="search-wrap">
       <input type="text" id="search-input" placeholder="🔍" oninput="filterMonuments(this.value)">
     </div>
