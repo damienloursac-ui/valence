@@ -105,15 +105,15 @@ body{background:var(--page);color:var(--text);font-family:'Inter',sans-serif;ove
 .top-right{display:flex;align-items:center;gap:.5rem}
 .lang-flag-btn{font-size:1.3rem;cursor:pointer;padding:.2rem .4rem;border-radius:8px;border:1px solid var(--border-mid);background:var(--page);transition:background .18s}
 .lang-flag-btn:active{background:var(--page-dark)}
-#weather-widget{cursor:pointer;padding:.45rem .85rem;border-radius:14px;background:linear-gradient(135deg,#1A5A96,#3A7FBD);box-shadow:0 4px 16px rgba(58,127,189,.35);transition:opacity .18s;display:inline-flex;align-items:center;gap:.6rem}
-#weather-widget:active{opacity:.85}
+#weather-widget{cursor:pointer;text-align:right;padding:.35rem .7rem;border-radius:12px;border:1px solid var(--border-mid);background:var(--page);transition:background .18s}
+#weather-widget:active{background:var(--page-dark)}
 .wx-loading{display:flex;align-items:center;justify-content:center;height:38px}
-.wx-spinner{width:14px;height:14px;border:1.5px solid rgba(255,255,255,.3);border-top-color:#fff;border-radius:50%;animation:spin .8s linear infinite}
-.wx-main{display:flex;align-items:center;gap:.5rem}
-.wx-main span:first-child{font-size:1.5rem}
-#wx-temp{font-family:'Cormorant Garamond',serif;font-size:1.35rem;color:#fff;line-height:1}
+.wx-spinner{width:14px;height:14px;border:1.5px solid var(--blue-mid);border-top-color:var(--blue);border-radius:50%;animation:spin .8s linear infinite}
+.wx-main{display:flex;align-items:center;justify-content:flex-end;gap:.35rem}
+.wx-main span:first-child{font-size:1.2rem}
+#wx-temp{font-family:'Cormorant Garamond',serif;font-size:1.2rem;color:var(--blue)}
 .wx-details{margin-top:.05rem}
-#wx-desc{font-size:.58rem;color:rgba(255,255,255,.85);display:block;letter-spacing:.03em}
+#wx-desc{font-size:.62rem;color:var(--text-mid);display:block}
 #wx-feels{font-size:.58rem;color:var(--text-soft)}
 .wx-extra{display:flex;gap:.5rem;justify-content:flex-end;margin-top:.1rem}
 #wx-wind,#wx-rain{font-size:.58rem;color:var(--text-soft)}
@@ -303,19 +303,19 @@ body{background:var(--page);color:var(--text);font-family:'Inter',sans-serif;ove
 /* ══ WEATHER PANEL ══ */
 #weather-overlay{position:fixed;inset:0;background:rgba(13,43,69,.3);backdrop-filter:blur(4px);z-index:200;display:none}
 #weather-overlay.show{display:block}
-#weather-panel{position:fixed;top:0;right:0;width:min(340px,92vw);height:100dvh;background:linear-gradient(160deg,#0D2B45 0%,#1A5A96 55%,#3A7FBD 100%);z-index:201;transform:translateX(100%);transition:transform .35s cubic-bezier(.32,.72,0,1);overflow-y:auto;padding-bottom:2rem;box-shadow:-8px 0 40px rgba(13,43,69,.4)}
+#weather-panel{position:fixed;top:0;right:0;width:min(340px,92vw);height:100dvh;background:var(--page);border-left:1px solid var(--border);z-index:201;transform:translateX(100%);transition:transform .35s cubic-bezier(.32,.72,0,1);overflow-y:auto;padding-bottom:2rem;box-shadow:-8px 0 32px rgba(13,43,69,.12)}
 #weather-panel.open{transform:translateX(0)}
-.wx-panel-header{display:flex;align-items:center;justify-content:space-between;padding:1.4rem 1.2rem .8rem;position:sticky;top:0;background:rgba(13,43,69,.5);backdrop-filter:blur(8px);border-bottom:1px solid rgba(255,255,255,.1);z-index:2}
-.wx-panel-city{font-family:'Cormorant Garamond',serif;font-size:1.3rem;color:#fff;opacity:.92}
-.wx-panel-close{background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.25);border-radius:50%;width:30px;height:30px;color:#fff;cursor:pointer;font-size:.85rem}
+.wx-panel-header{display:flex;align-items:center;justify-content:space-between;padding:1.2rem 1.2rem .8rem;position:sticky;top:0;background:var(--white);border-bottom:1px solid var(--border);z-index:2}
+.wx-panel-city{font-family:'Cormorant Garamond',serif;font-size:1.3rem;color:var(--blue)}
+.wx-panel-close{background:var(--page);border:1px solid var(--border-mid);border-radius:50%;width:30px;height:30px;color:var(--text-mid);cursor:pointer;font-size:.85rem}
 .wx-panel-now{display:flex;align-items:center;gap:1rem;padding:1.2rem 1.2rem .6rem}
-.wx-panel-icon{font-size:4rem;filter:drop-shadow(0 4px 12px rgba(0,0,0,.3))}
-.wx-panel-temp{font-family:'Cormorant Garamond',serif;font-size:3rem;color:#fff;line-height:1}
-.wx-panel-desc{font-size:.82rem;color:rgba(255,255,255,.75);margin-top:.25rem}
+.wx-panel-icon{font-size:3.5rem}
+.wx-panel-temp{font-family:'Cormorant Garamond',serif;font-size:2.8rem;color:var(--blue);line-height:1}
+.wx-panel-desc{font-size:.82rem;color:var(--text-mid);margin-top:.2rem}
 .wx-panel-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:.5rem;padding:.5rem 1.2rem 1rem}
-.wx-stat{background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.18);border-radius:10px;padding:.65rem .4rem;text-align:center}
-.wx-stat-val{font-family:'Cormorant Garamond',serif;font-size:1rem;color:#fff}
-.wx-stat-lbl{font-size:.55rem;color:rgba(255,255,255,.6);letter-spacing:.08em;text-transform:uppercase;margin-top:.1rem}
+.wx-stat{background:var(--page);border:1px solid var(--border);border-radius:10px;padding:.65rem .4rem;text-align:center}
+.wx-stat-val{font-family:'Cormorant Garamond',serif;font-size:1rem;color:var(--blue)}
+.wx-stat-lbl{font-size:.55rem;color:var(--text-soft);letter-spacing:.08em;text-transform:uppercase;margin-top:.1rem}
 .wx-section{font-size:.62rem;letter-spacing:.2em;text-transform:uppercase;color:var(--text-soft);padding:.5rem 1.2rem .4rem}
 .wx-forecast{display:flex;gap:.5rem;padding:0 1.2rem .8rem;overflow-x:auto;scrollbar-width:none}
 .wx-forecast::-webkit-scrollbar{display:none}
@@ -328,11 +328,11 @@ body{background:var(--page);color:var(--text);font-family:'Inter',sans-serif;ove
 .wx-hourly{display:flex;gap:.4rem;padding:0 1.2rem .8rem;overflow-x:auto;scrollbar-width:none}
 .wx-hourly::-webkit-scrollbar{display:none}
 .wx-hour{background:var(--page);border:1px solid var(--border);border-radius:8px;padding:.5rem .4rem;min-width:52px;text-align:center;flex-shrink:0}
-.wx-hour-time{font-size:.58rem;color:rgba(255,255,255,.6)}
+.wx-hour-time{font-size:.58rem;color:var(--text-soft)}
 .wx-hour-icon{font-size:1rem;margin:.2rem 0}
-.wx-hour-temp{font-family:'Cormorant Garamond',serif;font-size:.9rem;color:#fff}
-.wx-hour-rain{font-size:.55rem;color:rgba(180,220,255,.8)}
-.wx-credits{font-size:.58rem;color:rgba(255,255,255,.4);text-align:center;padding:.8rem 1.2rem 0}
+.wx-hour-temp{font-family:'Cormorant Garamond',serif;font-size:.9rem;color:var(--text)}
+.wx-hour-rain{font-size:.55rem;color:var(--blue)}
+.wx-credits{font-size:.58rem;color:var(--text-soft);text-align:center;padding:.8rem 1.2rem 0}
 /* ══ BONS PLANS ══ */
 .tips-body{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:.75rem 1rem 5rem;background:var(--page)}
 .tips-section-lbl{font-size:.62rem;letter-spacing:.2em;text-transform:uppercase;color:var(--text-soft);padding:.9rem 0 .45rem;display:flex;align-items:center;gap:.5rem}
@@ -516,17 +516,10 @@ body{background:var(--page);color:var(--text);font-family:'Inter',sans-serif;ove
       <div class="lang-flag-btn" id="lang-flag-btn" onclick="showLangSwitch()">🇫🇷</div>
       <div id="weather-widget" onclick="openWeather()">
         <div id="weather-loading" class="wx-loading"><div class="wx-spinner"></div></div>
-        <div id="weather-data" style="display:none;display:flex;align-items:center;gap:.6rem">
-          <span id="wx-icon" style="font-size:1.5rem">☀️</span>
-          <div>
-            <div style="display:flex;align-items:baseline;gap:.25rem">
-              <span id="wx-temp" style="font-family:'Cormorant Garamond',serif;font-size:1.35rem;color:#fff;line-height:1">—°</span>
-            </div>
-            <span id="wx-desc" style="font-size:.58rem;color:rgba(255,255,255,.85);display:block">Valence</span>
-          </div>
-          <span id="wx-feels" style="display:none"></span>
-          <span id="wx-wind" style="display:none"></span>
-          <span id="wx-rain" style="display:none"></span>
+        <div id="weather-data" style="display:none">
+          <div class="wx-main"><span id="wx-icon">☀️</span><span id="wx-temp">—°</span></div>
+          <div class="wx-details"><span id="wx-desc">—</span><span id="wx-feels">—</span></div>
+          <div class="wx-extra"><span id="wx-wind">💨 —</span><span id="wx-rain">🌧 —</span></div>
         </div>
       </div>
     </div>
