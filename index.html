@@ -393,7 +393,7 @@ body{background:var(--page);color:var(--text);font-family:'Inter',sans-serif;ove
 .event-card{background:var(--white);border:1px solid var(--border);border-radius:14px;padding:1rem;margin-bottom:.65rem;box-shadow:var(--shadow);cursor:pointer;transition:box-shadow .18s;position:relative;overflow:hidden}
 .event-card:active{box-shadow:var(--shadow-lg)}
 .event-card-accent{position:absolute;top:0;left:0;width:4px;height:100%;border-radius:14px 0 0 14px}
-.event-card-top{display:flex;align-items:flex-start;gap:.85rem}
+.event-card-top{display:flex;align-items:flex-start;gap:.85rem;justify-content:space-between}
 .event-icon{font-size:2rem;flex-shrink:0;line-height:1;margin-top:.1rem}
 .event-info{flex:1;min-width:0}
 .event-name{font-family:'Cormorant Garamond',serif;font-size:1.05rem;color:var(--text);line-height:1.2}
@@ -404,8 +404,8 @@ body{background:var(--page);color:var(--text);font-family:'Inter',sans-serif;ove
 .event-tag{font-size:.6rem;padding:.12rem .45rem;border-radius:20px;background:var(--blue-light);color:var(--blue);border:1px solid var(--blue-mid);font-weight:500}
 .event-tag.red{background:rgba(220,50,50,.1);color:#cc3333;border-color:rgba(220,50,50,.2)}
 .event-recurrence{font-size:.65rem;color:var(--text-soft);font-style:italic;margin-top:.4rem}
-.event-badge-ponctuel{position:absolute;top:.75rem;right:.75rem;background:var(--blue);color:#fff;font-size:.6rem;font-weight:600;padding:.18rem .5rem;border-radius:20px;letter-spacing:.06em}
-.event-badge-recurrent{position:absolute;top:.75rem;right:.75rem;background:rgba(40,160,80,.15);color:#1a8040;font-size:.6rem;font-weight:600;padding:.18rem .5rem;border-radius:20px;border:1px solid rgba(40,160,80,.25)}
+.event-badge-ponctuel{background:var(--blue);color:#fff;font-size:.6rem;font-weight:600;padding:.18rem .5rem;border-radius:20px;letter-spacing:.06em;white-space:nowrap;align-self:flex-start;flex-shrink:0}
+.event-badge-recurrent{background:rgba(40,160,80,.15);color:#1a8040;font-size:.6rem;font-weight:600;padding:.18rem .5rem;border-radius:20px;border:1px solid rgba(40,160,80,.25);white-space:nowrap;align-self:flex-start;flex-shrink:0}
 .events-empty{padding:3rem 1rem;text-align:center;color:var(--text-soft);font-size:.85rem}
 
 
@@ -1974,7 +1974,6 @@ function renderEvents(){
       const accentColor = catColor(e.cat);
       html += `<div class="event-card" style="padding-left:1.4rem">
         <div class="event-card-accent" style="background:${accentColor}"></div>
-        <div class="event-badge-ponctuel">${isPast?'✓ Passé':'Prochainement'}</div>
         <div class="event-card-top">
           <div class="event-icon">${e.icon}</div>
           <div class="event-info">
@@ -1982,6 +1981,7 @@ function renderEvents(){
             <div class="event-date">📅 ${e.dateLabel[LANG]||e.dateLabel.fr}</div>
             <div class="event-location">📍 ${e.lieu}</div>
           </div>
+          <span class="event-badge-ponctuel">${isPast?'✓ Passé':'Prochainement'}</span>
         </div>
         <div class="event-desc">${e.descs[LANG]||e.descs.fr}</div>
         <div class="event-tags">${(Array.isArray(e.tags)?e.tags:(e.tags[LANG]||e.tags.fr||[])).map(tag=>`<span class="event-tag${tag==='Payant'?' red':''}">${tag}</span>`).join('')}</div>
@@ -2003,7 +2003,6 @@ function renderEvents(){
       const accentColor = catColor(e.cat);
       html += `<div class="event-card" style="padding-left:1.4rem">
         <div class="event-card-accent" style="background:${accentColor}"></div>
-        <div class="event-badge-recurrent">🔁 ${months[e.month-1]}</div>
         <div class="event-card-top">
           <div class="event-icon">${e.icon}</div>
           <div class="event-info">
@@ -2011,6 +2010,7 @@ function renderEvents(){
             <div class="event-date">📅 ${e.recurrence[LANG]||e.recurrence.fr}</div>
             <div class="event-location">📍 ${e.lieu}</div>
           </div>
+          <span class="event-badge-recurrent">🔁 ${months[e.month-1]}</span>
         </div>
         <div class="event-desc">${e.descs[LANG]||e.descs.fr}</div>
         <div class="event-tags">${(Array.isArray(e.tags)?e.tags:(e.tags[LANG]||e.tags.fr||[])).map(tag=>`<span class="event-tag${tag==='Payant'?' red':''}">${tag}</span>`).join('')}</div>
