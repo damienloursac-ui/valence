@@ -450,6 +450,23 @@ body{background:var(--page);color:var(--text);font-family:'Inter',sans-serif;ove
 .badge-toast-title{font-size:.6rem;letter-spacing:.18em;text-transform:uppercase;color:var(--blue);font-weight:600}
 .badge-toast-name{font-family:'Cormorant Garamond',serif;font-size:1.05rem;color:var(--text)}
 </style>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+<style>
+/* ══ CARTE ══ */
+#map-toggle-bar{display:flex;gap:.4rem;padding:.45rem .75rem;background:var(--white);border-bottom:1px solid var(--border);flex-shrink:0}
+.map-toggle-btn{flex:1;padding:.38rem;border-radius:8px;border:1px solid var(--border-mid);background:var(--page);color:var(--text-mid);font-size:.74rem;font-family:'Inter',sans-serif;cursor:pointer;font-weight:500;transition:all .18s;display:flex;align-items:center;justify-content:center;gap:.3rem}
+.map-toggle-btn.active{background:var(--blue);border-color:var(--blue);color:#fff}
+#map-wrap{height:240px;flex-shrink:0;display:none;position:relative}
+#map-container{height:100%;width:100%}
+.leaflet-container{font-family:'Inter',sans-serif}
+.map-pin-popup .leaflet-popup-content-wrapper{border-radius:12px;box-shadow:0 4px 20px rgba(13,43,69,.15);border:1px solid rgba(58,127,189,.15);padding:0}
+.map-pin-popup .leaflet-popup-content{margin:0;padding:.7rem .9rem}
+.map-pin-popup .leaflet-popup-tip-container{display:none}
+.popup-name{font-family:'Cormorant Garamond',serif;font-size:.95rem;color:#0D2B45;font-weight:600}
+.popup-hood{font-size:.65rem;color:#6A9ABD;margin-top:.1rem}
+.popup-tag{display:inline-block;font-size:.58rem;padding:.1rem .4rem;background:rgba(58,127,189,.1);color:#3A7FBD;border-radius:20px;margin-top:.3rem}
+.popup-detail-btn{display:block;margin-top:.5rem;padding:.3rem .6rem;background:#3A7FBD;color:#fff;border:none;border-radius:8px;font-size:.65rem;font-family:'Inter',sans-serif;cursor:pointer;width:100%;text-align:center}
+</style>
 </head>
 <body>
 
@@ -529,6 +546,13 @@ body{background:var(--page);color:var(--text);font-family:'Inter',sans-serif;ove
   <div id="monuments-screen" class="screen active">
     <div class="search-wrap">
       <input type="text" id="search-input" placeholder="🔍" oninput="filterMonuments(this.value)">
+    </div>
+    <div id="map-toggle-bar">
+      <button class="map-toggle-btn active" id="btn-list" onclick="showListView()">📋 Liste</button>
+      <button class="map-toggle-btn" id="btn-map" onclick="showMapView()">🗺️ Carte</button>
+    </div>
+    <div id="map-wrap">
+      <div id="map-container"></div>
     </div>
     <div class="screen-body" id="monuments-body"></div>
   </div>
@@ -2307,6 +2331,94 @@ function roundRect(ctx,x,y,w,h,r){
 //  UTILS
 // ═══════════════════════════════════════════════════════════
 function dist(a,b){const R=6371000,p1=a.lat*Math.PI/180,p2=b.lat*Math.PI/180,dp=(b.lat-a.lat)*Math.PI/180,dl=(b.lng-a.lng)*Math.PI/180,x=Math.sin(dp/2)**2+Math.cos(p1)*Math.cos(p2)*Math.sin(dl/2)**2;return R*2*Math.atan2(Math.sqrt(x),Math.sqrt(1-x));}
+</script>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script>
+// ═══════════════════════════════════════════════════════════
+//  CARTE LEAFLET
+// ═══════════════════════════════════════════════════════════
+let _map = null;
+let _mapInit = false;
+let _currentView = 'list';
+
+function showListView() {
+  _currentView = 'list';
+  document.getElementById('map-wrap').style.display = 'none';
+  document.getElementById('monuments-body').style.display = '';
+  document.getElementById('btn-list').classList.add('active');
+  document.getElementById('btn-map').classList.remove('active');
+}
+
+function showMapView() {
+  _currentView = 'map';
+  document.getElementById('map-wrap').style.display = 'block';
+  document.getElementById('monuments-body').style.display = 'none';
+  document.getElementById('btn-list').classList.remove('active');
+  document.getElementById('btn-map').classList.add('active');
+  if (!_mapInit) initMap();
+  else setTimeout(()=>_map&&_map.invalidateSize(),100);
+}
+
+function initMap() {
+  _mapInit = true;
+  _map = L.map('map-container', {
+    center: [44.9326, 4.8912],
+    zoom: 14,
+    zoomControl: true,
+    attributionControl: false,
+  });
+
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    maxZoom: 19,
+  }).addTo(_map);
+
+  // Icône custom bleu
+  function makeIcon(emoji, visited) {
+    return L.divIcon({
+      className: '',
+      html: '<div style="width:32px;height:32px;background:' + (visited ? '#2A9E5A' : '#3A7FBD') + ';border:2px solid #fff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:14px;box-shadow:0 2px 8px rgba(13,43,69,.25)">' + emoji + '</div>',
+      iconSize: [32, 32],
+      iconAnchor: [16, 16],
+      popupAnchor: [0, -18],
+    });
+  }
+
+  LANDMARKS.forEach(lm => {
+    if (!lm.lat || !lm.lng) return;
+    const visited = VISITED.has(lm.id);
+    const marker = L.marker([lm.lat, lm.lng], { icon: makeIcon(lm.e, visited) });
+
+    const name = lmName(lm);
+    const hood = lmHood(lm);
+    const tag = lm.tags[0] || '';
+
+    marker.bindPopup(
+      '<div class="popup-name">' + lm.e + ' ' + name + '</div>' +
+      '<div class="popup-hood">' + hood + '</div>' +
+      '<span class="popup-tag">' + tag + '</span>' +
+      '<button class="popup-detail-btn" onclick="openDetail(\''+lm.id+'\')">Voir la fiche →</button>',
+      { className: 'map-pin-popup', maxWidth: 200, minWidth: 160 }
+    );
+    marker.addTo(_map);
+  });
+
+  setTimeout(() => _map.invalidateSize(), 150);
+}
+
+function openDetail(lmId) {
+  const lm = LANDMARKS.find(l => l.id === lmId);
+  if (!lm) return;
+  // Fermer popup, passer en liste, ouvrir detail
+  if (_map) _map.closePopup();
+  showListView();
+  setTimeout(() => showDetail(lm), 150);
+}
+
+// Rafraîchir les icônes quand on marque un lieu visité
+const _origMarkVisited = markVisited;
+// Patch toggleVisited pour màj icônes carte
+const _origToggleVisited = toggleVisited;
 </script>
 </body>
 </html>
