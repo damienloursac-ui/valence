@@ -1273,7 +1273,7 @@ const BADGES = [
   
 
   
-  {id:'arcruf', e:'🏛️', img:'arc-ruf.jpg', names:{fr:'Arc Ruf (Porte de l\'Alma)',en:'Arc Ruf (Porta dell\'Alma)',es:'Arco Ruf',de:'Arc Ruf',it:'Arco Ruf'}, hoods:{fr:'Vieux Valence',en:'Old Town',es:'Ciudad Vieja',de:'Altstadt',it:'Città Vecchia'}, descs:{fr:"L\'Arc Ruf, également appelé Porte de l\'Alma, est un arc de triomphe romain du IIe siècle niché dans le tissu médiéval du Vieux Valence. Vestige exceptionnel de la Valentia romaine, il est l\'un des arcs romains les mieux conservés de la région. Sa présence discrète au détour d\'une ruelle en fait une découverte surprenante pour le promeneur curieux.",en:"The Arc Ruf, also known as the Porta dell\'Alma, is a 2nd-century Roman triumphal arch nestled in the medieval fabric of Old Valence. An exceptional remnant of Roman Valentia, it is one of the best-preserved Roman arches in the region, a surprising discovery down a side street.",es:"El Arco Ruf, también conocido como Porta dell\'Alma, es un arco de triunfo romano del siglo II integrado en el tejido medieval del Viejo Valence. Vestigio excepcional de la Valentia romana.",de:"Der Arc Ruf, auch als Porta dell\'Alma bekannt, ist ein römischer Triumphbogen aus dem 2. Jahrhundert, eingebettet in das mittelalterliche Gewebe der Altstadt. Ein außergewöhnliches Überbleibsel des römischen Valentia.",it:"L\'Arco Ruf, noto anche come Porta dell\'Alma, è un arco di trionfo romano del II secolo integrato nel tessuto medievale della città vecchia. Eccezionale vestigio della romana Valentia."}, tags:['Romain','IIe siècle','Insolite'], h:'IIe s. ap. J.-C.', yr:'~150', lat:44.9320,lng:4.8925, g:'https://maps.google.com/?q=Arc+Ruf+Valence', wiki:'Valence,_Drôme'},
+    {id:'arcruf', icon:'🏛️', special:'arcruf', names:{fr:'Détective romain',en:'Roman Detective',es:'Detective romano',de:'Römischer Detektiv',it:'Detective romano'}, descs:{fr:'Visitez l\'Arc Ruf, vestige romain caché au cœur de Valence',en:'Visit the Arc Ruf, a Roman relic hidden in the heart of Valence',es:'Visita el Arco Ruf, vestigio romano escondido en el corazón de Valence',de:'Besuchen Sie den Arc Ruf, ein verstecktes römisches Relikt im Herzen von Valence',it:'Visita l\'Arco Ruf, reliquia romana nascosta nel cuore di Valence'}, descs:{fr:'Découvrez l\'Arc Ruf, vestige gallo-romain caché dans le Vieux Valence',en:'Discover the Arc Ruf, a hidden Gallo-Roman relic in Old Valence',es:'Descubra el Arco Ruf, vestigio galo-romano oculto en el Viejo Valence',de:'Entdecken Sie den Arc Ruf, ein verstecktes gallo-römisches Relikt in der Altstadt',it:'Scoprite l\'Arco Ruf, un relitto gallo-romano nascosto nella città vecchia'}},
   {id:'rhone',     icon:'⛵', special:'rhone', names:{fr:'Au fil du Rhône',en:'Along the Rhône',es:'Junto al Ródano',de:'Entlang der Rhône',it:'Lungo il Rodano'}, descs:{fr:'Parc Jouvet + Bords du Rhône',en:'Jouvet Park + Rhône riverside',es:'Parque Jouvet y orillas del Ródano',de:'Park Jouvet + Rhôneufer',it:'Parco Jouvet e rive del Rodano'}},
   {id:'summit',    icon:'⛰️', special:'summit', names:{fr:'Sommet conquis',en:'Summit Conquered',es:'Cumbre conquistada',de:'Gipfel erobert',it:'Vetta conquistata'}, descs:{fr:'Château de Crussol visité',en:'Crussol Castle visited',es:'Castillo de Crussol visitado',de:'Burg Crussol besucht',it:'Castello di Crussol visitato'}},
 ];
@@ -1591,8 +1591,12 @@ function checkBadges(){
       unlocked = VISITED.has('citechocolat') && VISITED.has('chapoutier');
     } else if(b.special==='rhone'){
       unlocked = VISITED.has('parcjouvet') && VISITED.has('rhone');
+    } else if(b.special==='arcruf'){
+      unlocked = VISITED.has('arcruf');
     } else if(b.special==='summit'){
       unlocked = VISITED.has('crussol');
+    } else if(b.special==='arcruf'){
+      unlocked = VISITED.has('arcruf');
     }
     if(unlocked){
       UNLOCKED_BADGES.add(b.id);
