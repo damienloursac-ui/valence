@@ -405,6 +405,7 @@ body{background:var(--page);color:var(--text);font-family:'Inter',sans-serif;ove
 .event-tag.red{background:rgba(220,50,50,.1);color:#cc3333;border-color:rgba(220,50,50,.2)}
 .event-recurrence{font-size:.65rem;color:var(--text-soft);font-style:italic;margin-top:.4rem}
 .event-badge-ponctuel{background:var(--blue);color:#fff;font-size:.6rem;font-weight:600;padding:.18rem .5rem;border-radius:20px;letter-spacing:.06em;white-space:nowrap;align-self:flex-start;flex-shrink:0}
+.event-badge-encours{background:#E07A20;color:#fff;font-size:.6rem;font-weight:600;padding:.18rem .5rem;border-radius:20px;letter-spacing:.06em;white-space:nowrap;align-self:flex-start;flex-shrink:0}
 .event-badge-recurrent{background:rgba(40,160,80,.15);color:#1a8040;font-size:.6rem;font-weight:600;padding:.18rem .5rem;border-radius:20px;border:1px solid rgba(40,160,80,.25);white-space:nowrap;align-self:flex-start;flex-shrink:0}
 .events-empty{padding:3rem 1rem;text-align:center;color:var(--text-soft);font-size:.85rem}
 
@@ -1041,7 +1042,7 @@ const EVENTS = [
    location:'Tennis Club de Valence', lieu:'Tennis Club de Valence · Avenue de Romans',
    tags:{fr:['Tennis','Printemps','Tous niveaux'],en:['Tennis','Spring','All levels'],es:['Tenis','Primavera','Todos los niveles'],de:['Tennis','Frühling','Alle Niveaus'],it:['Tennis','Primavera','Tutti i livelli']},
    recurrence:{fr:'Mars–Avril',en:'March–April',es:'Marzo–Abril',de:'März–April',it:'Marzo–Aprile'}},
-  {id:'p3', type:'ponctuel', date:'2026-06-27', icon:'🎭', cat:'culture',
+  {id:'p3', type:'ponctuel', date:'2026-06-27', dateEnd:'2026-08-31', icon:'🎭', cat:'culture',
    names:{fr:'Nuits de Valence — Spectacles en plein air',en:'Valence Nights — Open-Air Shows',es:'Noches de Valence — Espectáculos al aire libre',de:'Valence-Nächte — Open-Air-Shows',it:'Notti di Valence — Spettacoli all\'aperto'},
    descs:{fr:"Les Nuits de Valence investissent les plus beaux sites de la ville — cathédrale, Champ de Mars, jardins du musée — pour des spectacles son et lumière, théâtre de rue et concerts en plein air tout l\'été.",en:"Valence Nights take over the city\'s most beautiful sites — cathedral, Champ de Mars, museum gardens — for sound and light shows, street theatre and open-air concerts throughout summer.",es:"Las Noches de Valence toman los sitios más bellos de la ciudad para espectáculos de luz y sonido, teatro de calle y conciertos al aire libre.",de:"Die Valence-Nächte belegen die schönsten Orte der Stadt — Kathedrale, Champ de Mars, Museumsgärten — für Licht-und-Ton-Shows und Open-Air-Konzerte.",it:"Le Notti di Valence animano i siti più belli della città — cattedrale, Champ de Mars, giardini del museo — per spettacoli sonoro-luminosi e concerti all\'aperto."},
    location:'Centre-ville', lieu:'Sites historiques de Valence', tags:['Culture','Été','Son & Lumière'], dateLabel:{fr:'Juin–Août 2026',en:'June–August 2026',es:'Junio–Agosto 2026',de:'Juni–August 2026',it:'Giugno–Agosto 2026'}},
@@ -2010,7 +2011,7 @@ function renderEvents(){
             <div class="event-date">📅 ${e.dateLabel[LANG]||e.dateLabel.fr}</div>
             <div class="event-location">📍 ${e.lieu}</div>
           </div>
-          <span class="event-badge-ponctuel">${isPast?'✓ Passé':'Prochainement'}</span>
+          <span class="${isPast?(e.dateEnd&&new Date(e.dateEnd)>=new Date()?'event-badge-encours':'event-badge-ponctuel'):'event-badge-ponctuel'}">${isPast?(e.dateEnd&&new Date(e.dateEnd)>=new Date()?'▶ En cours':'✓ Passé'):'Prochainement'}</span>
         </div>
         <div class="event-desc">${e.descs[LANG]||e.descs.fr}</div>
         <div class="event-tags">${(Array.isArray(e.tags)?e.tags:(e.tags[LANG]||e.tags.fr||[])).map(tag=>`<span class="event-tag${tag==='Payant'?' red':''}">${tag}</span>`).join('')}</div>
